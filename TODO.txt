@@ -1,0 +1,14 @@
++
+gradebin.
+customizable weightage.
+display grade of student as per assignment.
+statics per student type.
+take care of labs aswell.
+student comparision with others
+change weight for a student 
+
+
+
+
+
+Assignment tag  add as column as checkbox.
