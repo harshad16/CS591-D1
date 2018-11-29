@@ -64,7 +64,8 @@ public class courseDAO extends BaseDAO<Course>{
     public List<Course> extractData(ResultSet rs) throws SQLException {
 
         StudentDAO sdao = new StudentDAO(conn);
-       List<Course> courses = new ArrayList<>();
+        AssignmentDAO adao = new AssignmentDAO(conn);
+        List<Course> courses = new ArrayList<>();
         while (rs.next()) {
             Course c = new Course();
             c.setCourseId(rs.getInt("id"));
@@ -73,6 +74,8 @@ public class courseDAO extends BaseDAO<Course>{
             c.setStart_time(rs.getString("start_time"));
             c.setStart_time(rs.getString("days"));
             c.setStudents(sdao.readAllFirstLevel("SELECT * FROM student WHERE id IN (SELECT studentid FROM class WHERE courseid = ?)",
+                    new Object[] { c.getCourseId() }));
+            c.setAssignments(adao.readAllFirstLevel("SELECT * FROM assignment WHERE courseid = ?",
                     new Object[] { c.getCourseId() }));
             courses.add(c);
         }

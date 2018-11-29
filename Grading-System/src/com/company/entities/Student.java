@@ -9,6 +9,7 @@ public class Student {
     private String year;
     private String type;
 
+
     public Student(String stdid, String firstName, String lastName, String year, String type) {
         this.id = null;
         this.studentId =stdid;

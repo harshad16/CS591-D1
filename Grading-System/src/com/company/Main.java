@@ -1,13 +1,11 @@
 
 package com.company;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.sql.*;
 import com.company.entities.*;
-import com.company.service.ClassService;
-import com.company.service.CourseService;
-import com.company.service.StudentService;
-
+import com.company.service.*;
 
 public class Main {
 
@@ -17,6 +15,8 @@ public class Main {
         CourseService cService = new CourseService();
         StudentService sService = new StudentService();
         ClassService classService = new ClassService();
+        AssignmentService aService = new AssignmentService();
+        GradeService gSrervice = new GradeService();
 
         Course c1 = new Course("intro to programming", "the very first Course", "something", "something");
         Course c2 = new Course("intro to programming2", "the very first course2", null, null);
@@ -36,6 +36,13 @@ public class Main {
         ClassEntity c1ass3 = new ClassEntity(3, 1);
         ClassEntity c1ass4 = new ClassEntity(3, 2);
 
+        Assignment a1 = new Assignment(2, "black jack", 1, null);
+        Assignment a2 = new Assignment(2, "tirnantaEna", 1, null);
+        Assignment a3 = new Assignment(2, "midterm", 2, null);
+
+        Grade g1 = new Grade(1, 1, "very good", 10.00);
+        Grade g2 = new Grade(1, 2, "bad", 0.0);
+        Grade g3 = new Grade(1, 3, null, 20.0);
 
         try {
             //cService.saveCourse(c1);
@@ -56,11 +63,20 @@ public class Main {
             classService.saveClass(c1ass3);
             classService.saveClass(c1ass4);*/
 
+            /*aService.saveAssignment(a1);
+            aService.saveAssignment(a2);
+            aService.saveAssignment(a3);*/
+
+            /*gSrervice.saveGrade(g1);
+            gSrervice.saveGrade(g2);
+            gSrervice.saveGrade(g3);*/
+
             //testing readCourses
             List<Course> courses = cService.readCourses("intro to programming");
             List<Student> students = sService.readStudents("Maral");
             List<ClassEntity> classes = classService.readClasses(null);
-
+            List<Assignment> assignments = aService.readAssignments(null);
+            List<Grade> grades = gSrervice.readGrades();
             /*for (ClassEntity c: classes) {
                 System.out.println(c);
             }*/
@@ -72,6 +88,14 @@ public class Main {
 
             for (Student s: students) {
                 System.out.println(s);
+            }
+
+            for (Assignment a: assignments) {
+                System.out.println(a);
+            }
+
+            for(Grade g: grades) {
+                System.out.println(g);
             }
             //testing delete courses
             //cService.deleteCourse(courses.get(0));

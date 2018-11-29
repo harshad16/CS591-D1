@@ -11,6 +11,7 @@ public class Course {
     private String days;
 
     private List<Student> students;
+    private List<Assignment> assignments;
 
     public Course(String name, String description, String start_time, String days) {
         this.courseId = null;
@@ -19,6 +20,7 @@ public class Course {
         this.start_time = start_time;
         this.days = days;
         this.students = null;
+        this.assignments = null;
     }
 
     public List<Student> getStudents() {
@@ -36,12 +38,21 @@ public class Course {
         this.start_time = null;
         this.days = null;
         this.students = null;
+        this.assignments = null;
     }
 
     public Course(String name, String description) {
         this();
         this.name = name;
         this.description = description;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
     public Integer getCourseId() {
@@ -90,8 +101,12 @@ public class Course {
     public String toString() {
 
         String studentsToString = "";
+        String assignmentsToString = "";
         for (Student s : this.students) {
             studentsToString += s + "#";
+        }
+        for (Assignment a: this.assignments) {
+            assignmentsToString += a + "#";
         }
         return "Course{" +
                 "courseId=" + courseId +
@@ -100,6 +115,7 @@ public class Course {
                 ", start_time='" + start_time + '\'' +
                 ", days='" + days + '\'' +
                 ", students='" + studentsToString + '\'' +
+                ", assignments='" + assignmentsToString + '\'' +
                 '}';
     }
 }
