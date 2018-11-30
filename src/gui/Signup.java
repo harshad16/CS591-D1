@@ -3,17 +3,25 @@ package src.gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import src.entities.User;
+import src.service.UserService;
 
 public class Signup extends JFrame {
 
@@ -105,6 +113,26 @@ public class Signup extends JFrame {
 		contentPane.add(textField_7);
 		
 		JButton btnNewButton = new JButton("Register");
+		btnNewButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String userName = textField_4.getText();
+				char[] password = textField_5.getPassword();
+				String securityQuestion = textField_6.getText();
+				String securityQuestionAnswer = textField_7.getText();
+				validation(userName, password, securityQuestion);
+				User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
+				try {
+					signUpforUser(user);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+			
+		});
 		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
 		btnNewButton.setBounds(617, 587, 112, 35);
 		contentPane.add(btnNewButton);
@@ -149,6 +177,30 @@ public class Signup extends JFrame {
 			}
 		});
 			
+	}
+	public void validation(String userName, char[] password, String securityQuestion) {
+		if(userName == null || userName == "") {
+			JOptionPane.showMessageDialog(contentPane, "Username cannot be nul!");	
+		}
+		if(password == null || password.length == 0) {
+			JOptionPane.showMessageDialog(contentPane, "Password cannot be null!");	
+		}
+		if(securityQuestion == null || securityQuestion == "") {
+			JOptionPane.showMessageDialog(contentPane, "Security question cannot be null!");	
+		}
+	}
+	
+	public void signUpforUser(User u) throws SQLException {
+		UserService uService = new UserService();
+		List<User> dupUser = uService.findUserByUserName(u.getUserName());
+		if(!dupUser.isEmpty()) {
+			JOptionPane.showMessageDialog(contentPane, "User name already exist!");	
+		}
+		else {
+			System.out.println("signup user" + u.getPassword());
+			uService.saveUser(u);
+			JOptionPane.showMessageDialog(contentPane, "Sucess!");	
+		}
 	}
 
 }

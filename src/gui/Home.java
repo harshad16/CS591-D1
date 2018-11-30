@@ -48,6 +48,19 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
+		initComponents();
+	}
+	
+	public Home(String userName) {
+		this();
+		JLabel lblNewLabel_1 = new JLabel(userName);
+		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(1149, 54, 74, 22);
+		contentPane.add(lblNewLabel_1);
+		
+	}
+	
+	public void initComponents() {
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -65,10 +78,10 @@ public class Home extends JFrame {
 		lblUsername.setBounds(1066, 51, 102, 29);
 		contentPane.add(lblUsername);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(1149, 54, 74, 22);
-		contentPane.add(lblNewLabel_1);
+//		JLabel lblNewLabel_1 = new JLabel("New label");
+//		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
+//		lblNewLabel_1.setBounds(1149, 54, 74, 22);
+//		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("Return");
 		lblNewLabel_3.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));

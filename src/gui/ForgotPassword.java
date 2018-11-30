@@ -3,17 +3,25 @@ package src.gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import src.entities.User;
+import src.service.UserService;
 
 public class ForgotPassword extends JFrame {
 
@@ -105,6 +113,34 @@ public class ForgotPassword extends JFrame {
 		contentPane.add(textField_7);
 		
 		JButton btnNewButton = new JButton("Save");
+		//validation part
+		btnNewButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					String userName = textField_4.getText();
+					String password = String.valueOf(textField_5.getPassword());
+					String securityQuestion = textField_6.getText();
+					String securityQuestionAnswer = textField_7.getText();
+					User user = checkUserAndSecurityQuestion(userName, password, securityQuestion,securityQuestionAnswer);
+					if(user != null) {
+						UserService uService = new UserService();
+						uService.saveUser(user);
+						JOptionPane.showMessageDialog(contentPane, "Password has been modified!");	
+					}
+				} catch (SQLException exception) {
+					// TODO Auto-generated catch block
+					exception.printStackTrace();
+				}
+			}
+			
+		});
+		
+		
+		
+		
 		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
 		btnNewButton.setBounds(617, 587, 112, 35);
 		contentPane.add(btnNewButton);
@@ -148,6 +184,29 @@ public class ForgotPassword extends JFrame {
 				
 			}
 		});
+	}
+	
+	public User checkUserAndSecurityQuestion(String userName, String password, String securityQuestion,String securityQuestionAnswer ) throws SQLException{
+		UserService uService = new UserService();
+		List<User> users = uService.findUserByUserName(userName);
+		System.out.println(users.size());
+		if(users.size() > 0) {
+			User foundUser = users.get(0);
+			System.out.println(foundUser);
+			if(foundUser.getSecurityQuestion().equals(securityQuestion)) {
+				if(foundUser.getSecurityQuestionAnswer().equals(securityQuestionAnswer)) {
+					User u =  new User(userName, password, securityQuestion , securityQuestionAnswer);
+					u.setId(foundUser.getId());
+					return u;
+				}
+				else {
+					JOptionPane.showMessageDialog(contentPane, "Security question or answer is not correct");	
+				}
+			}else {
+				JOptionPane.showMessageDialog(contentPane, "Security question or answer is not correct");	
+			}		
+		}
+		return null;
 	}
 
 }
