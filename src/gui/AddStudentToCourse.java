@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
 
 public class AddStudentToCourse extends JPanel {
 	private JTextField textField;
@@ -52,26 +53,16 @@ public class AddStudentToCourse extends JPanel {
 		
 		String[] columnNames = {"First Name",
                 "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
+                "BU-ID",
+                "Project",
+                "Final",
+                "Grade"};
 		Object[][] data = {
 			    {"Kathy", "Smith",
-			     "Snowboarding", new Integer(5), new Boolean(false)},
+			     "U123456789", new Integer(95), new Integer(93), "A"},
 			    {"John", "Doe",
-			     "Rowing", new Integer(3), new Boolean(true)},
-			    {"Sue", "Black",
-			     "Knitting", new Integer(2), new Boolean(false)},
-			    {"Jane", "White",
-			     "Speed reading", new Integer(20), new Boolean(true)},
-			    {"Joe", "Brown",
-			     "Pool", new Integer(10), new Boolean(false)}
+			     "U87654321", new Integer(93), new Integer(93), "A"}
 			};
-		
-		
-		JTable table = new JTable(data, columnNames);
-		table.setBounds(109, 124, 784, 331);
-		add(table);
 		
 		JButton btnNewButton = new JButton("ADD");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -80,6 +71,14 @@ public class AddStudentToCourse extends JPanel {
 		});
 		btnNewButton.setBounds(901, 50, 97, 37);
 		add(btnNewButton);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(93, 145, 905, 327);
+		add(scrollPane);
+		
+		
+		JTable table = new JTable(data, columnNames);
+		scrollPane.setViewportView(table);
 		
 
 	}
