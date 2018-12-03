@@ -5,15 +5,22 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import src.entities.User;
+import src.service.UserService;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import java.awt.Font;
@@ -88,9 +95,26 @@ public class Index {
 		JButton btnNewButton = new JButton("LogIn");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Home _home = new Home();
-				_home.setVisible(true);
-				frame.setVisible(false);
+				//validation starts here
+				try {
+				String userName = textField.getText();
+				char[] password = textField_1.getPassword();
+				User user = new User(userName, String.valueOf(password));
+				boolean isUser;
+					isUser = checkUserAndPassword(user);
+					if(isUser) {
+						//if correct, new window to show other logic	
+						Home _home = new Home(user.getUserName());
+						_home.setVisible(true);
+						frame.setVisible(false);
+					}
+					else {
+						JOptionPane.showMessageDialog(frame, "Password or Username is not correct");	
+					}	
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
@@ -175,5 +199,18 @@ public class Index {
 		lblNewLabel_4.setBounds(705, 602, 56, 16);
 		frame.getContentPane().add(lblNewLabel_4);
 		
+	}
+
+	private boolean checkUserAndPassword(User u) throws SQLException{
+		UserService uService = new UserService();
+		List<User> user = uService.findUserByUserName(u.getUserName());
+		if(user.size() != 0) {
+			System.out.println("user from db:" + user.get(0).getPassword());
+			System.out.println("user from input:" + u.getPassword());
+			if(user.get(0).getPassword().equals(u.getPassword())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

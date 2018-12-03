@@ -69,5 +69,21 @@ public class StudentService {
 
         return null;
     }
+    
+    public List<Student> findStudentById(String id) throws SQLException{
+    		Connection conn = null;
+    		try {
+    			conn = util.getConnection();
+    			StudentDAO sdao = new StudentDAO(conn);
+    			return sdao.findStudentById(id);
+    		}catch(InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+    			 e.printStackTrace();
+    		}finally{
+                if(conn!=null){
+                    conn.close();
+                }
+    		}
+    		return null;
+    }
 
 }

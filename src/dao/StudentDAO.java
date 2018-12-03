@@ -57,6 +57,13 @@ public class StudentDAO extends BaseDAO<Student>{
         }
 
     }
+    
+    public List<Student> findStudentById(String buId) throws SQLException {
+    		if(buId != null) {
+    			return readAll("SELECT * FROM student WHERE studentid = ?", new Object[] { buId });
+    		}
+    		return readAll("SELECT * FROM student", null);
+    }
 
     //to do for later
     public List<Student> extractData(ResultSet rs) throws SQLException {

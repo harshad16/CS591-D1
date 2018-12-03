@@ -21,6 +21,7 @@ public class Dashboard extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	private String userName;
 
 	/**
 	 * Launch the application.
