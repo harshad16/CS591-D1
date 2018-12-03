@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 public class Home extends JFrame {
 
 	private JPanel contentPane;
+	private String userName;
 
 	/**
 	 * Launch the application.
@@ -53,6 +54,7 @@ public class Home extends JFrame {
 	
 	public Home(String userName) {
 		this();
+		this.userName = userName;
 		JLabel lblNewLabel_1 = new JLabel(userName);
 		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(1149, 54, 74, 22);
@@ -133,6 +135,7 @@ public class Home extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				GeneralFrame _addcourse = new GeneralFrame("Course");
+				_addcourse.setUsername(userName);
 				_addcourse.setVisible(true);
 				setVisible(false);
 			}
@@ -145,6 +148,7 @@ public class Home extends JFrame {
 		lblNewLabel_2.setBounds(49, 13, 121, 43);
 		panel.add(lblNewLabel_2);
 		
+		//TODO: need to remove hard code
 		JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
 		btnCs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -165,6 +169,7 @@ public class Home extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				GeneralFrame _addstudent = new GeneralFrame("Student");
+				_addstudent.setUsername(userName);
 				_addstudent.setVisible(true);
 				setVisible(false);
 			}

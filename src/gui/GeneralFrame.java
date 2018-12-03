@@ -21,6 +21,8 @@ public class GeneralFrame extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private JLabel lblNewLabel_1;
+	private String userName;
 
 	/**
 	 * Launch the application.
@@ -37,11 +39,39 @@ public class GeneralFrame extends JFrame {
 			}
 		});
 	}
+	
+	public void setUsername(String userName) {
+		this.userName = userName;
+		lblNewLabel_1.setText(userName);
+	}
 
 	/**
 	 * Create the frame.
 	 */
 	public GeneralFrame() {
+		intialCommonComponent();
+	}
+	
+	public GeneralFrame(String panel_type) {
+		this();
+		if (panel_type=="Course") {
+			AddCourse obj = new AddCourse();
+	        obj.setVisible(true);
+	        contentPane.add(obj);
+	        ((JPanel) contentPane).revalidate();
+	        contentPane.repaint();	
+		}
+		else if (panel_type=="Student") {
+			AddStudentDB obj = new AddStudentDB();
+			obj.setVisible(true);
+	        contentPane.add(obj);
+	        ((JPanel) contentPane).revalidate();
+	        contentPane.repaint();
+		}
+		
+	}
+	
+	public void intialCommonComponent() {
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -59,7 +89,7 @@ public class GeneralFrame extends JFrame {
 		lblUsername.setBounds(1066, 51, 102, 29);
 		contentPane.add(lblUsername);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1 = new JLabel("newLabel");
 		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(1149, 54, 74, 22);
 		contentPane.add(lblNewLabel_1);
@@ -74,7 +104,7 @@ public class GeneralFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				Home _home = new Home();
+				Home _home = new Home(userName);
 				_home.setVisible(true);
 				setVisible(false);
 				
@@ -112,7 +142,7 @@ public class GeneralFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				Home _home = new Home();
+				Home _home = new Home(userName);
 				_home.setVisible(true);
 				setVisible(false);
 				
@@ -144,25 +174,6 @@ public class GeneralFrame extends JFrame {
 		});
 		lblHome.setBounds(69, 23, 33, 41);
 		contentPane.add(lblHome);
-		
-	}
-	
-	public GeneralFrame(String panel_type) {
-		this();
-		if (panel_type=="Course") {
-			AddCourse obj = new AddCourse();
-	        obj.setVisible(true);
-	        contentPane.add(obj);
-	        ((JPanel) contentPane).revalidate();
-	        contentPane.repaint();	
-		}
-		else if (panel_type=="Student") {
-			AddStudentDB obj = new AddStudentDB();
-			obj.setVisible(true);
-	        contentPane.add(obj);
-	        ((JPanel) contentPane).revalidate();
-	        contentPane.repaint();
-		}
 		
 	}
 
