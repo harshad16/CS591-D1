@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -264,28 +265,27 @@ public class Dashboard extends JFrame {
 			((JPanel) contentPane).revalidate();
 			contentPane.repaint();
 			
-	        String[] columnNames = {"First Name",
+			String[] columnNames = {"First Name",
 	                "Last Name",
-	                "Sport",
-	                "# of Years",
-	                "Vegetarian"};
+	                "BU-ID",
+	                "Project",
+	                "Final",
+	                "Grade"};
 			Object[][] data = {
 				    {"Kathy", "Smith",
-				     "Snowboarding", new Integer(5), new Boolean(false)},
+				     "U123456789", new Integer(95), new Integer(93), "A"},
 				    {"John", "Doe",
-				     "Rowing", new Integer(3), new Boolean(true)},
-				    {"Sue", "Black",
-				     "Knitting", new Integer(2), new Boolean(false)},
-				    {"Jane", "White",
-				     "Speed reading", new Integer(20), new Boolean(true)},
-				    {"Joe", "Brown",
-				     "Pool", new Integer(10), new Boolean(false)}
+				     "U87654321", new Integer(93), new Integer(93), "A"}
 				};
+			
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(12, 13, 949, 459);
+			panel.add(scrollPane);
 			
 			
 			table = new JTable(data, columnNames);
-			table.setBounds(12, 13, 949, 459);
-			panel.add(table);
+			scrollPane.setViewportView(table);
+			
 			
 			JButton btnNewButton_2 = new JButton("Save");
 			btnNewButton_2.setBounds(755, 485, 97, 25);
