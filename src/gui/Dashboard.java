@@ -14,11 +14,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import src.entities.Course;
+
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
 public class Dashboard extends JFrame {
-
+	
+	//for transforming course object between frames
+	private Course course;
 	private JPanel contentPane;
 	private JTable table;
 
@@ -29,7 +34,8 @@ public class Dashboard extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Dashboard frame = new Dashboard();
+					Course course = new Course();
+					Dashboard frame = new Dashboard(course);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +47,11 @@ public class Dashboard extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Dashboard() {
+	public Dashboard(Course course) {
+		
+		//for keeping track of course information 
+		this.course = course;
+		
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -120,15 +130,15 @@ public class Dashboard extends JFrame {
 		lblYear.setBounds(215, 80, 95, 26);
 		contentPane.add(lblYear);
 		
-		JLabel lblJava = new JLabel("Java");
-		lblJava.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblJava.setBounds(322, 20, 263, 26);
-		contentPane.add(lblJava);
+		JLabel namelbl = new JLabel(course.getName());
+		namelbl.setFont(new Font("Georgia", Font.PLAIN, 14));
+		namelbl.setBounds(322, 20, 263, 26);
+		contentPane.add(namelbl);
 		
-		JLabel lblCs = new JLabel("CS591");
-		lblCs.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblCs.setBounds(322, 52, 251, 26);
-		contentPane.add(lblCs);
+		JLabel courseIdlbl = new JLabel(course.getCourseId());
+		courseIdlbl.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseIdlbl.setBounds(322, 52, 251, 26);
+		contentPane.add(courseIdlbl);
 		
 		JLabel lblFall = new JLabel("Fall 2018");
 		lblFall.setFont(new Font("Georgia", Font.PLAIN, 14));
@@ -178,7 +188,7 @@ public class Dashboard extends JFrame {
 		JButton btnNewButton = new JButton("Add Assignment");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _assgn = new Dashboard("Assignment");
+				Dashboard _assgn = new Dashboard("Assignment", course);
 				_assgn.setVisible(true);
 				setVisible(false);
 			}
@@ -192,7 +202,7 @@ public class Dashboard extends JFrame {
 		JButton btnNewButton_1 = new JButton("Add Students");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _std = new Dashboard("Student");
+				Dashboard _std = new Dashboard("Student", course);
 				_std.setVisible(true);
 				setVisible(false);
 			}
@@ -206,7 +216,7 @@ public class Dashboard extends JFrame {
 		JButton btnViewStats = new JButton("View Stats");
 		btnViewStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _stats = new Dashboard("Stats");
+				Dashboard _stats = new Dashboard("Stats", course);
 				_stats.setVisible(true);
 				setVisible(false);
 			}
@@ -220,7 +230,7 @@ public class Dashboard extends JFrame {
 		JButton btnDashboard = new JButton("Dashboard");
 		btnDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _dashboard = new Dashboard("");
+				Dashboard _dashboard = new Dashboard("", course);
 				_dashboard.setVisible(true);
 				setVisible(false);
 			}
@@ -233,10 +243,10 @@ public class Dashboard extends JFrame {
 			
 	}
 	
-	public Dashboard(String panel_type){
-		this();
+	public Dashboard(String panel_type, Course course){
+		this(course);
 		if (panel_type.equals("Assignment")) {
-			AddAssignments obj = new AddAssignments();
+			AddAssignments obj = new AddAssignments(course);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();

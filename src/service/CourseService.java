@@ -20,7 +20,7 @@ public class CourseService {
         try {
             conn = util.getConnection();
             courseDAO cdao = new courseDAO(conn);
-            if(c.getCourseId()!=null){
+            if(c.getId()!=null){
                 cdao.updateCourse(c);
             }else{
                 cdao.saveCourse(c);

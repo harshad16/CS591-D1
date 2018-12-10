@@ -5,10 +5,15 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
+import javax.swing.*;
+
+import com.sun.prism.paint.Color;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
@@ -22,12 +27,28 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.*;
 import java.awt.event.ActionEvent;
+
+import src.entities.Course;
+import src.service.CourseService;
+import javax.swing.border.LineBorder;
+import javax.swing.BorderFactory;
 
 public class Home extends JFrame {
 
 	private JPanel contentPane;
-
+	private List<Course> courseList;
+	List<JButton> courseButtons = null;
+    private final Integer NUM_COLUMNS = 4;
+    private final Integer HORIZONTAL_GAP = 15;
+    private final Integer VERTICAL_GAP = 15;
+    
+	 
+    private Integer getNumRows() {
+    	return this.courseList.size()/ NUM_COLUMNS;
+    }
 	/**
 	 * Launch the application.
 	 */
@@ -43,12 +64,32 @@ public class Home extends JFrame {
 			}
 		});
 	}
+	
+	CourseService courseService = new CourseService();
+	
+	
+	private  List<Course> readCourses() {
+		List<Course> courses = null;
+				
+	    try {
+		    CourseService courseService = new CourseService();
+		    courses  =   courseService.readCourses(null);
+	    } catch (SQLException e) {
+		    System.out.println(e);
+	    }
+	    return courses;
+    }
 
 	/**
 	 * Create the frame.
 	 */
 	public Home() {
+		
+		courseList = this.readCourses();
+		
+	    		
 		setBounds(100, 100, 1280, 720);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -113,26 +154,48 @@ public class Home extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBounds(12, 146, 898, 527);
 		contentPane.add(panel);
-		panel.setLayout(null);
+		panel.setLayout(new GridLayout(getNumRows(),NUM_COLUMNS, HORIZONTAL_GAP, VERTICAL_GAP));
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton AddcourseButton = new JButton("");
+		AddcourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
+		AddcourseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				GeneralFrame _addcourse = new GeneralFrame("Course");
 				_addcourse.setVisible(true);
 				setVisible(false);
 			}
 		});
-		btnNewButton.setBounds(332, 101, 174, 160);
-		panel.add(btnNewButton);
+		//btnNewButton.setBounds(332, 101, 174, 160);
+		panel.add(AddcourseButton);
 		
-		JLabel lblNewLabel_2 = new JLabel("Add Course:");
+		/////////////////////////////////////////////////////////////////////////////
+		for (Course course: this.courseList) {
+			
+			JButton button = new JButton(course.getName());
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Dashboard _dashboard = new Dashboard(course);
+					_dashboard.setVisible(true);
+					setVisible(false);
+				}
+			});
+			button.setFont(new Font("Georgia", Font.BOLD, 16));
+			//Border boreder = BorderFactory.createLineBorder(Color.RED);
+			//button.setBorder(border);
+			panel.add(button);
+			//courseButtons.add(button);
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		
+		/*JLabel lblNewLabel_2 = new JLabel("Add Course:");
 		lblNewLabel_2.setFont(new Font("Georgia", Font.PLAIN, 16));
 		lblNewLabel_2.setBounds(49, 13, 121, 43);
-		panel.add(lblNewLabel_2);
+		panel.add(lblNewLabel_2);*/
 		
-		JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
+	    
+		/*JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
 		btnCs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Dashboard _dashboard = new Dashboard();
@@ -141,8 +204,8 @@ public class Home extends JFrame {
 			}
 		});
 		btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
-		btnCs.setBounds(49, 101, 174, 160);
-		panel.add(btnCs);
+		//btnCs.setBounds(49, 101, 174, 160);
+		panel.add(btnCs);*/
 		
 		JButton btnNewButton_1 = new JButton("Add Student in DB");
 		btnNewButton_1.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_users.png")));

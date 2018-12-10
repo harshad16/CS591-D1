@@ -17,7 +17,7 @@ public class Main {
         StudentService sService = new StudentService();
         ClassService classService = new ClassService();
 
-        Course c1 = new Course("intro to programming", "the very first Course", "something", "something");
+        /*Course c1 = new Course("intro to programming", "the very first Course", "something", "something");
         Course c2 = new Course("intro to programming2", "the very first course2", null, null);
         Course c3 = new Course("course1", null, null, "tu-tr");
         Course c4 = new Course("course2", "about programming", "9:00-10:45 am", "mondays-wednesday");
@@ -33,7 +33,7 @@ public class Main {
         ClassEntity c1ass1 = new ClassEntity(2, 1);
         ClassEntity c1ass2 = new ClassEntity(2, 2);
         ClassEntity c1ass3 = new ClassEntity(3, 1);
-        ClassEntity c1ass4 = new ClassEntity(3, 2);
+        ClassEntity c1ass4 = new ClassEntity(3, 2);*/
 
 
         try {

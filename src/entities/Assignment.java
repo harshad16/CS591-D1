@@ -1,31 +1,56 @@
 package src.entities;
 
-import java.io.Serializable;
+import java.util.Date;
 
-public class Assignment implements Serializable {
+public class Assignment {
+    //its primary key
     private Integer assignmentId;
     private Integer courseId;
-    private Double weight;
     private String name;
+    private Integer weight;
+    private String description;
+    private Date createdAt;
 
-    public void setAssignmentId(Integer assignmentId) {
-        this.assignmentId = assignmentId;
+    public Assignment(){
+        this.assignmentId = null;
+        this.courseId = null;
+        this.name = null;
+        this.weight = null;
+        this.description = null;
+        this.createdAt = null;
+    }
+
+    public Assignment(Integer courseId, String name, Integer weight, String descrption){
+        this.assignmentId = null;
+        this.courseId = courseId;
+        this.name = name;
+        this.weight = weight;
+        this.description = descrption;
+        this.createdAt = null;
+    }
+    
+    public Date getCreatedAt() {
+    	return this.createdAt;
+    }
+    
+    public void setCreatedAt(Date date) {
+    	this.createdAt = date; 
     }
 
     public Integer getAssignmentId() {
         return assignmentId;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setAssignmentId(Integer assignmentId) {
+        this.assignmentId = assignmentId;
     }
 
     public Integer getCourseId() {
         return courseId;
     }
 
-    public Double getWeight() {
-        return weight;
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public String getName() {
@@ -36,40 +61,32 @@ public class Assignment implements Serializable {
         this.name = name;
     }
 
-    public void setWeight(Double weight) {
+    public Integer getWeight() {
+        return weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Assignment{" +
+                "assignmentId=" + assignmentId +
+                ", courseId=" + courseId +
+                ", name='" + name + '\'' +
+                ", weight=" + weight +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + assignmentId;
-        result = prime * result + courseId;
-        return result;
+    public String getDescription() {
+        return description;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Assignment other = (Assignment) obj;
-        if (courseId == null) {
-            if (other.courseId != null)
-                return false;
-        } else if (!courseId.equals(other.courseId))
-            return false;
-        if (assignmentId == null) {
-            if (other.assignmentId != null)
-                return false;
-        } else if (!assignmentId.equals(other.assignmentId))
-            return false;
-
-        return true;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
 
 }

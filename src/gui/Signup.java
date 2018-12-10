@@ -113,6 +113,7 @@ public class Signup extends JFrame {
 		lblNewLabel_3.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/back.png")));
 		lblNewLabel_3.setBounds(30, 30, 56, 41);
 		contentPane.add(lblNewLabel_3, BorderLayout.WEST);
+			
 		lblNewLabel_3.addMouseListener(new MouseListener () {
 
 			@Override
