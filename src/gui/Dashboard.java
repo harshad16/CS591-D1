@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+<<<<<<< HEAD
 import javax.swing.table.DefaultTableModel;
 
 import src.entities.Assignment;
@@ -32,6 +33,10 @@ import src.service.AssignmentService;
 import src.service.ClassService;
 import src.service.GradeService;
 import src.service.StudentService;
+=======
+
+import src.entities.Course;
+>>>>>>> Adde course tables
 
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -42,6 +47,8 @@ public class Dashboard extends JFrame {
 	 * TODO: Write the doc.
 	 */
 	private static final long serialVersionUID = 1L;
+	//for transforming course object between frames
+	private Course course;
 	private JPanel contentPane;
 	private JTable table;
 	private JLabel usernameText;
@@ -53,7 +60,8 @@ public class Dashboard extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Dashboard frame = new Dashboard();
+					Course course = new Course();
+					Dashboard frame = new Dashboard(course);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +73,12 @@ public class Dashboard extends JFrame {
 	public Dashboard() throws SQLException {
 		initializeDashboard(true);			
 	}
-	
+		
+	public Dashboard(Course course) {	
+		//for keeping track of course information 
+		this.course = course;
+		initializeDashboard(true);
+	}
 	public void initializeDashboard(boolean def) throws SQLException {
 
 		setBounds(100, 100, 1280, 720);
@@ -138,6 +151,7 @@ public class Dashboard extends JFrame {
 		courseIdText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseIdText.setBounds(322, 52, 251, 26);
 		contentPane.add(courseIdText);
+
 		
 		JLabel courseYearText = new JLabel("Fall 2018");
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
@@ -247,21 +261,21 @@ public class Dashboard extends JFrame {
 	public void displayPanel(String panel_type) throws SQLException{
 		initializeDashboard(false);
 		if (panel_type.equals("Assignment")) {
-			AddAssignments obj = new AddAssignments();
+			AddAssignments obj = new AddAssignments(course);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();
 	        contentPane.repaint();
 		}
 		else if (panel_type.equals("Student")) {
-			AddStudentToCourse obj = new AddStudentToCourse();
+			AddStudentToCourse obj = new AddStudentToCourse(course);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();
 	        contentPane.repaint();
 		}
 		else if (panel_type.equals("Stats")) {
-			Statistics obj = new Statistics();
+			Statistics obj = new Statistics(course);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();

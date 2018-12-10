@@ -1,5 +1,7 @@
 package src.entities;
 
+import java.util.Date;
+
 public class Assignment {
     //its primary key
     private Integer assignmentId;
@@ -7,6 +9,7 @@ public class Assignment {
     private String name;
     private Integer weight;
     private String description;
+    private Date createdAt;
 
     public Assignment(){
         this.assignmentId = null;
@@ -14,6 +17,7 @@ public class Assignment {
         this.name = null;
         this.weight = null;
         this.description = null;
+        this.createdAt = null;
     }
 
     public Assignment(Integer courseId, String name, Integer weight, String descrption){
@@ -22,6 +26,15 @@ public class Assignment {
         this.name = name;
         this.weight = weight;
         this.description = descrption;
+        this.createdAt = null;
+    }
+    
+    public Date getCreatedAt() {
+    	return this.createdAt;
+    }
+    
+    public void setCreatedAt(Date date) {
+    	this.createdAt = date; 
     }
 
     public Integer getAssignmentId() {
@@ -75,6 +88,5 @@ public class Assignment {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 }

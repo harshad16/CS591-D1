@@ -17,29 +17,29 @@ public class courseDAO extends BaseDAO<Course>{
     }
 
     public void saveCourse(Course c) throws SQLException {
-        save("INSERT INTO course (name, description, start_time, days) VALUES (?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays()});
+        save("INSERT INTO course (name, description, start_time, days, college, courseid, type) VALUES (?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType()});
     }
 
 
 
     public Integer saveCourseID(Course c) throws SQLException {
-        return saveWithID("INSERT INTO course (name, description, start_time, days) VALUES (?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays()});
+        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type) VALUES (?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType()});
     }
 
     public void updateCourse(Course c) throws SQLException {
-        save("UPDATE course SET name = ? ,description = ?, start_time = ?, days = ? WHERE id = ?", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCourseId() });
+        save("UPDATE course SET name = ? ,description = ?, start_time = ?, days = ?, college = ?, courseid = ? WHERE id = ?", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getId() });
     }
 
     public void updateCourseName(Course c) throws SQLException {
-        save("UPDATE course SET name = ? WHERE id = ?", new Object[] { c.getName(), c.getCourseId() });
+        save("UPDATE course SET name = ? WHERE id = ?", new Object[] { c.getName(), c.getId() });
     }
 
     public void updateCourseDescription(Course c) throws SQLException {
-        save("UPDATE course SET description = ? WHERE id = ?", new Object[] { c.getDescription(), c.getCourseId() });
+        save("UPDATE course SET description = ? WHERE id = ?", new Object[] { c.getDescription(), c.getId() });
     }
 
     public void deleteCourse(Course c) throws SQLException {
-        save("DELETE FROM course WHERE id = ?", new Object[] { c.getCourseId() });
+        save("DELETE FROM course WHERE id = ?", new Object[] { c.getId() });
     }
 
     public List<Course> readAllCourses() throws SQLException {
@@ -63,17 +63,23 @@ public class courseDAO extends BaseDAO<Course>{
 
     public List<Course> extractData(ResultSet rs) throws SQLException {
 
-        StudentDAO sdao = new StudentDAO(conn);
-       List<Course> courses = new ArrayList<>();
+    	StudentDAO sdao = new StudentDAO(conn);
+        AssignmentDAO adao = new AssignmentDAO(conn);
+        List<Course> courses = new ArrayList<>();
         while (rs.next()) {
             Course c = new Course();
-            c.setCourseId(rs.getInt("id"));
+            c.setId(rs.getInt("id"));
+            c.setCourseId(rs.getString("courseid"));
             c.setName(rs.getString("name"));
             c.setDescription(rs.getString("description"));
             c.setStart_time(rs.getString("start_time"));
             c.setStart_time(rs.getString("days"));
+            c.setType(rs.getString("type"));
+            c.setCollege(rs.getString("college"));
             c.setStudents(sdao.readAllFirstLevel("SELECT * FROM student WHERE id IN (SELECT studentid FROM class WHERE courseid = ?)",
-                    new Object[] { c.getCourseId() }));
+                    new Object[] { c.getId() }));
+            c.setAssignments(adao.readAllFirstLevel("SELECT * FROM assignment WHERE courseid = ?",
+                    new Object[] { c.getId()}));
             courses.add(c);
         }
         return courses;
@@ -84,11 +90,14 @@ public class courseDAO extends BaseDAO<Course>{
         List<Course> courses = new ArrayList<>();
         while (rs.next()) {
             Course c = new Course();
-            c.setCourseId(rs.getInt(1));
+            c.setId(rs.getInt(1));
             c.setName(rs.getString("name"));
             c.setDescription(rs.getString("description"));
+            c.setCollege(rs.getString("college"));
+            c.setCourseId(rs.getString("courseid"));
             c.setStart_time(rs.getString("start_time"));
             c.setDays(rs.getString("days"));
+            c.setType(rs.getString("type"));
             courses.add(c);
         }
         return courses;

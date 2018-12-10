@@ -78,6 +78,7 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
             a.setDescription(rs.getString("description"));
             a.setCourseId(rs.getInt("courseid"));
             a.setWeight(rs.getInt("weight"));
+            a.setCreatedAt(rs.getDate("createdAt"));
             assignments.add(a);
         }
         return assignments;
@@ -94,9 +95,11 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
             a.setDescription(rs.getString("description"));
             a.setCourseId(rs.getInt("courseid"));
             a.setWeight(rs.getInt("weight"));
+            a.setCreatedAt(rs.getDate("createdAt"));
             assignments.add(a);
         }
         return assignments;
 
     }
+
 }

@@ -173,7 +173,6 @@ public class Signup extends JFrame {
 		returnLabel.setBounds(30, 30, 50, 40);
 		contentPane.add(returnLabel, BorderLayout.WEST);
 		returnLabel.addMouseListener(new MouseListener () {
-
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// Return to Index page(Login)
