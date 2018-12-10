@@ -61,10 +61,6 @@ public class Dashboard extends JFrame {
 		lblUsername.setBounds(1066, 51, 102, 29);
 		contentPane.add(lblUsername);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(1149, 54, 74, 22);
-		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("Return");
 		lblNewLabel_3.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
@@ -296,5 +292,13 @@ public class Dashboard extends JFrame {
 			btnNewButton_3.setBounds(864, 485, 97, 25);
 			panel.add(btnNewButton_3);
 		}
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+		JLabel lblNewLabel_1 = new JLabel(userName);
+		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(1149, 54, 74, 22);
+		contentPane.add(lblNewLabel_1);
 	}
 }

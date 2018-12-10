@@ -43,20 +43,26 @@ public class StudentDAO extends BaseDAO<Student>{
         return readAll("SELECT * FROM student", null);
     }
 
-    public List<Student> readStudentsByName(String name) throws SQLException {
-        name = "%" + name + "%";
-        return readAll("SELECT * FROM student WHERE first_name like ?", new Object[] { name });
-    }
-
-    public List<Student> readStudents(String firstName) throws SQLException {
-        if (firstName!= null && !firstName.isEmpty()) {
-            firstName = "%" + firstName + "%";
-            return readAll("SELECT * FROM student WHERE first_name like ?", new Object[] { firstName });
-        } else {
+    public List<Student> findStudentByFirstName(String name) throws SQLException {
+        if(name != null) {
+        		name = "%" + name + "%";
+        		return readAll("SELECT * FROM student WHERE first_name like ?", new Object[] { name });
+        }
+        else {
             return readAll("SELECT * FROM student", null);
         }
-
+        
     }
+
+//    public List<Student> readStudents(String firstName) throws SQLException {
+//        if (firstName!= null && !firstName.isEmpty()) {
+//            firstName = "%" + firstName + "%";
+//            return readAll("SELECT * FROM student WHERE first_name like ?", new Object[] { firstName });
+//        } else {
+//            return readAll("SELECT * FROM student", null);
+//        }
+//
+//    }
     
     public List<Student> findStudentById(String buId) throws SQLException {
     		if(buId != null) {
@@ -64,6 +70,14 @@ public class StudentDAO extends BaseDAO<Student>{
     		}
     		return readAll("SELECT * FROM student", null);
     }
+    
+    public List<Student> findStudentByLastName(String lastName) throws SQLException {
+		if(lastName != null) {
+			lastName = "%" + lastName + "%";
+			return readAll("SELECT * FROM student WHERE last_name like ?", new Object[] { lastName });
+		}
+		return readAll("SELECT * FROM student", null);
+}
 
     //to do for later
     public List<Student> extractData(ResultSet rs) throws SQLException {
