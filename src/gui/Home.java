@@ -172,25 +172,7 @@ public class Home extends JFrame {
 	    
 	    JScrollPane pane = new JScrollPane();
 	    pane.setLocation(12,146);
-	    pane.setSize(new Dimension(900, 514)); 
-
-	    courseList = this.readCourses();
-	    for (Course course: courseList) {
-	    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"+course.getCourseId()+"</html>");
-			btnCs.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					Dashboard _dashboard;
-					_dashboard = new Dashboard(course);
-					_dashboard.setUserName(userName);
-					_dashboard.setVisible(true);
-					setVisible(false);
-					
-				}
-			});
-			btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
-			buttonPanel.add(btnCs);
-	    }
-	    
+	    pane.setSize(new Dimension(900, 514));
 	    
 	    JButton newCourseButton = new JButton();
 		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
@@ -203,7 +185,35 @@ public class Home extends JFrame {
 			}
 		});
 		buttonPanel.add(newCourseButton);
-		
+
+	    courseList = this.readCourses();
+	    for (Course course: courseList) {
+	    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"
+	    								+course.getCollege()+"<br>"
+	    								+course.getCourseId()+"<br>"
+	    								+course.getDays()+"<br>"
+	    								+course.getStart_time()+"<br>"
+	    								+"</html>");
+			btnCs.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Dashboard _dashboard;
+					try {
+						_dashboard = new Dashboard(course);
+						_dashboard.setUserName(userName);
+						_dashboard.setVisible(true);
+						setVisible(false);
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			});
+			btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
+			buttonPanel.add(btnCs);
+	    }
+	    
 	    pane.setViewportView(buttonPanel);
 	    contentPane.add(pane);
 	}

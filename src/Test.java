@@ -20,13 +20,13 @@ public class Test {
         StudentService sService = new StudentService();
         ClassService classService = new ClassService();
 
-        Course c1 = new Course("intro to programming", "the very first Course", "something", "something");
-        Course c2 = new Course("intro to programming2", "the very first course2", null, null);
-        Course c3 = new Course("course1", null, null, "tu-tr");
-        Course c4 = new Course("course2", "about programming", "9:00-10:45 am", "mondays-wednesday");
-        Course c5 = new Course("course3", "about memory models", "9:00-10:45 am", null);
-        Course c6 = new Course("course4", "advanced course in javs", null, null);
-        Course c7 = new Course("course4", null, "9:00-10:45 am", "mondays-wednesday");
+        Course c1 = new Course("intro to programming", "the very first Course", "something", "something", null, null, null);
+        Course c2 = new Course("intro to programming2", "the very first course2", null, null, null, null, null);
+        Course c3 = new Course("course1", null, null, "tu-tr", null, null, null);
+        Course c4 = new Course("course2", "about programming", "9:00-10:45 am", "mondays-wednesday", null, null, null);
+        Course c5 = new Course("course3", "about memory models", "9:00-10:45 am", null, null, null, null);
+        Course c6 = new Course("course4", "advanced course in javs", null, null, null, null, null);
+        Course c7 = new Course("course4", null, "9:00-10:45 am", "mondays-wednesday", null, null, null);
 
         Student s1 = new Student("12345", "Arezoo", "sadeghi","fisrt-year", "graduate");
         Student s2 = new Student("12346", "Sepideh", "sadeghi","fisrt-year", "graduate");

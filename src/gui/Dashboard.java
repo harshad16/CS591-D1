@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -22,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-<<<<<<< HEAD
 import javax.swing.table.DefaultTableModel;
 
 import src.entities.Assignment;
@@ -33,11 +31,7 @@ import src.service.AssignmentService;
 import src.service.ClassService;
 import src.service.GradeService;
 import src.service.StudentService;
-=======
-
 import src.entities.Course;
->>>>>>> Adde course tables
-
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
@@ -54,6 +48,9 @@ public class Dashboard extends JFrame {
 	private JLabel usernameText;
 	private String userName;
 	private DefaultTableModel tableModel;
+	private JLabel courseNameText;
+	private JLabel courseIdText;
+	private JLabel courseYearText;
 
 	
 	public static void main(String[] args) {
@@ -74,11 +71,12 @@ public class Dashboard extends JFrame {
 		initializeDashboard(true);			
 	}
 		
-	public Dashboard(Course course) {	
+	public Dashboard(Course course) throws SQLException {	
 		//for keeping track of course information 
 		this.course = course;
 		initializeDashboard(true);
 	}
+	
 	public void initializeDashboard(boolean def) throws SQLException {
 
 		setBounds(100, 100, 1280, 720);
@@ -142,18 +140,21 @@ public class Dashboard extends JFrame {
 		courseYearLabel.setBounds(215, 80, 95, 26);
 		contentPane.add(courseYearLabel);
 		
-		JLabel courseNameText = new JLabel("Java");
+		courseNameText = new JLabel();
+		courseNameText.setText(course.getName());;
 		courseNameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseNameText.setBounds(322, 20, 263, 26);
 		contentPane.add(courseNameText);
 		
-		JLabel courseIdText = new JLabel("CS591");
+		courseIdText = new JLabel();
+		courseIdText.setText(course.getCourseId());
 		courseIdText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseIdText.setBounds(322, 52, 251, 26);
 		contentPane.add(courseIdText);
 
 		
-		JLabel courseYearText = new JLabel("Fall 2018");
+		courseYearText = new JLabel();
+		courseYearText.setText(course.getDays());
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(322, 80, 251, 26);
 		contentPane.add(courseYearText);
@@ -275,7 +276,7 @@ public class Dashboard extends JFrame {
 	        contentPane.repaint();
 		}
 		else if (panel_type.equals("Stats")) {
-			Statistics obj = new Statistics(course);
+			Statistics obj = new Statistics();
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();
@@ -310,14 +311,13 @@ public class Dashboard extends JFrame {
 		
 		
 		// TODO get course id
-		int cid = 2;
 		ClassService  clsService = new ClassService();
 		StudentService sService = new StudentService();
 		AssignmentService aService = new AssignmentService();
 		GradeService gService = new GradeService();
 		
 		
-		List<ClassEntity> classes = clsService.readClasses(cid);
+		List<ClassEntity> classes = clsService.readClasses(course.getId());
 		List<Student> students;
 		List<Assignment> assignment;
 		List<Grade> grade;
@@ -329,7 +329,7 @@ public class Dashboard extends JFrame {
 		for(String v:values) {
 			colNameList.add(v);
 		}
-		assignment = aService.readAssignmentByCID(cid);
+		assignment = aService.readAssignmentByCID(course.getId());
 		for (Assignment asgnE: assignment) {
 //			System.out.println("AssignmentAttributes:"+asgnE);
 			colNameList.add(asgnE.getName());
@@ -346,7 +346,8 @@ public class Dashboard extends JFrame {
         	students = sService.findStudentById(clsE.getStudentId());
         	Object[] row = new Object[columnNames.length];
         	for(Student std : students) {
-				row[0]=std.getId();
+        		System.out.println("Student:"+std);
+        		row[0]=std.getId();
 				row[1]=std.getFirstName();
 				row[2]=std.getLastName();
 				row[3]=std.getStudentId(); 
