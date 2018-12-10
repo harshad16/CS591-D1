@@ -1,60 +1,97 @@
 package src.gui;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import src.entities.Course;
+import src.service.CourseService;
+
 public class AddCourse extends JPanel {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+		
+	private JTextField nameTF;
+	private JTextField courseIdTF;
+	private JTextField collegeTF;
+	private JTextField descriptionTF;
+	private JTextField startTimeTF;
+	private JTextField daysTF;
 
 	/**
 	 * Create the panel.
 	 */
 	public AddCourse() {
 		
+		JPanel panel = new JPanel();				
 		setBounds(12, 146, 898, 527);
 		setLayout(null);
 		
-		JLabel lblStudentName = new JLabel("Course Name:");
-		lblStudentName.setFont(new Font("Georgia", Font.PLAIN, 16));
-		lblStudentName.setBounds(122, 97, 127, 31);
-		add(lblStudentName);
+		JLabel lblCourseName = new JLabel("Course Name:");
+		lblCourseName.setFont(new Font("Georgia", Font.BOLD, 16));
+		lblCourseName.setBounds(122, 97, 127, 31);
+		add(lblCourseName);
 		
-		JLabel lblNewLabel2 = new JLabel("Course ID:");
-		lblNewLabel2.setFont(new Font("Georgia", Font.PLAIN, 16));
-		lblNewLabel2.setBounds(122, 126, 127, 22);
-		add(lblNewLabel2);
+		JLabel lblCourseId = new JLabel("Course ID:");
+		lblCourseId.setFont(new Font("Georgia", Font.BOLD, 16));
+		lblCourseId.setBounds(122, 126, 127, 22);
+		add(lblCourseId);
 		
 		JLabel lblCollege = new JLabel("College:");
-		lblCollege.setFont(new Font("Georgia", Font.PLAIN, 16));
+		lblCollege.setFont(new Font("Georgia", Font.BOLD, 16));
 		lblCollege.setBounds(122, 155, 127, 22);
 		add(lblCollege);
 		
-		textField = new JTextField();
-		textField.setBounds(288, 101, 116, 22);
-		add(textField);
-		textField.setColumns(10);
+		JLabel lblDescription = new JLabel("Description:");
+		lblDescription.setFont(new Font("Georgia", Font.BOLD, 16));
+		lblDescription.setBounds(600, 97, 127, 22);
+		add(lblDescription);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(288, 130, 116, 22);
-		add(textField_1);
-		textField_1.setColumns(10);
+		JLabel lblStartTime = new JLabel("Start Time:");
+		lblStartTime.setFont(new Font("Georgia", Font.BOLD, 16));
+		lblStartTime.setBounds(600, 126, 127, 22);
+		add(lblStartTime);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(288, 159, 116, 22);
-		add(textField_2);
-		textField_2.setColumns(10);
+		JLabel lblDays = new JLabel("Days:");
+		lblDays.setFont(new Font("Georgia", Font.BOLD, 16));
+		lblDays.setBounds(600, 155, 127, 22);
+		add(lblDays);
+		
+		nameTF = new JTextField();
+		nameTF.setBounds(288, 101, 116, 22);
+		add(nameTF);
+		nameTF.setColumns(10);
+		
+		courseIdTF = new JTextField();
+		courseIdTF.setBounds(288, 130, 116, 22);
+		add(courseIdTF);
+		courseIdTF.setColumns(10);
+		
+		collegeTF = new JTextField();
+		collegeTF.setBounds(288, 159, 116, 22);
+		add(collegeTF);
+		collegeTF.setColumns(10);
+		
+		descriptionTF = new JTextField();
+		descriptionTF.setBounds(766, 101, 116, 22);
+		add(descriptionTF);
+		descriptionTF.setColumns(10);
+		
+		startTimeTF = new JTextField();
+		startTimeTF.setBounds(766, 130, 116, 22);
+		add(startTimeTF);
+		startTimeTF.setColumns(10);
+		
+		daysTF = new JTextField();
+		daysTF.setBounds(766, 159, 116, 22);
+		add(daysTF);
+		daysTF.setColumns(10);
 		
 		JRadioButton rdbtnGraduate = new JRadioButton("Graduate");
 		rdbtnGraduate.setFont(new Font("Georgia", Font.PLAIN, 16));
@@ -67,7 +104,7 @@ public class AddCourse extends JPanel {
 		add(rdbtnUndergraduate);
 		
 		JButton btnNewButton = new JButton("Save");
-		btnNewButton.setFont(new Font("Georgia", Font.PLAIN, 16));
+		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
 		btnNewButton.setBounds(212, 323, 88, 37);
 		add(btnNewButton);
 		
@@ -77,9 +114,49 @@ public class AddCourse extends JPanel {
 		add(rdbtnBoth);
 		
 		JLabel lblCourseLevel = new JLabel("Course Level:");
-		lblCourseLevel.setFont(new Font("Georgia", Font.PLAIN, 16));
+		lblCourseLevel.setFont(new Font("Georgia", Font.BOLD, 16));
 		lblCourseLevel.setBounds(122, 209, 127, 22);
 		add(lblCourseLevel);
-
+		
+		
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			
+ 			@Override
+			public void actionPerformed(ActionEvent e) {
+					String name = nameTF.getText();
+					String description = descriptionTF.getText();
+					String startTime = startTimeTF.getText();
+					String days = daysTF.getText();
+					String college = collegeTF.getText();
+					String courseId = courseIdTF.getText();
+					String type = "";
+					if(rdbtnGraduate.isSelected()) {
+						type = "graduate";
+					}
+					
+					if(rdbtnUndergraduate.isSelected()) {
+						type = "underGraduate";
+					}
+					
+					Course c = new Course(name, description, startTime, days, courseId, college, type);
+					boolean rst = saveCourse(c);
+					if(rst) {
+					    JOptionPane.showMessageDialog(panel, "Success!");	
+					}else {
+							JOptionPane.showMessageDialog(panel, "Error!");	
+					}		
+ 			 }
+		});
 	}
+
+    private boolean saveCourse(Course c) {
+	    try {
+		    CourseService courseService = new CourseService();
+		    courseService.saveCourse(c);
+	    } catch (SQLException e) {
+		    return false;
+	    }
+	    return true;
+    }
 }

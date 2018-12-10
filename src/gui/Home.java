@@ -17,7 +17,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import src.entities.Course;
+import src.service.CourseService;
+import javax.swing.border.LineBorder;
+import javax.swing.BorderFactory;
 
 public class Home extends JFrame {
 
@@ -41,6 +46,22 @@ public class Home extends JFrame {
 			}
 		});
 	}
+	
+	CourseService courseService = new CourseService();
+	private List<Course> courseList;
+	
+	
+	private  List<Course> readCourses() {
+		List<Course> courses = null;
+				
+	    try {
+		    CourseService courseService = new CourseService();
+		    courses  =   courseService.readCourses(null);
+	    } catch (SQLException e) {
+		    System.out.println(e);
+	    }
+	    return courses;
+    }
 
 	public Home() {
 		initComponents();
@@ -53,7 +74,7 @@ public class Home extends JFrame {
 	}
 	
 	public void initComponents() {
-		setBounds(100, 100, 1280, 720);
+		setBounds(100, 100, 1280, 720);		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -151,16 +172,33 @@ public class Home extends JFrame {
 	    
 	    JScrollPane pane = new JScrollPane();
 	    pane.setLocation(12,146);
-	    pane.setSize(new Dimension(900, 514)); 
+	    pane.setSize(new Dimension(900, 514));
+	    
+	    JButton newCourseButton = new JButton();
+		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
+		newCourseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GeneralFrame _addcourse = new GeneralFrame("Course");
+				_addcourse.setUsername(userName);
+				_addcourse.setVisible(true);
+				setVisible(false);
+			}
+		});
+		buttonPanel.add(newCourseButton);
 
-	    int sizeOfButtons = 5;
-	    for(int i = 0; i < sizeOfButtons; i++) {
-	    	JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
+	    courseList = this.readCourses();
+	    for (Course course: courseList) {
+	    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"
+	    								+course.getCollege()+"<br>"
+	    								+course.getCourseId()+"<br>"
+	    								+course.getDays()+"<br>"
+	    								+course.getStart_time()+"<br>"
+	    								+"</html>");
 			btnCs.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					Dashboard _dashboard;
 					try {
-						_dashboard = new Dashboard();
+						_dashboard = new Dashboard(course);
 						_dashboard.setUserName(userName);
 						_dashboard.setVisible(true);
 						setVisible(false);
@@ -176,19 +214,6 @@ public class Home extends JFrame {
 			buttonPanel.add(btnCs);
 	    }
 	    
-	    
-	    JButton newCourseButton = new JButton();
-		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
-		newCourseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				GeneralFrame _addcourse = new GeneralFrame("Course");
-				_addcourse.setUsername(userName);
-				_addcourse.setVisible(true);
-				setVisible(false);
-			}
-		});
-		buttonPanel.add(newCourseButton);
-		
 	    pane.setViewportView(buttonPanel);
 	    contentPane.add(pane);
 	}

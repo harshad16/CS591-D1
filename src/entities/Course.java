@@ -4,21 +4,39 @@ import java.util.*;
 
 public class Course {
 
-    private Integer courseId;
+    private Integer id;
     private String name;
+    private String college;
+    private String courseId;
     private String description;
     private String start_time;
     private String days;
+    private String type;
+    
 
     private List<Student> students;
+    private List<Assignment> assignments;
 
-    public Course(String name, String description, String start_time, String days) {
-        this.courseId = null;
+    public Course(String name, String description, String start_time, String days, String courseid, String college, String type) {
+        this.id = null;
         this.name = name;
         this.description =description;
         this.start_time = start_time;
+        this.college = college;
+        this.courseId = courseid;
         this.days = days;
+        this.type = type;
         this.students = null;
+        this.assignments = null;
+        
+    }
+    
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
     public List<Student> getStudents() {
@@ -30,12 +48,32 @@ public class Course {
     }
 
     public Course() {
-        this.courseId = null;
+        this.id = null;
         this.name = null;
         this.description = null;
         this.start_time = null;
+        this.college = null;
+        this.courseId = null;
         this.days = null;
+        this.type  = null;
         this.students = null;
+        this.assignments = null;
+    }
+    
+    public String getCollege() {
+    	return college;
+    }
+    
+    public void setCollege(String college) {
+    	this.college = college;
+    }
+    
+    public String getCourseId() {
+    	return courseId;
+    }
+    
+    public void setCourseId(String courseId) {
+    	this.courseId = courseId;
     }
 
     public Course(String name, String description) {
@@ -44,12 +82,12 @@ public class Course {
         this.description = description;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -62,6 +100,14 @@ public class Course {
 
     public String getDescription() {
         return description;
+    }
+    
+    public String getType() {
+    	return this.type;
+    }
+    
+    public void setType(String type) {
+    	this.type = type;
     }
 
     public void setDescription(String description) {
@@ -90,16 +136,25 @@ public class Course {
     public String toString() {
 
         String studentsToString = "";
+        String assignmentsToString = "";
+        
         for (Student s : this.students) {
             studentsToString += s + "#";
         }
+        for (Assignment a: this.assignments) {
+            assignmentsToString += a + "#";
+        }
         return "Course{" +
-                "courseId=" + courseId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", start_time='" + start_time + '\'' +
+                ", college='" + college + '\'' +
+                ", courseId='" + courseId + '\'' +
                 ", days='" + days + '\'' +
+                ", type='" + type + '\'' +
                 ", students='" + studentsToString + '\'' +
+                 ", assignments='" + assignmentsToString + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package src.gui;
 
 import src.entities.ClassEntity;
+import src.entities.Course;
 import src.entities.Student;
 import src.service.ClassService;
 import src.service.StudentService;
@@ -30,6 +31,7 @@ public class AddStudentToCourse extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Course course;
 	private JTextField searchText;
 	private String searchType;
 	private List<Student> students;
@@ -42,6 +44,15 @@ public class AddStudentToCourse extends JPanel {
 	 * Create the panel.
 	 */
 	public AddStudentToCourse() {
+		initialize();
+	}
+	
+	public AddStudentToCourse(Course c) {
+		this.course = c;
+		initialize();
+	}
+	
+	public void initialize() {
 		setBounds(215, 146, 1021, 527);
 		setLayout(null);
 		
@@ -59,11 +70,10 @@ public class AddStudentToCourse extends JPanel {
 		        		System.out.println("ModelValue"+tableModel.getValueAt(row, 0));
 		        		Integer sid = (Integer) tableModel.getValueAt(row, 0);
 		        		// TODO get course id
-		        		int cid = 2;
 		        		ClassService  clsService = new ClassService();
 		        		List<ClassEntity> classes;		
 		        		try {
-							classes = clsService.readClasses(cid);
+							classes = clsService.readClasses(course.getId());
 							boolean already=false;
 							for (ClassEntity clsE: classes) {
 			                	System.out.println("ClassAttributes:"+clsE);
@@ -74,7 +84,7 @@ public class AddStudentToCourse extends JPanel {
 			                }
 							if (!already) {
 								// Added student to course class.
-								ClassEntity c1ass1 = new ClassEntity(cid, sid);
+								ClassEntity c1ass1 = new ClassEntity(course.getId(), sid);
 								clsService.saveClass(c1ass1);
 							}
 			        		
@@ -220,5 +230,6 @@ public class AddStudentToCourse extends JPanel {
 					}
 				}catch(SQLException e) {}
 			}
-		}
+
+	}
 }
