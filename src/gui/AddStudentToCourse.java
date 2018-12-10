@@ -1,6 +1,8 @@
 package src.gui;
 
+import src.entities.ClassEntity;
 import src.entities.Student;
+import src.service.ClassService;
 import src.service.StudentService;
 import java.sql.SQLException;
 import java.util.List;
@@ -24,13 +26,17 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 public class AddStudentToCourse extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField searchText;
 	private String searchType;
 	private List<Student> students;
 	private Object[][] rst;
 	private JScrollPane scrollPane;
-	private Student selectedStudent;
 	private JTable resultTable;
+	private DefaultTableModel tableModel;
 
 	/**
 	 * Create the panel.
@@ -49,12 +55,38 @@ public class AddStudentToCourse extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO: Store the selected student to classes and course database
 				for (int row = 0; row < resultTable.getRowCount(); row++){
-			        for ( int col=0; col < resultTable.getColumnCount(); col++) {
-			        	if ((resultTable.getValueAt(row, resultTable.getColumnCount()-1).toString()== "true")) {
-			        		System.out.println(resultTable.getValueAt(row, col));
-			        	}
-			        }
-			    }
+					if ((resultTable.getValueAt(row, resultTable.getColumnCount()-1).toString()== "true")) {
+		        		System.out.println("ModelValue"+tableModel.getValueAt(row, 0));
+		        		Integer sid = (Integer) tableModel.getValueAt(row, 0);
+		        		// TODO get course id
+		        		int cid = 2;
+		        		ClassService  clsService = new ClassService();
+		        		List<ClassEntity> classes;		
+		        		try {
+							classes = clsService.readClasses(cid);
+							boolean already=false;
+							for (ClassEntity clsE: classes) {
+			                	System.out.println("ClassAttributes:"+clsE);
+			                	if(sid == clsE.getStudentId()) {
+			                		// validation if student already exists in class
+			                    	already = true;
+			                    }
+			                }
+							if (!already) {
+								// Added student to course class.
+								ClassEntity c1ass1 = new ClassEntity(cid, sid);
+								clsService.saveClass(c1ass1);
+							}
+			        		
+		        		} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	        		
+					}
+				}
+				JOptionPane.showMessageDialog(AddStudentToCourse.this, "Successfully added Students!");
+				
 			}
 		});
 
@@ -117,7 +149,7 @@ public class AddStudentToCourse extends JPanel {
 	}
 	
 	private void searchStudent() {
-		String[] columnNames = {"First Name",
+		String[] columnNames = {"sid(hidden)","First Name",
                 "Last Name",
                 "BU-ID", 
                 "Year", 
@@ -133,7 +165,7 @@ public class AddStudentToCourse extends JPanel {
 				//Implement this by search id in class DB
 				switch(searchType) {
 				case "BUid":
-					students = sService.findStudentById(searchText.getText());
+					students = sService.findStudentByBUId(searchText.getText());
 					break;
 				case  "First Name":
 					students = sService.findStudentByFirstName(searchText.getText());
@@ -146,13 +178,15 @@ public class AddStudentToCourse extends JPanel {
 				if(!students.isEmpty()) {
 					rst = new Object[students.size()][columnNames.length];
 					for(Student s : students) {
-						Object[] row = {s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),false};
+						Object[] row = {s.getId(),s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),false};
 						// Create a check method to see if student is already added to class
 						rst[count] = row;
 						count++;
 					}
 					
-					DefaultTableModel tableModel=new DefaultTableModel(rst, columnNames){
+					tableModel=new DefaultTableModel(rst, columnNames){
+						private static final long serialVersionUID = 1L;
+
 						// This Method is to make a column not be Editable on Table.
 					    @Override
 					    public boolean isCellEditable(int row, int column) {
@@ -165,6 +199,7 @@ public class AddStudentToCourse extends JPanel {
 					        return getValueAt(0, columnIndex).getClass();
 					    }
 					};
+					
 
 					resultTable = new JTable(tableModel);
 					resultTable.setPreferredScrollableViewportSize(new Dimension(400, 400));
@@ -174,7 +209,8 @@ public class AddStudentToCourse extends JPanel {
 					Dimension d = resultTable.getTableHeader().getPreferredSize();
 					d.height = 30;
 					resultTable.getTableHeader().setSize(d);
-
+					// Hide the id column
+					resultTable.removeColumn(resultTable.getColumnModel().getColumn(0));
 					resultTable.setFillsViewportHeight(true);
 					resultTable.setRowHeight(30);
 					resultTable.setFont(new Font("Georgia", Font.PLAIN, 16));

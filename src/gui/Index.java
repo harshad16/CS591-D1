@@ -2,23 +2,18 @@ package src.gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-
 import src.entities.User;
 import src.service.UserService;
-
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -28,19 +23,19 @@ import java.awt.Color;
 
 public class Index {
 
-	JFrame frame;
-	private JTextField textField;
-	private JPasswordField textField_1;
-
 	/**
-	 * Launch the application.
+	 * TODO: Write the Doc
 	 */
+	public JFrame mainFrame;
+	private JTextField usernameText;
+	private JPasswordField passwordText;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Index window = new Index();
-					window.frame.setVisible(true);
+					window.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,57 +43,51 @@ public class Index {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Index() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1280, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		mainFrame = new JFrame();
+		mainFrame.setBounds(100, 100, 1280, 720);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Index.class.getResource("/src/misc/logo.png")));
-		lblNewLabel.setBounds(561, 57, 200, 200);
-		frame.getContentPane().add(lblNewLabel);
+		JLabel logoLabel = new JLabel();
+		logoLabel.setIcon(new ImageIcon(Index.class.getResource("/src/misc/logo.png")));
+		logoLabel.setBounds(561, 57, 200, 200);
+		mainFrame.getContentPane().add(logoLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("USERNAME");
-		lblNewLabel_1.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblNewLabel_1.setIcon(new ImageIcon(Index.class.getResource("/src/misc/user.png")));
-		lblNewLabel_1.setBounds(462, 313, 174, 60);
-		frame.getContentPane().add(lblNewLabel_1);
+		JLabel usernameLabel = new JLabel("USERNAME");
+		usernameLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		usernameLabel.setIcon(new ImageIcon(Index.class.getResource("/src/misc/user_32x32.png")));
+		usernameLabel.setBounds(462, 313, 174, 60);
+		mainFrame.getContentPane().add(usernameLabel);
 		
-		JLabel lblNewLabel_2 = new JLabel("PASSWORD");
-		lblNewLabel_2.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblNewLabel_2.setIcon(new ImageIcon(Index.class.getResource("/src/misc/password.png")));
-		lblNewLabel_2.setBounds(462, 400, 174, 60);
-		frame.getContentPane().add(lblNewLabel_2);
+		JLabel passwordLabel = new JLabel("PASSWORD");
+		passwordLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		passwordLabel.setIcon(new ImageIcon(Index.class.getResource("/src/misc/password_32x32.png")));
+		passwordLabel.setBounds(462, 386, 174, 60);
+		mainFrame.getContentPane().add(passwordLabel);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Georgia", Font.PLAIN, 16));
-		textField.setBounds(658, 326, 164, 35);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		usernameText = new JTextField();
+		usernameText.setFont(new Font("Georgia", Font.PLAIN, 16));
+		usernameText.setBounds(658, 326, 164, 35);
+		mainFrame.getContentPane().add(usernameText);
+		usernameText.setColumns(10);
 		
-		textField_1 = new JPasswordField();
-		textField_1.setBounds(658, 414, 164, 35);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		passwordText = new JPasswordField();
+		passwordText.setBounds(658, 400, 164, 35);
+		mainFrame.getContentPane().add(passwordText);
+		passwordText.setColumns(10);
 		
-		JButton btnNewButton = new JButton("LogIn");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton loginButton = new JButton("LogIn");
+		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//validation starts here
 				try {
-				String userName = textField.getText();
-				char[] password = textField_1.getPassword();
+				String userName = usernameText.getText();
+				char[] password = passwordText.getPassword();
 				User user = new User(userName, String.valueOf(password));
 				boolean isUser;
 					isUser = checkUserAndPassword(user);
@@ -106,98 +95,105 @@ public class Index {
 						//if correct, new window to show other logic	
 						Home _home = new Home(user.getUserName());
 						_home.setVisible(true);
-						frame.setVisible(false);
+						mainFrame.setVisible(false);
 					}
 					else {
-						JOptionPane.showMessageDialog(frame, "Password or Username is not correct");	
+						JOptionPane.showMessageDialog(mainFrame, "Password or Username is not correct");	
 					}	
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
-		btnNewButton.setBounds(610, 543, 122, 46);
-		frame.getContentPane().add(btnNewButton);
+		loginButton.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){
+					//validation starts here
+					try {
+					String userName = usernameText.getText();
+					char[] password = passwordText.getPassword();
+					User user = new User(userName, String.valueOf(password));
+					boolean isUser;
+						isUser = checkUserAndPassword(user);
+						if(isUser) {
+							//if correct, new window to show other logic	
+							Home _home = new Home(user.getUserName());
+							_home.setVisible(true);
+							mainFrame.setVisible(false);
+						}
+						else {
+							JOptionPane.showMessageDialog(mainFrame, "Password or Username is not correct");	
+						}	
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+		        }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {}
+
+			@Override
+			public void keyTyped(KeyEvent e) {}
+		});
+		loginButton.setFont(new Font("Georgia", Font.BOLD, 16));
+		loginButton.setBounds(610, 543, 122, 46);
+		mainFrame.getContentPane().add(loginButton);
 		
-		JLabel lblNewLabel_3 = new JLabel("Forgot Password?");
-		lblNewLabel_3.addMouseListener(new MouseListener () {
+		JLabel forgotPasswordButton = new JLabel("Forgot Password?");
+		forgotPasswordButton.addMouseListener(new MouseListener () {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				// Goto Forgot Password page
 				ForgotPassword forgot_password = new ForgotPassword();
 				forgot_password.setVisible(true);
-				frame.setVisible(false);
-				
+				mainFrame.setVisible(false);	
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) {}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) {}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent arg0) {}
 			
 		});
-		lblNewLabel_3.setForeground(Color.BLUE);
-		lblNewLabel_3.setBounds(590, 603, 107, 16);
-		frame.getContentPane().add(lblNewLabel_3);
+		forgotPasswordButton.setForeground(Color.BLUE);
+		forgotPasswordButton.setBounds(590, 603, 107, 16);
+		mainFrame.getContentPane().add(forgotPasswordButton);
 		
-		JLabel lblNewLabel_4 = new JLabel("SignUp");
-		lblNewLabel_4.addMouseListener(new MouseListener () {
+		JLabel signupButton = new JLabel("SignUp");
+		signupButton.addMouseListener(new MouseListener () {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				// Goto SignUp page
 				Signup sign_up = new Signup();
 				sign_up.setVisible(true);
-				frame.setVisible(false);
+				mainFrame.setVisible(false);
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e) {}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent e) {}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent e) {}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent e) {}
 		});
-		lblNewLabel_4.setForeground(Color.BLUE);
-		lblNewLabel_4.setBounds(705, 602, 56, 16);
-		frame.getContentPane().add(lblNewLabel_4);
+		signupButton.setForeground(Color.BLUE);
+		signupButton.setBounds(705, 602, 56, 16);
+		mainFrame.getContentPane().add(signupButton);
 		
 	}
 

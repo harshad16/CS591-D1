@@ -1,83 +1,106 @@
 package src.entities;
 
-import java.io.Serializable;
 
-public class Grade implements Serializable {
-    private Integer gradeId;
-    private Integer studentId;
+public class Grade {
+
+    private Integer id;
     private Integer assignmentId;
+    private Integer studentId;
+    private String note;
     private Double grade;
 
-    public void setStudentId(Integer studentId) {
+    private Student student;
+    private Assignment assignment;
+
+    public Grade() {
+        this.id = null;
+        this.assignmentId = null;
+        this.studentId = null;
+        this.note = null;
+        this.grade = null;
+        this.student = null;
+        this.assignment = null;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Assignment getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
+
+    public Grade(Integer assignmentId, Integer studentId, String note, Double grade) {
+        this();
+        this.assignmentId =assignmentId;
         this.studentId = studentId;
+        this.note = note;
+        this.grade = grade;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getId() {
+        return id;
     }
 
-    public Double getGrade() {
-        return grade;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getAssignmentId() {
         return assignmentId;
     }
 
-    public Integer getGradeId() {
-        return gradeId;
-    }
-
     public void setAssignmentId(Integer assignmentId) {
         this.assignmentId = assignmentId;
     }
 
-    public void setGrade(Double grade) {
+    @Override
+    public String toString() {
+        return "Grade{" +
+                "id=" + id +
+                ", assignmentId=" + assignmentId +
+                ", studentId=" + studentId +
+                ", note='" + note + '\'' +
+                ", grade=" + grade +
+                ", student=" + student +
+                ", assignment=" + assignment +
+                '}';
+    }
+
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(double grade) {
         this.grade = grade;
     }
 
-    public void setGradeId(Integer gradeId) {
-        this.gradeId = gradeId;
-    }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + gradeId;
-        result = prime * result + studentId;
-        result = prime * result + assignmentId;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Grade other = (Grade) obj;
-        if (gradeId == null) {
-            if (other.gradeId != null)
-                return false;
-        } else if (!gradeId.equals(other.gradeId))
-            return false;
-        if (studentId == null) {
-            if (other.studentId != null)
-                return false;
-        } else if (!studentId.equals(other.studentId))
-            return false;
-        if(assignmentId == null) {
-            if(other.assignmentId != null) {
-                return false;
-            }
-        }else if(!assignmentId.equals(other.assignmentId)) {
-            return false;
-        }
-
-        return true;
-    }
 
 }

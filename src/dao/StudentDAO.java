@@ -54,17 +54,14 @@ public class StudentDAO extends BaseDAO<Student>{
         
     }
 
-//    public List<Student> readStudents(String firstName) throws SQLException {
-//        if (firstName!= null && !firstName.isEmpty()) {
-//            firstName = "%" + firstName + "%";
-//            return readAll("SELECT * FROM student WHERE first_name like ?", new Object[] { firstName });
-//        } else {
-//            return readAll("SELECT * FROM student", null);
-//        }
-//
-//    }
+    public List<Student> findStudentById(Integer id) throws SQLException {
+        if (id!= null) {
+            return readAll("SELECT * FROM student WHERE id = ?", new Object[] { id });
+        }   
+        return readAll("SELECT * FROM student", null);
+    }
     
-    public List<Student> findStudentById(String buId) throws SQLException {
+    public List<Student> findStudentByBUId(String buId) throws SQLException {
     		if(buId != null) {
     			return readAll("SELECT * FROM student WHERE studentid = ?", new Object[] { buId });
     		}

@@ -37,14 +37,8 @@ public class ClassDAO extends BaseDAO<ClassEntity>{
         return readAll("SELECT * FROM class", null);
     }
 
-    public List<ClassEntity> readCLasses(String searchString) throws SQLException {
-        if (searchString!= null && !searchString.isEmpty()) {
-            searchString = "%" + searchString + "%";
-            return readAll("SELECT * FROM class WHERE courseName like ?", new Object[] { searchString });
-        } else {
-            return readAll("SELECT * FROM class", null);
-        }
-
+    public List<ClassEntity> readCLasses(Integer searchString) throws SQLException {
+       return readAll("SELECT * FROM class WHERE courseid = ?", new Object[] { searchString }); 
     }
 
 

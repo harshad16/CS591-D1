@@ -1,32 +1,54 @@
 package src.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import src.entities.Assignment;
+import src.entities.ClassEntity;
+import src.entities.Grade;
+import src.entities.Student;
+import src.service.AssignmentService;
+import src.service.ClassService;
+import src.service.GradeService;
+import src.service.StudentService;
+
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
 public class Dashboard extends JFrame {
-
+	
+	/**
+	 * TODO: Write the doc.
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private JLabel usernameText;
 	private String userName;
+	private DefaultTableModel tableModel;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -40,10 +62,12 @@ public class Dashboard extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Dashboard() {
+	public Dashboard() throws SQLException {
+		initializeDashboard(true);			
+	}
+	
+	public void initializeDashboard(boolean def) throws SQLException {
+
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -51,188 +75,177 @@ public class Dashboard extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Home.class.getResource("/src/misc/user.png")));
-		lblNewLabel.setBounds(1012, 29, 42, 77);
-		contentPane.add(lblNewLabel);
+		JLabel usernameLabel = new JLabel("Username:");
+		usernameLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/user_32x32.png")));
+		usernameLabel.setFont(new Font("Georgia", Font.BOLD, 14));
+		usernameLabel.setBounds(1025, 50, 125, 30);
+		contentPane.add(usernameLabel);
 		
-		JLabel lblUsername = new JLabel("Username:");
-		lblUsername.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblUsername.setBounds(1066, 51, 102, 29);
-		contentPane.add(lblUsername);
+		usernameText = new JLabel();
+		usernameText.setText(userName);
+		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		usernameText.setBounds(1150, 50, 100, 30);
+		contentPane.add(usernameText);
 		
-		
-		JLabel lblNewLabel_3 = new JLabel("Return");
-		lblNewLabel_3.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
-		lblNewLabel_3.setBounds(30, 30, 50, 41);
-		contentPane.add(lblNewLabel_3, BorderLayout.WEST);
-		lblNewLabel_3.addMouseListener(new MouseListener () {
-
+		JLabel returnLabel = new JLabel();
+		returnLabel.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
+		returnLabel.setBounds(30, 30, 50, 40);
+		contentPane.add(returnLabel, BorderLayout.WEST);
+		returnLabel.addMouseListener(new MouseListener () {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				Home _home = new Home();
+				// Return to Home Page
+				Home _home = new Home(userName);
 				_home.setVisible(true);
 				setVisible(false);
-				
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) {}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) {}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent arg0) {}
 		});
 		
 		
-		JLabel lblNewLabel_2 = new JLabel("Course Name:");
-		lblNewLabel_2.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_2.setBounds(215, 22, 95, 22);
-		contentPane.add(lblNewLabel_2);
+		JLabel courseNameLabel = new JLabel("Course Name:");
+		courseNameLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseNameLabel.setBounds(215, 22, 95, 22);
+		contentPane.add(courseNameLabel);
 		
-		JLabel lblNewLabel_4 = new JLabel("Course Id:");
-		lblNewLabel_4.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_4.setBounds(215, 51, 95, 25);
-		contentPane.add(lblNewLabel_4);
+		JLabel courseIdLabel = new JLabel("Course Id:");
+		courseIdLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseIdLabel.setBounds(215, 51, 95, 25);
+		contentPane.add(courseIdLabel);
 		
-		JLabel lblYear = new JLabel("Year:");
-		lblYear.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblYear.setBounds(215, 80, 95, 26);
-		contentPane.add(lblYear);
+		JLabel courseYearLabel = new JLabel("Year:");
+		courseYearLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseYearLabel.setBounds(215, 80, 95, 26);
+		contentPane.add(courseYearLabel);
 		
-		JLabel lblJava = new JLabel("Java");
-		lblJava.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblJava.setBounds(322, 20, 263, 26);
-		contentPane.add(lblJava);
+		JLabel courseNameText = new JLabel("Java");
+		courseNameText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseNameText.setBounds(322, 20, 263, 26);
+		contentPane.add(courseNameText);
 		
-		JLabel lblCs = new JLabel("CS591");
-		lblCs.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblCs.setBounds(322, 52, 251, 26);
-		contentPane.add(lblCs);
+		JLabel courseIdText = new JLabel("CS591");
+		courseIdText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseIdText.setBounds(322, 52, 251, 26);
+		contentPane.add(courseIdText);
 		
-		JLabel lblFall = new JLabel("Fall 2018");
-		lblFall.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblFall.setBounds(322, 80, 251, 26);
-		contentPane.add(lblFall);
+		JLabel courseYearText = new JLabel("Fall 2018");
+		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		courseYearText.setBounds(322, 80, 251, 26);
+		contentPane.add(courseYearText);
 		
-		JLabel lblHome = new JLabel("");
-		lblHome.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));
-		lblHome.addMouseListener(new MouseListener () {
-
+		JLabel homeLabel = new JLabel();
+		homeLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));
+		homeLabel.addMouseListener(new MouseListener () {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				Home _home = new Home();
+				// Goto Home Page
+				Home _home = new Home(userName);
 				_home.setVisible(true);
 				setVisible(false);
-				
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) {}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) {}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent arg0) {}
 		});
-		lblHome.setBounds(92, 29, 33, 41);
-		contentPane.add(lblHome);
+		homeLabel.setBounds(90, 30, 50, 40);
+		contentPane.add(homeLabel);
 		
-		JButton btnNewButton = new JButton("Add Assignment");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Dashboard _assgn = new Dashboard("Assignment");
-				_assgn.setVisible(true);
-				setVisible(false);
-			}
-		});
-		btnNewButton.setBounds(30, 309, 133, 101);
-		contentPane.add(btnNewButton);
-		btnNewButton.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/add_course.png")));
-		btnNewButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnNewButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		// TODO: Initially show the Dash board if no setup is selected.
+		if(def) { 
+			setDashboard("Dashboard");
+		}
 		
-		JButton btnNewButton_1 = new JButton("Add Students");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton addAssignmentButton = new JButton("Add Assignment");
+		addAssignmentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _std = new Dashboard("Student");
-				_std.setVisible(true);
-				setVisible(false);
+				try {
+					displayPanel("Assignment");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
-		btnNewButton_1.setBounds(30, 423, 133, 101);
-		contentPane.add(btnNewButton_1);
-		btnNewButton_1.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/add_course.png")));
-		btnNewButton_1.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnNewButton_1.setHorizontalTextPosition(SwingConstants.CENTER);
+		addAssignmentButton.setBounds(30, 309, 133, 101);
+		contentPane.add(addAssignmentButton);
+		addAssignmentButton.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/add_course.png")));
+		addAssignmentButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		addAssignmentButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		
-		JButton btnViewStats = new JButton("View Stats");
-		btnViewStats.addActionListener(new ActionListener() {
+		JButton addStudentButton = new JButton("Add Students");
+		addStudentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _stats = new Dashboard("Stats");
-				_stats.setVisible(true);
-				setVisible(false);
+				try {
+					displayPanel("Student");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
-		btnViewStats.setBounds(30, 537, 133, 103);
-		contentPane.add(btnViewStats);
-		btnViewStats.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/view_stats.png")));
-		btnViewStats.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnViewStats.setHorizontalTextPosition(SwingConstants.CENTER);
+		addStudentButton.setBounds(30, 423, 133, 101);
+		contentPane.add(addStudentButton);
+		addStudentButton.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/add_course.png")));
+		addStudentButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		addStudentButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		
-		JButton btnDashboard = new JButton("Dashboard");
-		btnDashboard.addActionListener(new ActionListener() {
+		JButton viewStatsButton = new JButton("View Stats");
+		viewStatsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Dashboard _dashboard = new Dashboard("");
-				_dashboard.setVisible(true);
-				setVisible(false);
+				try {
+					displayPanel("Stats");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
-		btnDashboard.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/dashboard.png")));
-		btnDashboard.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnDashboard.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnDashboard.setBounds(30, 200, 133, 96);
-		contentPane.add(btnDashboard);
-			
+		viewStatsButton.setBounds(30, 537, 133, 103);
+		contentPane.add(viewStatsButton);
+		viewStatsButton.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/view_stats.png")));
+		viewStatsButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		viewStatsButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		
+		JButton dashboardButton = new JButton("Dashboard");
+		dashboardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					displayPanel("Dashboard");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		dashboardButton.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/dashboard.png")));
+		dashboardButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		dashboardButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		dashboardButton.setBounds(30, 200, 133, 96);
+		contentPane.add(dashboardButton);
 	}
 	
-	public Dashboard(String panel_type){
-		this();
+	public void displayPanel(String panel_type) throws SQLException{
+		initializeDashboard(false);
 		if (panel_type.equals("Assignment")) {
 			AddAssignments obj = new AddAssignments();
 	        obj.setVisible(true);
@@ -255,50 +268,240 @@ public class Dashboard extends JFrame {
 	        contentPane.repaint();
 		}
 		else {
-			JPanel panel = new JPanel();
-			panel.setBounds(215, 146, 1021, 527);
-			panel.setLayout(null);
-			contentPane.add(panel_type,panel);
-			((JPanel) contentPane).revalidate();
-			contentPane.repaint();
-			
-			String[] columnNames = {"First Name",
-	                "Last Name",
-	                "BU-ID",
-	                "Project",
-	                "Final",
-	                "Grade"};
-			Object[][] data = {
-				    {"Kathy", "Smith",
-				     "U123456789", new Integer(95), new Integer(93), "A"},
-				    {"John", "Doe",
-				     "U87654321", new Integer(93), new Integer(93), "A"}
-				};
-			
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setBounds(12, 13, 949, 459);
-			panel.add(scrollPane);
-			
-			
-			table = new JTable(data, columnNames);
-			scrollPane.setViewportView(table);
-			
-			
-			JButton btnNewButton_2 = new JButton("Save");
-			btnNewButton_2.setBounds(755, 485, 97, 25);
-			panel.add(btnNewButton_2);
-			
-			JButton btnNewButton_3 = new JButton("Clear");
-			btnNewButton_3.setBounds(864, 485, 97, 25);
-			panel.add(btnNewButton_3);
+			setDashboard("Dashboard");
 		}
 	}
 	
 	public void setUserName(String userName) {
 		this.userName = userName;
-		JLabel lblNewLabel_1 = new JLabel(userName);
-		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(1149, 54, 74, 22);
-		contentPane.add(lblNewLabel_1);
+		this.usernameText.setText(userName);
+		
 	}
+
+	public void setDashboard(String panel_type) throws SQLException {
+		JPanel panel = new JPanel();
+		panel.setBounds(215, 146, 1021, 527);
+		panel.setLayout(null);
+		contentPane.add(panel_type,panel);
+		((JPanel) contentPane).revalidate();
+		contentPane.repaint();
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 13, 949, 459);
+		scrollPane.setHorizontalScrollBarPolicy(
+				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(
+				   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		panel.add(scrollPane);
+		
+		
+		// TODO get course id
+		int cid = 2;
+		ClassService  clsService = new ClassService();
+		StudentService sService = new StudentService();
+		AssignmentService aService = new AssignmentService();
+		GradeService gService = new GradeService();
+		
+		
+		List<ClassEntity> classes = clsService.readClasses(cid);
+		List<Student> students;
+		List<Assignment> assignment;
+		List<Grade> grade;
+		
+		
+		// TODO: Built Column Name based upon assignment as well
+		ArrayList<String> colNameList = new ArrayList<String>();
+		String[] values = {"Sid(hidden)","First Name","Last Name","BU-ID","Degree"};
+		for(String v:values) {
+			colNameList.add(v);
+		}
+		assignment = aService.readAssignmentByCID(cid);
+		for (Assignment asgnE: assignment) {
+//			System.out.println("AssignmentAttributes:"+asgnE);
+			colNameList.add(asgnE.getName());
+		}
+		colNameList.add("Grade");
+		String[] columnNames = new String[colNameList.size()];
+		columnNames = colNameList.toArray(columnNames);
+		
+		
+		Object[][] data = new Object[classes.size()][columnNames.length];
+		// Initialize with student info
+		int rowCount=0;
+		for (ClassEntity clsE: classes) {
+        	students = sService.findStudentById(clsE.getStudentId());
+        	Object[] row = new Object[columnNames.length];
+        	for(Student std : students) {
+				row[0]=std.getId();
+				row[1]=std.getFirstName();
+				row[2]=std.getLastName();
+				row[3]=std.getStudentId(); 
+				row[4]=std.getType();
+				
+				grade = gService.readGradesByStudentId((Integer)std.getId());
+				for(Grade grd:grade) {
+//					System.out.println("GradeAttributes:"+grd);
+//					System.out.println(columnNames[5]);
+					for(int j=5;j<columnNames.length-1;j++) {
+						if(columnNames[j].equals(grd.getAssignment().getName())) {
+							row[j]=grd.getGrade();
+							break;
+						}
+					}
+				}
+    			// Create a check method to see if student is already added to class
+    			data[rowCount] = row;
+    			rowCount++;
+    		}
+		}
+		
+		
+		// TODO: GET VALUES from Grades
+		for(int i=0;i<rowCount;i++) {
+			for(int j=5;j<columnNames.length;j++) {
+				if (j == columnNames.length-1) {
+					data[i][j]="";
+				}
+				else if (data[i][j]==null) {
+					data[i][j]=new Integer(0);	
+				}
+			}
+		}
+		
+		// TODO: calculate GRADES
+		
+		
+		tableModel=new DefaultTableModel(data, columnNames){
+			private static final long serialVersionUID = 1L;
+			
+			// This Method is to make a column not be Editable on Table.
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return column == data[0].length-1 || column <= 4 ? false: true; 
+		    }
+		    
+		    // This Method Renders Checkbox on Table.
+		    @Override
+		    public Class<?> getColumnClass(int columnIndex) {
+		        return getValueAt(0, columnIndex).getClass();
+		    }
+		};
+		
+		
+		table = new JTable(tableModel);
+		table.setPreferredScrollableViewportSize(new Dimension(400, 400));
+		table.getTableHeader().setForeground(SystemColor.textHighlight);
+		table.getTableHeader().setFont(new Font("Georgia", Font.BOLD, 16));
+		table.getTableHeader().setReorderingAllowed(false);
+		Dimension d = table.getTableHeader().getPreferredSize();
+		d.height = 30;
+		table.getTableHeader().setSize(d);
+		table.setFillsViewportHeight(true);
+		table.setRowHeight(30);
+		table.setFont(new Font("Georgia", Font.PLAIN, 16));
+		// Hide the id column
+		table.removeColumn(table.getColumnModel().getColumn(0));
+		scrollPane.setViewportView(table);
+		
+		
+		JButton saveButton = new JButton("Save");
+		saveButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Integer assignmentId = null;
+				Integer sid;
+				Double grade = null;
+				GradeService gService = new GradeService();
+//				System.out.println("Dashboard Elements: ");
+				for (int row = 0; row < table.getRowCount(); row++){
+					sid = (Integer) tableModel.getValueAt(row, 0);
+					for (int col = 4; col < table.getColumnCount()-1; col++){
+//						System.out.print(table.getValueAt(row, col)+" ");
+						// Fields Integer assignmentId, Integer studentId, String note, Double grade
+						for (Assignment asgnE: assignment) {
+//							System.out.println("AssignmentAttributes:"+table.getColumnName(col));
+//							System.out.println("AssignmentName:"+asgnE.getName());
+							if (asgnE.getName().equals(table.getColumnName(col))) {
+								assignmentId = asgnE.getAssignmentId();
+//								System.out.println("AssignmentId:"+asgnE.getAssignmentId());
+								grade = ((Number) table.getValueAt(row, col)).doubleValue();
+								break;
+							}
+						}
+						// Saving the Grades.
+						Grade stdGrade = new Grade(assignmentId,sid,"",grade);
+						try {
+							gService.saveGrade(stdGrade);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				JOptionPane.showMessageDialog(Dashboard.this, "Successfully Saved Scores!");
+			}
+		});
+		saveButton.setBounds(755, 485, 97, 25);
+		panel.add(saveButton);
+		
+		
+		JButton clearButton = new JButton("Clear");
+		// TODO: Need to Come up with better logic
+		clearButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				model.setRowCount(0);
+			}
+		});
+		clearButton.setBounds(864, 485, 97, 25);
+		panel.add(clearButton);
+		
+		JLabel gradeButton = new JLabel();
+		gradeButton.setIcon(new ImageIcon(AddAssignments.class.getResource("/src/misc/logo_32x32.png")));
+		// WIP: working on better logic
+		gradeButton.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Double score = 0.0;
+				Double grade = null;
+				GradeService gService = new GradeService();
+//				System.out.println("Dashboard Elements: ");
+				for (int row = 0; row < table.getRowCount(); row++){
+					for (int col = 4; col < table.getColumnCount()-1; col++){
+//						System.out.print(table.getValueAt(row, col)+" ");
+						// Fields Integer assignmentId, Integer studentId, String note, Double grade
+						for (Assignment asgnE: assignment) {
+//							System.out.println("AssignmentAttributes:"+table.getColumnName(col));
+//							System.out.println("AssignmentName:"+asgnE.getName());
+							if (asgnE.getName().equals(table.getColumnName(col))) {
+								score += (asgnE.getWeight()*((Number) table.getValueAt(row, col)).doubleValue())/100;
+							}
+						}
+					}
+				}
+				JOptionPane.showMessageDialog(Dashboard.this, "Successfully Saved Scores!");
+			
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+			
+		});
+		gradeButton.setBounds(696, 476, 32, 38);
+		panel.add(gradeButton);
+
+	}
+
 }
