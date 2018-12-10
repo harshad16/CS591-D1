@@ -205,8 +205,6 @@ public class Index {
 		UserService uService = new UserService();
 		List<User> user = uService.findUserByUserName(u.getUserName());
 		if(user.size() != 0) {
-			System.out.println("user from db:" + user.get(0).getPassword());
-			System.out.println("user from input:" + u.getPassword());
 			if(user.get(0).getPassword().equals(u.getPassword())) {
 				return true;
 			}

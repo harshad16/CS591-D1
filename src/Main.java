@@ -57,7 +57,7 @@ public class Main {
 
             //testing readCourses
             List<Course> courses = cService.readCourses("intro to programming");
-            List<Student> students = sService.readStudents("Maral");
+            //List<Student> students = sService.readStudents("Maral");
             List<ClassEntity> classes = classService.readClasses(null);
 
             /*for (ClassEntity c: classes) {
@@ -69,9 +69,9 @@ public class Main {
                 System.out.println(c);
             }
 
-            for (Student s: students) {
-                System.out.println(s);
-            }
+//            for (Student s: students) {
+//                System.out.println(s);
+//            }
             //testing delete courses
             //cService.deleteCourse(courses.get(0));
             //sService.deleteStudent(students.get(0));

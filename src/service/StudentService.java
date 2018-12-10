@@ -53,12 +53,12 @@ public class StudentService {
         }
     }
 
-    public List<Student> readStudents(String searchString) throws SQLException{
+    public List<Student> findStudentByLastName(String lastName) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
             StudentDAO sdao = new StudentDAO(conn);
-            return sdao.readStudents(searchString);
+            return sdao.findStudentByLastName(lastName);
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally{
@@ -85,5 +85,21 @@ public class StudentService {
     		}
     		return null;
     }
+    
+    public List<Student> findStudentByFirstName(String firstName) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = util.getConnection();
+			StudentDAO sdao = new StudentDAO(conn);
+			return sdao.findStudentByFirstName(firstName);
+		}catch(InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			 e.printStackTrace();
+		}finally{
+            if(conn!=null){
+                conn.close();
+            }
+		}
+		return null;
+}
 
 }

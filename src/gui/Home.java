@@ -153,6 +153,7 @@ public class Home extends JFrame {
 		btnCs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Dashboard _dashboard = new Dashboard();
+				_dashboard.setUserName(userName);
 				_dashboard.setVisible(true);
 				setVisible(false);
 			}
