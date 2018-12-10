@@ -70,7 +70,7 @@ public class StudentService {
         return null;
     }
     
-    public List<Student> findStudentById(String id) throws SQLException{
+    public List<Student> findStudentById(Integer id) throws SQLException{
     		Connection conn = null;
     		try {
     			conn = util.getConnection();
@@ -84,6 +84,23 @@ public class StudentService {
                 }
     		}
     		return null;
+    }
+    
+    
+    public List<Student> findStudentByBUId(String id) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = util.getConnection();
+			StudentDAO sdao = new StudentDAO(conn);
+			return sdao.findStudentByBUId(id);
+		}catch(InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			 e.printStackTrace();
+		}finally{
+            if(conn!=null){
+                conn.close();
+            }
+		}
+		return null;
     }
     
     public List<Student> findStudentByFirstName(String firstName) throws SQLException{

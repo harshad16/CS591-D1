@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -20,20 +22,23 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import src.entities.SecurityQuestions;
 import src.entities.User;
 import src.service.UserService;
+import javax.swing.JComboBox;
+import java.awt.Color;
 
 public class Signup extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField textField_4;
-	private JPasswordField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-
 	/**
-	 * Launch the application.
+	 * SignUp Method: User Can register themselves with GradeIn  by Registering.
 	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField usernameTextField;
+	private JPasswordField passwordTextField;
+	private JTextField securityAnswerTextField;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -47,9 +52,6 @@ public class Signup extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Signup() {
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,135 +61,184 @@ public class Signup extends JFrame {
 		setContentPane(contentPane);
 
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/logo.png")));
-		lblNewLabel.setBounds(561, 13, 200, 200);
-		contentPane.add(lblNewLabel);
+		JLabel logoLabel = new JLabel();
+		logoLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/logo.png")));
+		logoLabel.setBounds(550, 15, 200, 200);
+		contentPane.add(logoLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("USERNAME");
-		lblNewLabel_1.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblNewLabel_1.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/user.png")));
-		lblNewLabel_1.setBounds(460, 248, 174, 60);
-		contentPane.add(lblNewLabel_1);
+		JLabel usernameLabel = new JLabel("USERNAME");
+		usernameLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		usernameLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/user_32x32.png")));
+		usernameLabel.setBounds(375, 261, 200, 35);
+		contentPane.add(usernameLabel);
 		
-		JLabel lblNewLabel_2 = new JLabel("PASSWORD");
-		lblNewLabel_2.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblNewLabel_2.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/password.png")));
-		lblNewLabel_2.setBounds(460, 335, 174, 60);
-		contentPane.add(lblNewLabel_2);
+		JLabel passwordLabel = new JLabel("PASSWORD");
+		passwordLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		passwordLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/password_32x32.png")));
+		passwordLabel.setBounds(375, 317, 200, 35);
+		contentPane.add(passwordLabel);
 		
-		JLabel lblSecurityQuestion = new JLabel("Security Question");
-		lblSecurityQuestion.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/question.png")));
-		lblSecurityQuestion.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblSecurityQuestion.setBounds(460, 419, 204, 60);
-		contentPane.add(lblSecurityQuestion);
+		JLabel securityQuestionLabel = new JLabel("Security Question");
+		securityQuestionLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/question_32x32.png")));
+		securityQuestionLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		securityQuestionLabel.setBounds(375, 382, 200, 35);
+		contentPane.add(securityQuestionLabel);
 		
-		JLabel lblSecurityAnswer = new JLabel("Security Answer");
-		lblSecurityAnswer.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/question.png")));
-		lblSecurityAnswer.setFont(new Font("Georgia", Font.BOLD, 16));
-		lblSecurityAnswer.setBounds(460, 499, 204, 60);
-		contentPane.add(lblSecurityAnswer);
+		JLabel securityAnswerLabel = new JLabel("Security Answer");
+		securityAnswerLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/question_32x32.png")));
+		securityAnswerLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+		securityAnswerLabel.setBounds(375, 438, 200, 35);
+		contentPane.add(securityAnswerLabel);
 		
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Georgia", Font.PLAIN, 16));
-		textField_4.setColumns(10);
-		textField_4.setBounds(676, 261, 164, 35);
-		contentPane.add(textField_4);
+		usernameTextField = new JTextField();
+		usernameTextField.setFont(new Font("Georgia", Font.PLAIN, 16));
+		usernameTextField.setColumns(10);
+		usernameTextField.setBounds(610, 261, 345, 35);
+		contentPane.add(usernameTextField);
 		
-		textField_5 = new JPasswordField();
-		textField_5.setFont(new Font("Georgia", Font.PLAIN, 16));
-		textField_5.setColumns(10);
-		textField_5.setBounds(676, 343, 164, 35);
-		contentPane.add(textField_5);
+		passwordTextField = new JPasswordField();
+		passwordTextField.setFont(new Font("Georgia", Font.PLAIN, 16));
+		passwordTextField.setColumns(10);
+		passwordTextField.setBounds(610, 317, 345, 35);
+		contentPane.add(passwordTextField);
 		
-		textField_6 = new JTextField();
-		textField_6.setFont(new Font("Georgia", Font.PLAIN, 16));
-		textField_6.setColumns(10);
-		textField_6.setBounds(676, 419, 164, 35);
-		contentPane.add(textField_6);
+		JComboBox<String> securityQuestionText = new JComboBox();
+		securityQuestionText.setEditable(true);
+		securityQuestionText.setFont(new Font("Georgia", Font.PLAIN, 16));
+		securityQuestionText.setBounds(610, 382, 345, 35);
+		SecurityQuestions sq = new SecurityQuestions();
+		securityQuestionText.insertItemAt("", 0); // Option to Write your own question or select from below
+		for (int i=0; i<sq.getAllQuestions().size();i++) {
+    		securityQuestionText.addItem((String) sq.getAllQuestions().get(i));
+    	}
+    	contentPane.add(securityQuestionText);
 		
-		textField_7 = new JTextField();
-		textField_7.setFont(new Font("Georgia", Font.PLAIN, 16));
-		textField_7.setColumns(10);
-		textField_7.setBounds(676, 496, 164, 35);
-		contentPane.add(textField_7);
+		securityAnswerTextField = new JTextField();
+		securityAnswerTextField.setFont(new Font("Georgia", Font.PLAIN, 16));
+		securityAnswerTextField.setColumns(10);
+		securityAnswerTextField.setBounds(610, 438, 345, 35);
+		contentPane.add(securityAnswerTextField);
 		
-		JButton btnNewButton = new JButton("Register");
-		btnNewButton.addActionListener(new ActionListener() {
-
+		JButton registerButton = new JButton("Register");
+		registerButton.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				String userName = textField_4.getText();
-				char[] password = textField_5.getPassword();
-				String securityQuestion = textField_6.getText();
-				String securityQuestionAnswer = textField_7.getText();
-				validation(userName, password, securityQuestion);
-				User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
-				try {
-					signUpforUser(user);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+				String userName = usernameTextField.getText();
+				char[] password = passwordTextField.getPassword();
+				String securityQuestion = (String) securityQuestionText.getSelectedItem();
+				String securityQuestionAnswer = securityAnswerTextField.getText();
+				if (validation(userName, password, securityQuestion)) {
+					User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
+					try {
+						signUpforUser(user);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 				}
-				
 			}
-			
 		});
-		btnNewButton.setFont(new Font("Georgia", Font.BOLD, 16));
-		btnNewButton.setBounds(617, 587, 112, 35);
-		contentPane.add(btnNewButton);
+		registerButton.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){
+		        	String userName = usernameTextField.getText();
+					char[] password = passwordTextField.getPassword();
+					String securityQuestion = (String) securityQuestionText.getSelectedItem();
+					String securityQuestionAnswer = securityAnswerTextField.getText();
+					if (validation(userName, password, securityQuestion)) {
+						User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
+						try {
+							signUpforUser(user);
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
+		        }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {}
+
+			@Override
+			public void keyTyped(KeyEvent e) {}
+		});
+		registerButton.setFont(new Font("Georgia", Font.BOLD, 16));
+		registerButton.setBounds(598, 522, 130, 41);
+		contentPane.add(registerButton);
 		
-		JLabel lblNewLabel_3 = new JLabel("Return");
-		lblNewLabel_3.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/back.png")));
-		lblNewLabel_3.setBounds(30, 30, 56, 41);
-		contentPane.add(lblNewLabel_3, BorderLayout.WEST);
-		lblNewLabel_3.addMouseListener(new MouseListener () {
+		JLabel returnLabel = new JLabel();
+		returnLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/back.png")));
+		returnLabel.setBounds(30, 30, 50, 40);
+		contentPane.add(returnLabel, BorderLayout.WEST);
+		returnLabel.addMouseListener(new MouseListener () {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				// Return to Index page(Login)
 				Index _index = new Index();
-				_index.frame.setVisible(true);
+				_index.mainFrame.setVisible(true);
+				setVisible(false);	
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+		});			
+
+		
+		JLabel forgotPasswordLabel = new JLabel("Forgot Password?");
+		forgotPasswordLabel.setForeground(Color.BLUE);
+		forgotPasswordLabel.setBounds(608, 576, 107, 16);
+		contentPane.add(forgotPasswordLabel);
+		forgotPasswordLabel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// Goto Forgot Password page
+				ForgotPassword forgot_password = new ForgotPassword();
+				forgot_password.setVisible(true);
 				setVisible(false);
-				
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) {}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) {}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+			public void mouseReleased(MouseEvent arg0) {}
 			
+		});
+
 	}
-	public void validation(String userName, char[] password, String securityQuestion) {
-		if(userName == null || userName == "") {
-			JOptionPane.showMessageDialog(contentPane, "Username cannot be nul!");	
-		}
+	
+	public boolean validation(String userName, char[] password, String securityQuestion) {
+		if(userName == null || userName.length() == 0) {
+			JOptionPane.showMessageDialog(contentPane, "Username cannot be nul!");
+			return false;
+		}	
 		if(password == null || password.length == 0) {
-			JOptionPane.showMessageDialog(contentPane, "Password cannot be null!");	
+			JOptionPane.showMessageDialog(contentPane, "Password cannot be null!");
+			return false;
 		}
 		if(securityQuestion == null || securityQuestion == "") {
-			JOptionPane.showMessageDialog(contentPane, "Security question cannot be null!");	
+			JOptionPane.showMessageDialog(contentPane, "Security question cannot be null!\n Write your own question or select from dropdown");
+			return false;
 		}
+		return true;
 	}
 	
 	public void signUpforUser(User u) throws SQLException {
@@ -199,8 +250,10 @@ public class Signup extends JFrame {
 		else {
 			System.out.println("signup user" + u.getPassword());
 			uService.saveUser(u);
-			JOptionPane.showMessageDialog(contentPane, "Sucess!");	
+			JOptionPane.showMessageDialog(contentPane, "Sucess!");
+			Home _home = new Home(u.getUserName());
+			_home.setVisible(true);
+			setVisible(false);
 		}
 	}
-
 }

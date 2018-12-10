@@ -21,6 +21,10 @@ import src.service.StudentService;
 
 public class AddStudentDB extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -254,7 +258,7 @@ public class AddStudentDB extends JPanel {
 			}
 		else {
 			JOptionPane.showMessageDialog(panel, "Type cannot be null!");	
-			return checkisSelected();
+			return "";
 		}
 	}
 	
@@ -262,7 +266,7 @@ public class AddStudentDB extends JPanel {
 		StudentService sService = new StudentService();
 		List<Student> student;
 		try {
-			student = sService.findStudentById(s.getStudentId());
+			student = sService.findStudentByBUId(s.getStudentId());
 			if(!student.isEmpty()) {
 				//System.out.println(student.get(0));
 				return true;

@@ -137,6 +137,19 @@ CREATE TABLE IF NOT EXISTS `grading_system`.`security` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+-- -----------------------------------------------------
+-- Table `grading_system`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `grading_system`.`user` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `securityQuestion` MEDIUMTEXT NULL DEFAULT NULL,
+  `securityQuestionAnswer` MEDIUMTEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`username`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

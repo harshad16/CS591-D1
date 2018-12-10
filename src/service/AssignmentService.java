@@ -4,27 +4,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import src.dao.ClassDAO;
-import src.entities.ClassEntity;
+import src.dao.AssignmentDAO;
+import src.entities.Assignment;
 
-
-public class ClassService {
-
+public class AssignmentService {
     public Utilities util;
 
-    public ClassService() {
+    public AssignmentService() {
         util = new Utilities();
     }
 
-    public void saveClass(ClassEntity c) throws SQLException{
+    public void saveAssignment(Assignment a) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            if(c.getClassId()!=null){
-                cdao.updateClass(c);
+            AssignmentDAO adao = new AssignmentDAO(conn);
+            if(a.getAssignmentId()!=null){
+                adao.updateAssignment(a);
             }else{
-                cdao.saveClass(c);
+                adao.saveAssignment(a);
             }
             conn.commit();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
@@ -37,12 +35,12 @@ public class ClassService {
         }
     }
 
-    public void deleteClass(ClassEntity c) throws SQLException{
+    public void deleteAssignment(Assignment a) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            cdao.deleteClass(c);
+            AssignmentDAO adao = new AssignmentDAO(conn);
+            adao.deleteAssignment(a);
             conn.commit();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -54,12 +52,29 @@ public class ClassService {
         }
     }
 
-    public List<ClassEntity> readClasses(Integer searchString) throws SQLException{
+    public List<Assignment> readAssignments(String searchString) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            return cdao.readCLasses(searchString);
+            AssignmentDAO adao = new AssignmentDAO(conn);
+            return adao.readAssignments(searchString);
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally{
+            if(conn!=null){
+                conn.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public List<Assignment> readAssignmentByCID(Integer cid) throws SQLException{
+        Connection conn = null;
+        try {
+            conn = util.getConnection();
+            AssignmentDAO adao = new AssignmentDAO(conn);
+            return adao.readAssignmentByCID(cid);
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally{

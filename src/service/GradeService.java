@@ -4,27 +4,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import src.dao.ClassDAO;
-import src.entities.ClassEntity;
+import src.dao.GradeDAO;
+import src.entities.Grade;
 
-
-public class ClassService {
-
+public class GradeService {
     public Utilities util;
 
-    public ClassService() {
+    public GradeService() {
         util = new Utilities();
     }
 
-    public void saveClass(ClassEntity c) throws SQLException{
+    public void saveGrade(Grade g) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            if(c.getClassId()!=null){
-                cdao.updateClass(c);
+            GradeDAO gdao = new GradeDAO(conn);
+            if(g.getId()!=null){
+                gdao.updateGrade(g);
             }else{
-                cdao.saveClass(c);
+                gdao.saveGrade(g);
             }
             conn.commit();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
@@ -37,12 +35,12 @@ public class ClassService {
         }
     }
 
-    public void deleteClass(ClassEntity c) throws SQLException{
+    public void deleteGrade(Grade g) throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            cdao.deleteClass(c);
+            GradeDAO gdao = new GradeDAO(conn);
+            gdao.deleteGrade(g);;
             conn.commit();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -54,12 +52,12 @@ public class ClassService {
         }
     }
 
-    public List<ClassEntity> readClasses(Integer searchString) throws SQLException{
+    public List<Grade> readGrades() throws SQLException{
         Connection conn = null;
         try {
             conn = util.getConnection();
-            ClassDAO cdao = new ClassDAO(conn);
-            return cdao.readCLasses(searchString);
+            GradeDAO gdao = new GradeDAO(conn);
+            return gdao.readAllGrades();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally{
@@ -70,5 +68,21 @@ public class ClassService {
 
         return null;
     }
+    
+    public List<Grade> readGradesByStudentId(Integer studentId) throws SQLException{
+        Connection conn = null;
+        try {
+            conn = util.getConnection();
+            GradeDAO gdao = new GradeDAO(conn);
+            return gdao.readGradesByStudentId(studentId);
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally{
+            if(conn!=null){
+                conn.close();
+            }
+        }
 
+        return null;
+    }
 }

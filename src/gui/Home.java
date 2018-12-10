@@ -1,37 +1,34 @@
 package src.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.awt.CardLayout;
-import javax.swing.JTextPane;
-import javax.swing.JSpinner;
-import java.awt.GridLayout;
-import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class Home extends JFrame {
 
+	/**
+	 * TODO: Write the doc.
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private String userName;
+	private JLabel usernameText;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,9 +42,6 @@ public class Home extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Home() {
 		initComponents();
 	}
@@ -55,11 +49,7 @@ public class Home extends JFrame {
 	public Home(String userName) {
 		this();
 		this.userName = userName;
-		JLabel lblNewLabel_1 = new JLabel(userName);
-		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(1149, 54, 74, 22);
-		contentPane.add(lblNewLabel_1);
-		
+		this.usernameText.setText(userName);
 	}
 	
 	public void initComponents() {
@@ -70,104 +60,76 @@ public class Home extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Home.class.getResource("/src/misc/user.png")));
-		lblNewLabel.setBounds(1012, 29, 42, 77);
-		contentPane.add(lblNewLabel);
 		
-		JLabel lblUsername = new JLabel("Username:");
-		lblUsername.setFont(new Font("Georgia", Font.PLAIN, 14));
-		lblUsername.setBounds(1066, 51, 102, 29);
-		contentPane.add(lblUsername);
-		
-//		JLabel lblNewLabel_1 = new JLabel("New label");
-//		lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 14));
-//		lblNewLabel_1.setBounds(1149, 54, 74, 22);
-//		contentPane.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_3 = new JLabel("Return");
-		lblNewLabel_3.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
-		lblNewLabel_3.setBounds(12, 23, 56, 41);
-		contentPane.add(lblNewLabel_3, BorderLayout.WEST);
-		lblNewLabel_3.addMouseListener(new MouseListener () {
+		JLabel homeLabel = new JLabel();
+		homeLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));
+		homeLabel.addMouseListener(new MouseListener () {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				Home _home = new Home(userName);
+				_home.setVisible(true);
+				setVisible(false);
+			}
 
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+		});
+		homeLabel.setBounds(90, 30, 50, 40);
+		contentPane.add(homeLabel);
+		
+		JLabel usernameLabel = new JLabel("Username:");
+		usernameLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/user_32x32.png")));
+		usernameLabel.setFont(new Font("Georgia", Font.BOLD, 14));
+		usernameLabel.setBounds(1025, 50, 125, 30);
+		contentPane.add(usernameLabel);
+		
+		usernameText = new JLabel();
+		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		usernameText.setBounds(1150, 50, 100, 30);
+		contentPane.add(usernameText);
+		
+		JLabel returnLabel = new JLabel();
+		returnLabel.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
+		returnLabel.setBounds(30, 30, 50, 40);
+		contentPane.add(returnLabel, BorderLayout.WEST);
+		returnLabel.addMouseListener(new MouseListener () {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				Index _index = new Index();
-				_index.frame.setVisible(true);
-				setVisible(false);
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(12, 146, 898, 527);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				GeneralFrame _addcourse = new GeneralFrame("Course");
-				_addcourse.setUsername(userName);
-				_addcourse.setVisible(true);
+				_index.mainFrame.setVisible(true);
 				setVisible(false);
 			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
 		});
-		btnNewButton.setBounds(332, 101, 174, 160);
-		panel.add(btnNewButton);
 		
-		JLabel lblNewLabel_2 = new JLabel("Add Course:");
-		lblNewLabel_2.setFont(new Font("Georgia", Font.PLAIN, 16));
-		lblNewLabel_2.setBounds(49, 13, 121, 43);
-		panel.add(lblNewLabel_2);
-		
-		//TODO: need to remove hard code
-		JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
-		btnCs.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Dashboard _dashboard = new Dashboard();
-				_dashboard.setUserName(userName);
-				_dashboard.setVisible(true);
-				setVisible(false);
-			}
-		});
-		btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
-		btnCs.setBounds(49, 101, 174, 160);
-		panel.add(btnCs);
-		
-		JButton btnNewButton_1 = new JButton("Add Student in DB");
-		btnNewButton_1.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_users.png")));
-		btnNewButton_1.setFont(new Font("Georgia", Font.PLAIN, 16));
-		btnNewButton_1.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnNewButton_1.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton addStudentButton = new JButton("Add Student in DB");
+		addStudentButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_users.png")));
+		addStudentButton.setFont(new Font("Georgia", Font.PLAIN, 16));
+		addStudentButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		addStudentButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		addStudentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				GeneralFrame _addstudent = new GeneralFrame("Student");
 				_addstudent.setUsername(userName);
@@ -175,48 +137,59 @@ public class Home extends JFrame {
 				setVisible(false);
 			}
 		});
-		btnNewButton_1.setBounds(1027, 146, 163, 105);
-		contentPane.add(btnNewButton_1);
+		addStudentButton.setBounds(1027, 146, 163, 105);
+		contentPane.add(addStudentButton);
 		
+		JLabel addCourseLabel = new JLabel("Add Course:");
+		addCourseLabel.setBounds(12, 98, 121, 43);
+		contentPane.add(addCourseLabel);
+		addCourseLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
 		
-		JLabel lblHome = new JLabel("");
-		lblHome.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));
-		lblHome.addMouseListener(new MouseListener () {
+		JPanel buttonPanel = new JPanel();
+	    buttonPanel.setLayout(new GridLayout(0,4,30,30));
+	    buttonPanel.setSize(new Dimension(400, 300)); 
+	    
+	    JScrollPane pane = new JScrollPane();
+	    pane.setLocation(12,146);
+	    pane.setSize(new Dimension(900, 514)); 
 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				Home _home = new Home();
-				_home.setVisible(true);
+	    int sizeOfButtons = 5;
+	    for(int i = 0; i < sizeOfButtons; i++) {
+	    	JButton btnCs = new JButton("<html>CS591-D1<br>Fall-2018</html>");
+			btnCs.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Dashboard _dashboard;
+					try {
+						_dashboard = new Dashboard();
+						_dashboard.setUserName(userName);
+						_dashboard.setVisible(true);
+						setVisible(false);
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			});
+			btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
+			buttonPanel.add(btnCs);
+	    }
+	    
+	    
+	    JButton newCourseButton = new JButton();
+		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
+		newCourseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GeneralFrame _addcourse = new GeneralFrame("Course");
+				_addcourse.setUsername(userName);
+				_addcourse.setVisible(true);
 				setVisible(false);
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
-		lblHome.setBounds(69, 23, 33, 41);
-		contentPane.add(lblHome);
+		buttonPanel.add(newCourseButton);
+		
+	    pane.setViewportView(buttonPanel);
+	    contentPane.add(pane);
 	}
 }

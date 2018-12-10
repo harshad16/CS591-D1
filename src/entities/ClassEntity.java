@@ -32,7 +32,6 @@ public class ClassEntity {
                 ", courseId=" + courseId +
                 ", studentId=" + studentId +
                 ", students="  + studentToString +
-                ", course=" + course +
                 '}';
     }
 
