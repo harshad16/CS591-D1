@@ -31,7 +31,7 @@ public class AddStudentToCourse extends JPanel {
 	private JScrollPane scrollPane;
 	private Student selectedStudent;
 	private JTable resultTable;
-	
+
 	/**
 	 * Create the panel.
 	 */
