@@ -35,6 +35,25 @@ public class CourseService {
             }
         }
     }
+    
+    public Integer saveCourseId(Course c) throws SQLException{
+        Connection conn = null;
+        Integer id = null;
+        try {
+            conn = util.getConnection();
+            courseDAO cdao = new courseDAO(conn);
+            id = cdao.saveCourseID(c);
+            conn.commit();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally{
+            if(conn!=null){
+                conn.close();
+            }
+        }
+        return id;
+    }
 
     public void deleteCourse(Course c) throws SQLException{
         Connection conn = null;
@@ -59,6 +78,23 @@ public class CourseService {
             conn = util.getConnection();
             courseDAO cdao = new courseDAO(conn);
             return cdao.readCourses(searchString);
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally{
+            if(conn!=null){
+                conn.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public List<Course> readMostRecentCourse() throws SQLException{
+        Connection conn = null;
+        try {
+            conn = util.getConnection();
+            courseDAO cdao = new courseDAO(conn);
+            return cdao.readMostRecentCourse();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally{
