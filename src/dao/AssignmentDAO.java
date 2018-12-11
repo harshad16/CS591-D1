@@ -16,17 +16,17 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
     }
 
     public void saveAssignment(Assignment a) throws SQLException {
-        save("INSERT INTO assignment (courseid, name, weight, description) VALUES (?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription()});
+        save("INSERT INTO assignment (courseid, name, weight, description, type, total) VALUES (?,?,?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal()});
     }
 
 
 
     public Integer saveAssignmentID(Assignment a) throws SQLException {
-        return saveWithID("INSERT INTO assignment (courseid, name, weight, description) VALUES (?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription()});
+        return saveWithID("INSERT INTO assignment (courseid, name, weight, description, type, total) VALUES (?,?,?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal()});
     }
 
     public void updateAssignment(Assignment a) throws SQLException {
-        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ? WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getAssignmentId() });
+        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ?, type = ?, total = ? WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getAssignmentId() });
     }
 
     public void updateAssignmentName(Assignment a) throws SQLException {
@@ -78,6 +78,8 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
             a.setDescription(rs.getString("description"));
             a.setCourseId(rs.getInt("courseid"));
             a.setWeight(rs.getInt("weight"));
+            a.setTotal(rs.getInt("total"));
+            a.setType(rs.getString("type"));
             a.setCreatedAt(rs.getDate("createdAt"));
             assignments.add(a);
         }
@@ -94,6 +96,8 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
             a.setName(rs.getString("name"));
             a.setDescription(rs.getString("description"));
             a.setCourseId(rs.getInt("courseid"));
+            a.setTotal(rs.getInt("total"));
+            a.setType(rs.getString("type"));
             a.setWeight(rs.getInt("weight"));
             a.setCreatedAt(rs.getDate("createdAt"));
             assignments.add(a);

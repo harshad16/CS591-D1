@@ -10,6 +10,8 @@ public class Assignment {
     private Integer weight;
     private String description;
     private Date createdAt;
+    private String type;
+    private Integer total;
 
     public Assignment(){
         this.assignmentId = null;
@@ -18,17 +20,37 @@ public class Assignment {
         this.weight = null;
         this.description = null;
         this.createdAt = null;
+        this.type = null;
+        this.total = null;
     }
 
-    public Assignment(Integer courseId, String name, Integer weight, String descrption){
+    public Assignment(Integer courseId, String name, Integer weight, String descrption, String type, Integer total){
         this.assignmentId = null;
         this.courseId = courseId;
         this.name = name;
         this.weight = weight;
         this.description = descrption;
         this.createdAt = null;
+        this.type = type;
+        this.total = total;
+        
     }
     
+    public String getType() {
+    	return this.type;
+    }
+    
+    public void setType(String type) {
+    	this.type = type;
+    }
+    
+    public Integer getTotal() {
+    	return this.total;
+    }
+    
+    public void setTotal(Integer total) {
+    	this.total = total;
+    }
     public Date getCreatedAt() {
     	return this.createdAt;
     }
@@ -73,6 +95,8 @@ public class Assignment {
                 ", courseId=" + courseId +
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
+                ", type=" + type +
+                ", total=" + total +
                 ", description='" + description + '\'' +
                 '}';
     }
