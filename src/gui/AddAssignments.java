@@ -3,16 +3,27 @@ package src.gui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.util.List;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.Dimension;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import src.entities.Assignment;
 import src.entities.Course;
+import src.service.AssignmentService;
 
 public class AddAssignments extends JPanel {
 
@@ -22,9 +33,11 @@ public class AddAssignments extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTable table;
+	private JPanel contentPane;
 		
 	public AddAssignments(Course course) {
 		
+		contentPane = new JPanel();
 		this.assignments = course.getAssignments();
 		setBounds(215, 146, 1021, 527);
 		setLayout(null);
@@ -34,8 +47,8 @@ public class AddAssignments extends JPanel {
                 "Description",
                 "Created At"};
 		
-		Object[][] data = new Object[assignments.size()][columnNames.length];
-		for (int i = 0; i < data.length; ++i) {
+		Object[][] data = new Object[assignments.size() + 1][columnNames.length];
+		for (int i = 0; i < assignments.size(); ++i) {
 			Assignment a = this.assignments.get(i);
 			String description = a.getDescription() != null ? a.getDescription() : "NO Description Avaible";
 			Object[] row = {a.getName(), a.getWeight(), description, a.getCreatedAt().toLocaleString()};
@@ -43,7 +56,10 @@ public class AddAssignments extends JPanel {
 			    data[i][j] = row[j];
 			}
 		}
-			
+		//Add extra row for creating a new assignment
+		for (int k = 0; k < columnNames.length; ++k) {
+			data[assignments.size()][k] = new String("");
+		}
 		DefaultTableModel tableModel=new DefaultTableModel(data, columnNames){
 			// This Method is to make a column not be Editable on Table.
 		    @Override
@@ -87,10 +103,74 @@ public class AddAssignments extends JPanel {
 		JButton  saveBtn = new JButton("Save");
 		saveBtn.setBounds(755, 485, 97, 25);
 		add(saveBtn);
-		
-		JButton clearBtn = new JButton("Clear");
-		clearBtn.setBounds(864, 485, 97, 25);
-		add(clearBtn);
+		saveBtn.addActionListener(new ActionListener() {
+			
+ 			@Override
+			public void actionPerformed(ActionEvent e) {
+ 				//Assignment a = new Assignment();
+ 				int row = table.getSelectedRow();
+ 				Integer courseId = course.getId();
+ 				String name = table.getModel().getValueAt(row, 0).toString();
+ 				Integer weight =  (Integer) (table.getModel().getValueAt(row, 1));
+ 				String description = table.getModel().getValueAt(row, 2).toString();
+ 				Assignment a = new Assignment(courseId,name, weight, description);
+ 				//if its not the last row , we need set the assignmentId so we know which one to update
+ 				if (row != assignments.size() ) {
+ 				   a.setAssignmentId(assignments.get(row).getAssignmentId());
+ 				}
+ 				boolean success = saveAssignment(a);
+ 				if(success) {
+				    JOptionPane.showMessageDialog(contentPane, "Success!");	
+				}else {
+						JOptionPane.showMessageDialog(contentPane, "Error!");	
+				}
+ 			 }
+		});
+			
+		JButton deleteBtn = new JButton("delete");
+		deleteBtn.setBounds(864, 485, 97, 25);
+		add(deleteBtn);
+		deleteBtn.addActionListener(new ActionListener() {					
+ 			@Override
+			public void actionPerformed(ActionEvent e) {
+ 				//Assignment a = new Assignment();
+ 				int row = table.getSelectedRow();
+ 				Integer courseId = course.getId();
+ 				String name = table.getModel().getValueAt(row, 0).toString();
+ 				Integer weight =  (Integer) (table.getModel().getValueAt(row, 1));
+ 				String description = table.getModel().getValueAt(row, 2).toString();
+ 				Assignment a = new Assignment(courseId,name, weight, description);
+ 				//if its not the last row , we need set the assignmentId so we know which one to update
+ 				a.setAssignmentId(assignments.get(row).getAssignmentId());
+ 				
+ 				boolean success = deleteAssignment(a);
+ 				if(success) {
+				    JOptionPane.showMessageDialog(contentPane, "Deleted successfully!");
+				}else {
+						JOptionPane.showMessageDialog(contentPane, "Error!");	
+				}
+ 			 }
+		});
 	}
+	
+	private boolean saveAssignment(Assignment a) {
+	    try {
+	    	AssignmentService assignmentService = new AssignmentService();
+	    	assignmentService.saveAssignment(a);
+	    } catch (SQLException e) {
+		    return false;
+	    }
+	    return true;
+    }
+	
+	private boolean deleteAssignment(Assignment a) {
+	    try {
+	    	AssignmentService assignmentService = new AssignmentService();
+	    	assignmentService.deleteAssignment(a);
+	    } catch (SQLException e) {
+		    return false;
+	    }
+	    return true;
+    }
 	
 }
