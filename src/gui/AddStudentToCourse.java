@@ -40,9 +40,6 @@ public class AddStudentToCourse extends JPanel {
 	private JTable resultTable;
 	private DefaultTableModel tableModel;
 
-	/**
-	 * Create the panel.
-	 */
 	public AddStudentToCourse() {
 		initialize();
 	}
@@ -64,39 +61,66 @@ public class AddStudentToCourse extends JPanel {
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO: Store the selected student to classes and course database
-				for (int row = 0; row < resultTable.getRowCount(); row++){
-					if ((resultTable.getValueAt(row, resultTable.getColumnCount()-1).toString()== "true")) {
-		        		System.out.println("ModelValue"+tableModel.getValueAt(row, 0));
-		        		Integer sid = (Integer) tableModel.getValueAt(row, 0);
-		        		// TODO get course id
-		        		ClassService  clsService = new ClassService();
-		        		List<ClassEntity> classes;		
-		        		try {
-							classes = clsService.readClasses(course.getId());
-							boolean already=false;
-							for (ClassEntity clsE: classes) {
-			                	System.out.println("ClassAttributes:"+clsE);
-			                	if(sid == clsE.getStudentId()) {
-			                		// validation if student already exists in class
-			                    	already = true;
-			                    }
-			                }
-							if (!already) {
-								// Added student to course class.
-								ClassEntity c1ass1 = new ClassEntity(course.getId(), sid);
-								clsService.saveClass(c1ass1);
+				try {	
+					for (int row = 0; row < resultTable.getRowCount(); row++){
+						if ((resultTable.getValueAt(row, resultTable.getColumnCount()-1).toString()== "true")) {
+			        		Integer sid = (Integer) tableModel.getValueAt(row, 0);
+			        		ClassService  clsService = new ClassService();
+			        		List<ClassEntity> classes;		
+			        		try {
+								classes = clsService.readClasses(course.getId());
+								boolean already=false;
+								for (ClassEntity clsE: classes) {
+				                	// System.out.println("ClassAttributes:"+clsE);
+				                	if(sid == clsE.getStudentId()) {
+				                		already = true;
+				                    }
+				                }
+								if (!already) {
+									ClassEntity c1ass1 = new ClassEntity(course.getId(), sid);
+									clsService.saveClass(c1ass1);
+								}
+				        		
+			        		} catch (SQLException e) {
+								e.printStackTrace();
 							}
-			        		
-		        		} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+		        		
 						}
-	        		
+						else {
+							Integer sid = (Integer) tableModel.getValueAt(row, 0);
+			        		ClassService  clsService = new ClassService();
+			        		List<ClassEntity> classes;		
+			        		try {
+								classes = clsService.readClasses(course.getId());
+								for (ClassEntity clsE: classes) {
+				                	// System.out.println("ClassAttributes:"+clsE);
+				                	if(sid == clsE.getStudentId()) {
+				                		int s_index=0;
+				                		for(s_index=0;s_index<clsE.getStudents().size();s_index++) {
+				                			if(clsE.getStudents().get(s_index).getId()==sid) {
+				                				break;
+				                			}
+				                		}
+				                    	String full_name = clsE.getStudents().get(s_index).getFirstName()+" "+clsE.getStudents().get(s_index).getLastName();
+				                    	if (JOptionPane.showConfirmDialog(AddStudentToCourse.this, "Are you sure? You want to remove "+full_name+" from the course", "WARNING",
+				                    	        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					                    	clsService.deleteClass(clsE);
+					                    	// System.out.println(" "+clsE.getStudentId());
+				                    	} else {
+				                    	    // no option
+				                    	}
+				                    }
+				                }
+				        		
+			        		} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
 					}
+					JOptionPane.showMessageDialog(AddStudentToCourse.this, "Successfully added Students!");
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(AddStudentToCourse.this, "Please select student");
 				}
-				JOptionPane.showMessageDialog(AddStudentToCourse.this, "Successfully added Students!");
-				
 			}
 		});
 
@@ -105,9 +129,13 @@ public class AddStudentToCourse extends JPanel {
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel model = (DefaultTableModel) resultTable.getModel();
-				model.setRowCount(0);
-				searchText.setText("");
+				try {
+					DefaultTableModel model = (DefaultTableModel) resultTable.getModel();
+					model.setRowCount(0);
+					searchText.setText("");
+				} catch (NullPointerException e1) {
+					JOptionPane.showMessageDialog(AddStudentToCourse.this, "Please select student");
+				}
 			}
 		});
 		clearButton.setBounds(901, 473, 97, 37);
@@ -188,8 +216,26 @@ public class AddStudentToCourse extends JPanel {
 				if(!students.isEmpty()) {
 					rst = new Object[students.size()][columnNames.length];
 					for(Student s : students) {
-						Object[] row = {s.getId(),s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),false};
 						// Create a check method to see if student is already added to class
+						ClassService  clsService = new ClassService();
+		        		List<ClassEntity> classes;		
+		        		boolean already=false;
+		        		try {
+							classes = clsService.readClasses(course.getId());
+							for (ClassEntity clsE: classes) {
+			                	// System.out.println("ClassAttributes:"+clsE);
+			                	if(s.getId() == clsE.getStudentId()) {
+			                		// validation if student already exists in class
+			                    	already = true;
+			                    	// System.out.println(already+" "+clsE.getStudentId());
+			                    }
+			                }		
+			        		
+		        		} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		        		Object[] row = {s.getId(),s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),already};
 						rst[count] = row;
 						count++;
 					}
