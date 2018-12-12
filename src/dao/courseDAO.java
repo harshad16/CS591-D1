@@ -17,13 +17,11 @@ public class courseDAO extends BaseDAO<Course>{
     }
 
     public void saveCourse(Course c) throws SQLException {
-        save("INSERT INTO course (name, description, start_time, days, college, courseid, type) VALUES (?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType()});
+        save("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid) VALUES (?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId()});
     }
 
-
-
     public Integer saveCourseID(Course c) throws SQLException {
-        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type) VALUES (?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType()});
+        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid) VALUES (?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId()});
     }
 
     public void updateCourse(Course c) throws SQLException {
@@ -75,6 +73,7 @@ public class courseDAO extends BaseDAO<Course>{
             c.setStart_time(rs.getString("start_time"));
             c.setStart_time(rs.getString("days"));
             c.setType(rs.getString("type"));
+            c.setUserId(rs.getInt("userid"));
             c.setCollege(rs.getString("college"));
             c.setStudents(sdao.readAllFirstLevel("SELECT * FROM student WHERE id IN (SELECT studentid FROM class WHERE courseid = ?)",
                     new Object[] { c.getId() }));
@@ -98,6 +97,7 @@ public class courseDAO extends BaseDAO<Course>{
             c.setStart_time(rs.getString("start_time"));
             c.setDays(rs.getString("days"));
             c.setType(rs.getString("type"));
+            c.setUserId(rs.getInt("userid"));
             courses.add(c);
         }
         return courses;

@@ -125,7 +125,7 @@ public class ForgotPassword extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String userName = usernameTextField.getText();
-					String password = String.valueOf(passwordTextField.getPassword());
+					String password = ((Integer)String.valueOf(passwordTextField.getPassword()).hashCode()).toString();
 					String securityQuestion = (String) securityQuestionText.getSelectedItem();
 					String securityQuestionAnswer = securityAnswerText.getText();
 					User user = checkUserAndSecurityQuestion(userName, password, securityQuestion,securityQuestionAnswer);
@@ -146,7 +146,7 @@ public class ForgotPassword extends JFrame {
 				if (e.getKeyCode()==KeyEvent.VK_ENTER){
 					try {
 						String userName = usernameTextField.getText();
-						String password = String.valueOf(passwordTextField.getPassword());
+						String password = ((Integer)String.valueOf(passwordTextField.getPassword()).hashCode()).toString();
 						String securityQuestion = (String) securityQuestionText.getSelectedItem();
 						String securityQuestionAnswer = securityAnswerText.getText();
 						User user = checkUserAndSecurityQuestion(userName, password, securityQuestion,securityQuestionAnswer);

@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import src.entities.User;
+
 public class GeneralFrame extends JFrame {
 
 	/**
@@ -20,7 +22,7 @@ public class GeneralFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel usernameText;
-	private String userName;
+	private User user;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -34,20 +36,17 @@ public class GeneralFrame extends JFrame {
 			}
 		});
 	}
-	
-	public void setUsername(String userName) {
-		this.userName = userName;
-		usernameText.setText(userName);
-	}
 
 	public GeneralFrame() {
 		intialCommonComponent();
 	}
 	
-	public GeneralFrame(String panel_type) {
-		this();
+	public GeneralFrame(String panel_type,User u) {
+		this.user = u;
+		intialCommonComponent();
+		usernameText.setText(user.getUserName());
 		if (panel_type=="Course") {
-			AddCourse obj = new AddCourse();
+			AddCourse obj = new AddCourse(user);
 	        obj.setVisible(true);
 	        contentPane.add(obj);
 	        ((JPanel) contentPane).revalidate();
@@ -92,7 +91,7 @@ public class GeneralFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				Home _home = new Home(userName);
+				Home _home = new Home(user);
 				_home.setVisible(true);
 				setVisible(false);	
 			}
@@ -115,7 +114,7 @@ public class GeneralFrame extends JFrame {
 		homeLabel.addMouseListener(new MouseListener () {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Home _home = new Home(userName);
+				Home _home = new Home(user);
 				_home.setVisible(true);
 				setVisible(false);
 			}

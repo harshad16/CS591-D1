@@ -27,9 +27,19 @@ CREATE TABLE IF NOT EXISTS `grading_system`.`course` (
   `start_time` VARCHAR(45) NULL DEFAULT NULL,
   `days` VARCHAR(45) NULL DEFAULT NULL,
   `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`))
+  `college` VARCHAR(45) NULL DEFAULT NULL,
+  `courseid` VARCHAR(45) NULL DEFAULT NULL,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `userid` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  INDEX `userid_idx` (`userid` ASC),
+  CONSTRAINT `user-id`
+    FOREIGN KEY (`userid`)
+    REFERENCES `grading_system`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -120,34 +130,23 @@ CREATE TABLE IF NOT EXISTS `grading_system`.`grade` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
+AUTO_INCREMENT = 52
 DEFAULT CHARACTER SET = latin1;
 
-
--- -----------------------------------------------------
--- Table `grading_system`.`security`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `grading_system`.`security` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `password` VARCHAR(45) NULL DEFAULT NULL,
-  `security-question` MEDIUMTEXT NULL DEFAULT NULL,
-  `security-question-answer` MEDIUMTEXT NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
 
 -- -----------------------------------------------------
 -- Table `grading_system`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grading_system`.`user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NULL DEFAULT NULL,
   `securityQuestion` MEDIUMTEXT NULL DEFAULT NULL,
   `securityQuestionAnswer` MEDIUMTEXT NULL DEFAULT NULL,
-  PRIMARY KEY (`username`))
+  `username` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = latin1;
 
 

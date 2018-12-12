@@ -12,12 +12,13 @@ public class Course {
     private String start_time;
     private String days;
     private String type;
-    
+    private Integer userid;
 
     private List<Student> students;
     private List<Assignment> assignments;
+	
 
-    public Course(String name, String description, String start_time, String days, String courseid, String college, String type) {
+    public Course(String name, String description, String start_time, String days, String courseid, String college, String type, Integer userid) {
         this.id = null;
         this.name = name;
         this.description =description;
@@ -26,6 +27,7 @@ public class Course {
         this.courseId = courseid;
         this.days = days;
         this.type = type;
+        this.userid = userid;
         this.students = null;
         this.assignments = null;
         
@@ -56,6 +58,7 @@ public class Course {
         this.courseId = null;
         this.days = null;
         this.type  = null;
+        this.userid = null;
         this.students = null;
         this.assignments = null;
     }
@@ -106,6 +109,14 @@ public class Course {
     	return this.type;
     }
     
+    public Integer getUserId() {
+    	return this.userid;
+    }
+    
+    public void setUserId(Integer userid) {
+    	this.userid = userid;
+    }
+    
     public void setType(String type) {
     	this.type = type;
     }
@@ -153,6 +164,7 @@ public class Course {
                 ", courseId='" + courseId + '\'' +
                 ", days='" + days + '\'' +
                 ", type='" + type + '\'' +
+                ", userid='" + userid + '\'' +
                 ", students='" + studentsToString + '\'' +
                  ", assignments='" + assignmentsToString + '\'' +
                 '}';

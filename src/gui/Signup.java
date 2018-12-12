@@ -121,7 +121,7 @@ public class Signup extends JFrame {
 		
 		JButton registerButton = new JButton("Register");
 		registerButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String userName = usernameTextField.getText();
@@ -129,7 +129,7 @@ public class Signup extends JFrame {
 				String securityQuestion = (String) securityQuestionText.getSelectedItem();
 				String securityQuestionAnswer = securityAnswerTextField.getText();
 				if (validation(userName, password, securityQuestion)) {
-					User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
+					User user = new User(userName, ((Integer)String.valueOf(password).hashCode()).toString(), securityQuestion, securityQuestionAnswer);	
 					try {
 						signUpforUser(user);
 					} catch (SQLException e1) {
@@ -148,7 +148,7 @@ public class Signup extends JFrame {
 					String securityQuestion = (String) securityQuestionText.getSelectedItem();
 					String securityQuestionAnswer = securityAnswerTextField.getText();
 					if (validation(userName, password, securityQuestion)) {
-						User user = new User(userName, String.valueOf(password), securityQuestion, securityQuestionAnswer);	
+						User user = new User(userName, ((Integer)String.valueOf(password).hashCode()).toString(), securityQuestion, securityQuestionAnswer);	
 						try {
 							signUpforUser(user);
 						} catch (SQLException e1) {
@@ -247,12 +247,15 @@ public class Signup extends JFrame {
 			JOptionPane.showMessageDialog(contentPane, "User name already exist!");	
 		}
 		else {
-			System.out.println("signup user" + u.getPassword());
 			uService.saveUser(u);
 			JOptionPane.showMessageDialog(contentPane, "Sucess!");
-			Home _home = new Home(u.getUserName());
-			_home.setVisible(true);
-			setVisible(false);
+			List<User> userList = uService.findUserByUserName(u.getUserName());
+			if(userList.size() != 0) {
+				User usr = userList.get(0);
+				Home _home = new Home(usr);
+				_home.setVisible(true);
+				setVisible(false);
+			}
 		}
 	}
 }

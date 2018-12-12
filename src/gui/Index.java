@@ -29,6 +29,7 @@ public class Index {
 	public JFrame mainFrame;
 	private JTextField usernameText;
 	private JPasswordField passwordText;
+	private User user;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -88,12 +89,12 @@ public class Index {
 				try {
 				String userName = usernameText.getText();
 				char[] password = passwordText.getPassword();
-				User user = new User(userName, String.valueOf(password));
+				user = new User(userName, ((Integer)String.valueOf(password).hashCode()).toString());
 				boolean isUser;
 					isUser = checkUserAndPassword(user);
 					if(isUser) {
-						//if correct, new window to show other logic	
-						Home _home = new Home(user.getUserName());
+						//if correct, new window to show other logic
+						Home _home = new Home(user);
 						_home.setVisible(true);
 						mainFrame.setVisible(false);
 					}
@@ -113,12 +114,12 @@ public class Index {
 					try {
 					String userName = usernameText.getText();
 					char[] password = passwordText.getPassword();
-					User user = new User(userName, String.valueOf(password));
+					user = new User(userName, ((Integer)String.valueOf(password).hashCode()).toString());
 					boolean isUser;
 						isUser = checkUserAndPassword(user);
 						if(isUser) {
 							//if correct, new window to show other logic	
-							Home _home = new Home(user.getUserName());
+							Home _home = new Home(user);
 							_home.setVisible(true);
 							mainFrame.setVisible(false);
 						}
@@ -199,9 +200,10 @@ public class Index {
 
 	private boolean checkUserAndPassword(User u) throws SQLException{
 		UserService uService = new UserService();
-		List<User> user = uService.findUserByUserName(u.getUserName());
-		if(user.size() != 0) {
-			if(user.get(0).getPassword().equals(u.getPassword())) {
+		List<User> userList = uService.findUserByUserName(u.getUserName());
+		if(userList.size() != 0) {
+			if(userList.get(0).getPassword().equals(u.getPassword())) {
+				user = userList.get(0);
 				return true;
 			}
 		}
