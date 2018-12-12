@@ -45,6 +45,7 @@ public class UserDAO extends BaseDAO<User>{
 		while(rs.next()) {
 			User u = new User();
 			u.setId(rs.getInt("id"));
+			u.setUserName(rs.getString("username"));
 			u.setPassword(rs.getString("password"));
 			u.setSecurityQuestion(rs.getString("securityQuestion"));
 			u.setSecurityQuestionAnswer(rs.getString("securityQuestionAnswer"));
@@ -59,6 +60,7 @@ public class UserDAO extends BaseDAO<User>{
 		while(rs.next()) {
 			User u = new User();
 			u.setId(rs.getInt("id"));
+			u.setUserName(rs.getString("username"));
 			u.setPassword(rs.getString("password"));
 			u.setSecurityQuestion(rs.getString("securityQuestion"));
 			u.setSecurityQuestionAnswer(rs.getString("securityQuestionAnswer"));

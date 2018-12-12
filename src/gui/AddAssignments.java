@@ -3,25 +3,16 @@ package src.gui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.sql.SQLException;
-import javax.swing.table.DefaultTableModel;
-import java.util.*;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import java.awt.Font;
-import java.awt.SystemColor;
-import java.awt.Dimension;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import src.entities.Assignment;
 import src.entities.Course;
-import src.service.AssignmentService;
-import src.service.CourseService;
 
 public class AddAssignments extends JPanel {
 

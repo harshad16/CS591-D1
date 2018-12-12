@@ -13,6 +13,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import src.entities.Course;
+import src.entities.User;
 import src.service.CourseService;
 
 public class AddCourse extends JPanel {
@@ -23,12 +24,14 @@ public class AddCourse extends JPanel {
 	private JTextField descriptionTF;
 	private JTextField startTimeTF;
 	private JTextField daysTF;
+	private User user;
 
 	/**
 	 * Create the panel.
 	 */
-	public AddCourse() {
+	public AddCourse(User u) {
 		
+		this.user = u;
 		JPanel panel = new JPanel();				
 		setBounds(12, 146, 898, 527);
 		setLayout(null);
@@ -118,10 +121,7 @@ public class AddCourse extends JPanel {
 		lblCourseLevel.setBounds(122, 209, 127, 22);
 		add(lblCourseLevel);
 		
-		
-		
 		btnNewButton.addActionListener(new ActionListener() {
-			
  			@Override
 			public void actionPerformed(ActionEvent e) {
 					String name = nameTF.getText();
@@ -131,6 +131,7 @@ public class AddCourse extends JPanel {
 					String college = collegeTF.getText();
 					String courseId = courseIdTF.getText();
 					String type = "";
+					Integer userid = user.getId();
 					if(rdbtnGraduate.isSelected()) {
 						type = "graduate";
 					}
@@ -139,7 +140,7 @@ public class AddCourse extends JPanel {
 						type = "underGraduate";
 					}
 					
-					Course c = new Course(name, description, startTime, days, courseId, college, type);
+					Course c = new Course(name, description, startTime, days, courseId, college, type, userid);
 					boolean rst = saveCourse(c);
 					if(rst) {
 					    JOptionPane.showMessageDialog(panel, "Success!");	
@@ -149,7 +150,7 @@ public class AddCourse extends JPanel {
  			 }
 		});
 	}
-
+	
     private boolean saveCourse(Course c) {
 	    try {
 		    CourseService courseService = new CourseService();

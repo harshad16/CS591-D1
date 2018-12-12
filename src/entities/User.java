@@ -36,7 +36,7 @@ public class User implements Serializable {
     }
     
     public Integer getId() {
-    		return this.id;
+    		return id;
     }
     
     public void setUserName(String userName) {
@@ -44,7 +44,7 @@ public class User implements Serializable {
     }
     
     public String getUserName() {
-    		return this.userName;
+    		return userName;
     }
 
     public void setPassword(String password) {
@@ -86,8 +86,6 @@ public class User implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + password.hashCode();
-        result = prime * result + ((securityQuestion == null) ? 0 : securityQuestion.hashCode());
-        result = prime * result + ((securityQuestionAnswer == null) ? 0 : securityQuestionAnswer.hashCode());
         return result;
     }
 

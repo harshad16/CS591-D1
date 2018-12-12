@@ -21,8 +21,6 @@ public class GradeDAO extends BaseDAO<Grade>{
         save("INSERT INTO grade (assignmentid, studentid, note, grade) VALUES (?,?,?,?)", new Object[] { grade.getAssignmentId(), grade.getStudentId(), grade.getNote(), grade.getGrade()});
     }
 
-
-
     public Integer saveGradeID(Grade g) throws SQLException {
         return saveWithID("INSERT INTO grade (assignmentid, studentid, note, grade) VALUES (?,?,?,?)", new Object[] { g.getAssignmentId(), g.getStudentId(), g.getNote(), g.getGrade()});
     }

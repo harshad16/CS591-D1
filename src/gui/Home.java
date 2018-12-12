@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import src.entities.Course;
+import src.entities.User;
 import src.service.CourseService;
 import javax.swing.border.LineBorder;
 import javax.swing.BorderFactory;
@@ -31,7 +32,7 @@ public class Home extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private String userName;
+	private User user;
 	private JLabel usernameText;
 
 	public static void main(String[] args) {
@@ -67,10 +68,9 @@ public class Home extends JFrame {
 		initComponents();
 	}
 	
-	public Home(String userName) {
-		this();
-		this.userName = userName;
-		this.usernameText.setText(userName);
+	public Home(User u) {
+		this.user = u;
+		initComponents();
 	}
 	
 	public void initComponents() {
@@ -88,7 +88,7 @@ public class Home extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				Home _home = new Home(userName);
+				Home _home = new Home(user);
 				_home.setVisible(true);
 				setVisible(false);
 			}
@@ -117,6 +117,7 @@ public class Home extends JFrame {
 		usernameText = new JLabel();
 		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		usernameText.setBounds(1150, 50, 100, 30);
+		usernameText.setText(user.getUserName());
 		contentPane.add(usernameText);
 		
 		JLabel returnLabel = new JLabel();
@@ -152,8 +153,7 @@ public class Home extends JFrame {
 		addStudentButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		addStudentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				GeneralFrame _addstudent = new GeneralFrame("Student");
-				_addstudent.setUsername(userName);
+				GeneralFrame _addstudent = new GeneralFrame("Student", user);
 				_addstudent.setVisible(true);
 				setVisible(false);
 			}
@@ -178,8 +178,7 @@ public class Home extends JFrame {
 		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
 		newCourseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				GeneralFrame _addcourse = new GeneralFrame("Course");
-				_addcourse.setUsername(userName);
+				GeneralFrame _addcourse = new GeneralFrame("Course", user);
 				_addcourse.setVisible(true);
 				setVisible(false);
 			}
@@ -188,30 +187,31 @@ public class Home extends JFrame {
 
 	    courseList = this.readCourses();
 	    for (Course course: courseList) {
-	    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"
-	    								+course.getCollege()+"<br>"
-	    								+course.getCourseId()+"<br>"
-	    								+course.getDays()+"<br>"
-	    								+course.getStart_time()+"<br>"
-	    								+"</html>");
-			btnCs.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					Dashboard _dashboard;
-					try {
-						_dashboard = new Dashboard(course);
-						_dashboard.setUserName(userName);
-						_dashboard.setVisible(true);
-						setVisible(false);
+	    	if (course.getUserId() == user.getId()) {
+		    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"
+		    								+course.getCollege()+"<br>"
+		    								+course.getCourseId()+"<br>"
+		    								+course.getDays()+"<br>"
+		    								+course.getStart_time()+"<br>"
+		    								+"</html>");
+				btnCs.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Dashboard _dashboard;
+						try {
+							_dashboard = new Dashboard(course,user);
+							_dashboard.setVisible(true);
+							setVisible(false);
+							
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
-					
-				}
-			});
-			btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
-			buttonPanel.add(btnCs);
+				});
+				btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
+				buttonPanel.add(btnCs);
+	    	}
 	    }
 	    
 	    pane.setViewportView(buttonPanel);

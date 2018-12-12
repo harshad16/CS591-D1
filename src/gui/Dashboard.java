@@ -27,6 +27,7 @@ import src.entities.Assignment;
 import src.entities.ClassEntity;
 import src.entities.Grade;
 import src.entities.Student;
+import src.entities.User;
 import src.service.AssignmentService;
 import src.service.ClassService;
 import src.service.GradeService;
@@ -46,19 +47,17 @@ public class Dashboard extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JLabel usernameText;
-	private String userName;
 	private DefaultTableModel tableModel;
 	private JLabel courseNameText;
 	private JLabel courseIdText;
 	private JLabel courseYearText;
-
+	private User user;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Course course = new Course();
-					Dashboard frame = new Dashboard(course);
+					Dashboard frame = new Dashboard();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -71,9 +70,10 @@ public class Dashboard extends JFrame {
 		initializeDashboard(true);			
 	}
 		
-	public Dashboard(Course course) throws SQLException {	
+	public Dashboard(Course course,User u) throws SQLException {	
 		//for keeping track of course information 
 		this.course = course;
+		this.user = u;
 		initializeDashboard(true);
 	}
 	
@@ -93,7 +93,7 @@ public class Dashboard extends JFrame {
 		contentPane.add(usernameLabel);
 		
 		usernameText = new JLabel();
-		usernameText.setText(userName);
+		usernameText.setText(user.getUserName());
 		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		usernameText.setBounds(1150, 50, 100, 30);
 		contentPane.add(usernameText);
@@ -106,7 +106,7 @@ public class Dashboard extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// Return to Home Page
-				Home _home = new Home(userName);
+				Home _home = new Home(user);
 				_home.setVisible(true);
 				setVisible(false);
 			}
@@ -165,7 +165,7 @@ public class Dashboard extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// Goto Home Page
-				Home _home = new Home(userName);
+				Home _home = new Home(user);
 				_home.setVisible(true);
 				setVisible(false);
 			}
@@ -285,12 +285,6 @@ public class Dashboard extends JFrame {
 		else {
 			setDashboard("Dashboard");
 		}
-	}
-	
-	public void setUserName(String userName) {
-		this.userName = userName;
-		this.usernameText.setText(userName);
-		
 	}
 
 	public void setDashboard(String panel_type) throws SQLException {
@@ -421,7 +415,6 @@ public class Dashboard extends JFrame {
 		
 		JButton saveButton = new JButton("Save");
 		saveButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
