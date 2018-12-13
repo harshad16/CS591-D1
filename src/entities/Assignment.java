@@ -12,6 +12,7 @@ public class Assignment {
     private Date createdAt;
     private String type;
     private Integer total;
+    private Boolean isOptional;
 
     public Assignment(){
         this.assignmentId = null;
@@ -22,9 +23,10 @@ public class Assignment {
         this.createdAt = null;
         this.type = null;
         this.total = null;
+        this.isOptional = null;
     }
 
-    public Assignment(Integer courseId, String name, Integer weight, String descrption, String type, Integer total){
+    public Assignment(Integer courseId, String name, Integer weight, String descrption, String type, Integer total, Boolean isOptional){
         this.assignmentId = null;
         this.courseId = courseId;
         this.name = name;
@@ -33,7 +35,16 @@ public class Assignment {
         this.createdAt = null;
         this.type = type;
         this.total = total;
+        this.isOptional = isOptional;
         
+    }
+    
+    public boolean getIsOptional() {
+    	return this.isOptional;
+    }
+    
+    public void setIsOptional(Boolean isOptional) {
+    	this.isOptional = isOptional;
     }
     
     public String getType() {
@@ -97,6 +108,7 @@ public class Assignment {
                 ", weight=" + weight +
                 ", type=" + type +
                 ", total=" + total +
+                ", isOptional=" + isOptional +
                 ", description='" + description + '\'' +
                 '}';
     }

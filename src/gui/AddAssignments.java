@@ -6,6 +6,8 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import javax.swing.JButton;
@@ -47,7 +49,9 @@ public class AddAssignments extends JPanel {
                 "type",
                 "total",
                 "Description",
-                "Created At"};
+                "isOptional",
+                "Created At"
+                };
 		for (Assignment a: this.assignments)
 			System.out.println(a);
 		Object[][] data = new Object[assignments.size() + 1][columnNames.length];
@@ -55,8 +59,9 @@ public class AddAssignments extends JPanel {
 			System.out.println("Arezoo");
 			Assignment a = this.assignments.get(i);
 			String description = a.getDescription() != null ? a.getDescription() : "NO Description Avaible";
-			Object[] row = {a.getName(), a.getWeight(), a.getType(), a.getTotal(), description, a.getCreatedAt().toLocaleString()};
-			System.out.println("Sepideh");
+			String isOptional = (a.getIsOptional() == true) ? "1" : "0";
+			Object[] row = {a.getName(), a.getWeight(), a.getType(), a.getTotal(), description, isOptional, a.getCreatedAt().toLocaleString()};
+			System.out.println(a);
 			for (int j = 0; j < row.length; ++j) {
 			    data[i][j] = row[j];
 			}
@@ -89,8 +94,13 @@ public class AddAssignments extends JPanel {
 				   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(scrollPane);
 		
-		
 		table = new JTable(tableModel);
+		
+		//set text alignment in table cells for both integer and string
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		table.setDefaultRenderer(String.class, centerRenderer);
+		table.setDefaultRenderer(Integer.class, centerRenderer);
 		table.setPreferredScrollableViewportSize(new Dimension(400, 400));
 		table.getTableHeader().setForeground(SystemColor.textHighlight);
 		table.getTableHeader().setFont(new Font("Georgia", Font.BOLD, 16));
@@ -121,8 +131,9 @@ public class AddAssignments extends JPanel {
  				String type = table.getModel().getValueAt(row, 2).toString();
  				Integer total = Integer.parseInt(table.getModel().getValueAt(row, 3).toString());
  				String description = table.getModel().getValueAt(row, 4).toString();
+ 				Boolean isOptional = (table.getModel().getValueAt(row, 5).equals(new String("0"))) ? false :true;
  				
- 				Assignment a = new Assignment(courseId,name, weight, description, type, total);
+ 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
  				//if its not the last row , we need set the assignmentId so we know which one to update
  				if (row != assignments.size() && assignments.size() != 0 ) {
  				   a.setAssignmentId(assignments.get(row).getAssignmentId());
@@ -139,8 +150,7 @@ public class AddAssignments extends JPanel {
 		JButton deleteBtn = new JButton("delete");
 		deleteBtn.setBounds(864, 485, 97, 25);
 		add(deleteBtn);
-		deleteBtn.addActionListener(new ActionListener() {
-			
+		deleteBtn.addActionListener(new ActionListener() {					
  			@Override
 			public void actionPerformed(ActionEvent e) {
  				//Assignment a = new Assignment();
@@ -151,7 +161,8 @@ public class AddAssignments extends JPanel {
  				String type = table.getModel().getValueAt(row, 2).toString();
  				Integer total = (Integer) table.getModel().getValueAt(row, 3);
  				String description = table.getModel().getValueAt(row, 4).toString();
- 				Assignment a = new Assignment(courseId,name, weight, description, type, total);
+ 				Boolean isOptional = (table.getModel().getValueAt(row, 5).equals(new String("0"))) ? false :true;
+ 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
  				//if its not the last row , we need set the assignmentId so we know which one to update
  				a.setAssignmentId(assignments.get(row).getAssignmentId());
  				
