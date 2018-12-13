@@ -177,9 +177,11 @@ public class Statistics extends JPanel {
 //		lblNewLabel_7.setBounds(103, 364, 56, 16);
 //		panel.add(lblNewLabel_7);
 //	    
-	    
-	}
-	
+
+//	    
+//	}
+//	
+
 //	public ChartPanel plotGraph() {
 //
 //	    Function2D normal = new NormalDistributionFunction2D(50.0, 1.0);
@@ -257,5 +259,7 @@ public class Statistics extends JPanel {
 //        ChartPanel cp = new ChartPanel(chart);
 //	    cp.setPreferredSize(new Dimension(200, 100));
 //	    return cp;
-//	}
+
+	}
+
 }

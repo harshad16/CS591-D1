@@ -24,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import src.entities.Assignment;
+import src.entities.CalculateGrade;
 import src.entities.ClassEntity;
 import src.entities.Grade;
 import src.entities.Student;
@@ -349,7 +350,7 @@ public class Dashboard extends JFrame {
 		List<ClassEntity> classes = clsService.readClasses(course.getId());
 		List<Student> students;
 		List<Assignment> assignment;
-		List<Grade> grade;
+		List<Grade> grade = null;
 		
 		
 		// TODO: Built Column Name based upon assignment as well
@@ -393,6 +394,8 @@ public class Dashboard extends JFrame {
 						}
 					}
 				}
+			//calculate GRADES
+			row[columnNames.length-1] = calculateGrade(grade);
     			// Create a check method to see if student is already added to class
     			data[rowCount] = row;
     			rowCount++;
@@ -401,18 +404,8 @@ public class Dashboard extends JFrame {
 		
 		
 		// TODO: GET VALUES from Grades
-		for(int i=0;i<rowCount;i++) {
-			for(int j=5;j<columnNames.length;j++) {
-				if (j == columnNames.length-1) {
-					data[i][j]="";
-				}
-				else if (data[i][j]==null) {
-					data[i][j]=new Integer(0);	
-				}
-			}
-		}
+		setDefaultGrade(rowCount,data, columnNames);
 		
-		// TODO: calculate GRADES
 		
 		
 		tableModel=new DefaultTableModel(data, columnNames){
@@ -545,6 +538,38 @@ public class Dashboard extends JFrame {
 		gradeButton.setBounds(696, 476, 32, 38);
 		panel.add(gradeButton);
 
+	}
+	
+	private void setDefaultGrade(int rowCount, Object[][] data, String[] columnNames) {
+		for(int i=0;i<rowCount;i++) {
+			for(int j=5;j<columnNames.length;j++) {
+				if (j == columnNames.length-1 && data[i][j] == null) {
+					data[i][j]="";
+				}
+				else if (data[i][j]==null) {
+					data[i][j]=new Integer(0);	
+				}
+			}
+		}
+	}
+	
+	private String calculateGrade(List<Grade> grade) {
+		double sum = 0;
+		int weight = 0;
+		if(!grade.isEmpty()) {
+			for(Grade grd : grade) {
+				System.out.println(grd.getAssignment().getWeight());
+				System.out.println(grd.getGrade());
+				sum += grd.getAssignment().getWeight() * grd.getGrade();
+				weight += grd.getAssignment().getWeight();
+			}
+			CalculateGrade finalGrade = new CalculateGrade();
+			// 60/100 * weight
+			String fg = finalGrade.grade((int)sum / weight);
+			return null;
+		}
+		System.out.println("grade == null");
+		return null;
 	}
 
 }

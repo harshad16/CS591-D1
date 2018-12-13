@@ -248,11 +248,17 @@ public class Signup extends JFrame {
 		}
 		else {
 			uService.saveUser(u);
-			JOptionPane.showMessageDialog(contentPane, "Sucess!");
 			List<User> userList = uService.findUserByUserName(u.getUserName());
+			for(User usr: userList) {
+				System.out.println(usr);
+			}
+			System.out.println("complete loop");
 			if(userList.size() != 0) {
+				System.out.println("Inside user");
 				User usr = userList.get(0);
+				System.out.println("Got user");
 				Home _home = new Home(usr);
+				System.out.println("In home obj");
 				_home.setVisible(true);
 				setVisible(false);
 			}
