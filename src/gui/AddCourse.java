@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,8 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import src.entities.Assignment;
 import src.entities.Course;
 import src.entities.User;
+import src.service.AssignmentService;
 import src.service.CourseService;
 
 public class AddCourse extends JPanel {
@@ -116,6 +119,11 @@ public class AddCourse extends JPanel {
 		rdbtnBoth.setBounds(288, 253, 146, 37);
 		add(rdbtnBoth);
 		
+		JRadioButton importAssignmentrdBtn = new JRadioButton("Import assignments of most recent course");
+		importAssignmentrdBtn.setFont(new Font("Georgia", Font.PLAIN, 16));
+		importAssignmentrdBtn.setBounds(600, 209, 700, 37);
+		add(importAssignmentrdBtn);
+		
 		JLabel lblCourseLevel = new JLabel("Course Level:");
 		lblCourseLevel.setFont(new Font("Georgia", Font.BOLD, 16));
 		lblCourseLevel.setBounds(122, 209, 127, 22);
@@ -132,6 +140,7 @@ public class AddCourse extends JPanel {
 					String courseId = courseIdTF.getText();
 					String type = "";
 					Integer userid = user.getId();
+					List<Assignment> assignmentList = null;
 					if(rdbtnGraduate.isSelected()) {
 						type = "graduate";
 					}
@@ -141,23 +150,58 @@ public class AddCourse extends JPanel {
 					}
 					
 					Course c = new Course(name, description, startTime, days, courseId, college, type, userid);
-					boolean rst = saveCourse(c);
-					if(rst) {
-					    JOptionPane.showMessageDialog(panel, "Success!");	
-					}else {
+					c.setAssignments(getMostRecentCourse().getAssignments());
+					Integer rst = saveCourse(c);
+					Boolean assignmentSaved = true;
+					if(rst != -1) {
+						if (importAssignmentrdBtn.isSelected()) {
+						    for (Assignment a: c.getAssignments()) {
+							    a.setCourseId(rst);
+							    a.setAssignmentId(null);
+							    assignmentSaved = saveAssignment(a);
+							    if (!assignmentSaved ) break;
+						    }
+						}    
+						if (assignmentSaved)
+					        JOptionPane.showMessageDialog(panel, "Success!");	
+					}else if (rst == -1){
 							JOptionPane.showMessageDialog(panel, "Error!");	
 					}		
  			 }
 		});
 	}
-	
-    private boolean saveCourse(Course c) {
+
+    private Integer saveCourse(Course c) {
+    	Integer id = null;
 	    try {
 		    CourseService courseService = new CourseService();
-		    courseService.saveCourse(c);
+		    id = courseService.saveCourseId(c);
 	    } catch (SQLException e) {
-		    return false;
+		    return -1;
 	    }
-	    return true;
+	    return id;
+    }
+    
+    private Course getMostRecentCourse() {
+    	List<Course> courseList = null;
+    	Course mostRecentCourse = null;
+    	try {
+		    CourseService courseService = new CourseService();
+		    courseList = courseService.readMostRecentCourse();
+		    mostRecentCourse = courseList.get(0);
+	    } catch (SQLException e) {
+		    return null;
+	    }
+    	return mostRecentCourse;
+    }
+    
+    private Boolean saveAssignment(Assignment a) {
+    	 try {
+ 	    	AssignmentService assignmentService = new AssignmentService();
+ 	    	assignmentService.saveAssignment(a);
+ 	    } catch (SQLException e) {
+ 		    return false;
+ 	    }
+ 	    return true;	
     }
 }

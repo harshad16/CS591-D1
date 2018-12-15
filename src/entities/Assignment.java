@@ -10,6 +10,9 @@ public class Assignment {
     private Integer weight;
     private String description;
     private Date createdAt;
+    private String type;
+    private Integer total;
+    private Boolean isOptional;
 
     public Assignment(){
         this.assignmentId = null;
@@ -18,17 +21,47 @@ public class Assignment {
         this.weight = null;
         this.description = null;
         this.createdAt = null;
+        this.type = null;
+        this.total = null;
+        this.isOptional = null;
     }
 
-    public Assignment(Integer courseId, String name, Integer weight, String descrption){
+    public Assignment(Integer courseId, String name, Integer weight, String descrption, String type, Integer total, Boolean isOptional){
         this.assignmentId = null;
         this.courseId = courseId;
         this.name = name;
         this.weight = weight;
         this.description = descrption;
         this.createdAt = null;
+        this.type = type;
+        this.total = total;
+        this.isOptional = isOptional;
+        
     }
     
+    public boolean getIsOptional() {
+    	return this.isOptional;
+    }
+    
+    public void setIsOptional(Boolean isOptional) {
+    	this.isOptional = isOptional;
+    }
+    
+    public String getType() {
+    	return this.type;
+    }
+    
+    public void setType(String type) {
+    	this.type = type;
+    }
+    
+    public Integer getTotal() {
+    	return this.total;
+    }
+    
+    public void setTotal(Integer total) {
+    	this.total = total;
+    }
     public Date getCreatedAt() {
     	return this.createdAt;
     }
@@ -73,6 +106,9 @@ public class Assignment {
                 ", courseId=" + courseId +
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
+                ", type=" + type +
+                ", total=" + total +
+                ", isOptional=" + isOptional +
                 ", description='" + description + '\'' +
                 '}';
     }

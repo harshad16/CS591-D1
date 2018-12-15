@@ -58,6 +58,10 @@ public class courseDAO extends BaseDAO<Course>{
         }
 
     }
+    
+    public List<Course> readMostRecentCourse() throws SQLException {
+         return readAll("SELECT * FROM course ORDER BY createdAt DESC LIMIT 1", null);
+    }
 
     public List<Course> extractData(ResultSet rs) throws SQLException {
 

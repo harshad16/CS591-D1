@@ -135,10 +135,27 @@ public class Dashboard extends JFrame {
 		courseIdLabel.setBounds(215, 51, 95, 25);
 		contentPane.add(courseIdLabel);
 		
+			
 		JLabel courseYearLabel = new JLabel("Year:");
 		courseYearLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearLabel.setBounds(215, 80, 95, 26);
 		contentPane.add(courseYearLabel);
+		
+		JLabel collegeLabel = new JLabel("College:");
+		collegeLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		collegeLabel.setBounds(500, 22, 95, 26);
+		contentPane.add(collegeLabel);
+		
+		JLabel typeLabel = new JLabel("Type:");
+		typeLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		typeLabel.setBounds(500, 51, 95, 26);
+		contentPane.add(typeLabel);
+		
+		JLabel daysLabel = new JLabel("Days:");
+		daysLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
+		daysLabel.setBounds(500, 80, 95, 26);
+		contentPane.add(daysLabel);
+		
 		
 		courseNameText = new JLabel();
 		courseNameText.setText(course.getName());;
@@ -153,11 +170,29 @@ public class Dashboard extends JFrame {
 		contentPane.add(courseIdText);
 
 		
-		courseYearText = new JLabel();
-		courseYearText.setText(course.getDays());
+		/*courseYearText = new JLabel();
+		courseYearText.setText(course.getYear());
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(322, 80, 251, 26);
-		contentPane.add(courseYearText);
+		contentPane.add(courseYearText);*/
+		
+		JLabel collegeText = new JLabel();
+		collegeText.setText(course.getCollege());
+		collegeText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		collegeText.setBounds(570, 20, 251, 26);
+		contentPane.add(collegeText);
+		
+		JLabel TypeText = new JLabel();
+		TypeText.setText(course.getType());
+		TypeText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		TypeText.setBounds(570, 52, 251, 26);
+		contentPane.add(TypeText);
+		
+		JLabel daysText = new JLabel();
+		daysText.setText(course.getDays());
+		daysText.setFont(new Font("Georgia", Font.PLAIN, 14));
+		daysText.setBounds(570, 80, 251, 26);
+		contentPane.add( daysText);
 		
 		JLabel homeLabel = new JLabel();
 		homeLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));

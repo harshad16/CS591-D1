@@ -24,7 +24,7 @@ public class AssignmentService {
             conn = util.getConnection();
             AssignmentDAO adao = new AssignmentDAO(conn);
             if(a.getAssignmentId()!=null){
-                adao.updateAssignment(a);
+            	adao.updateAssignment(a);
             }else{
                 adao.saveAssignment(a);
             }
