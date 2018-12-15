@@ -16,17 +16,19 @@ public class CalculateGrade {
 			{"F",new Integer(0),new Integer(35)},
 	};
 
-	private void grade() {
+	public String grade(int grd) {
 		// TODO Auto-generated method stub
-		System.out.println(grade.length);
 		for (int i=0; i< grade.length; i++) {
-			System.out.println(grade[i].length);
+			if(grd > (Integer)grade[i][1] && grd <= (Integer)grade[i][2]) {
+				return (String)grade[i][0];
+			}
 		}
-	};
-	
-	public static void main() {
-		CalculateGrade g = new CalculateGrade();
-		g.grade();
+		return "";
 	}
+	
+//	public static void main() {
+//		CalculateGrade g = new CalculateGrade();
+//		g.grade();
+//	}
 
 }

@@ -41,6 +41,7 @@ public class AddAssignments extends JPanel {
 		
 		contentPane = new JPanel();
 		this.assignments = course.getAssignments();
+		System.out.println("Assignemtn" + this.assignments);
 		setBounds(215, 146, 1021, 527);
 		setLayout(null);
 		

@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import src.entities.CapitalizeUtil;
 import src.entities.User;
 
 public class GeneralFrame extends JFrame {
@@ -44,7 +45,7 @@ public class GeneralFrame extends JFrame {
 	public GeneralFrame(String panel_type,User u) {
 		this.user = u;
 		intialCommonComponent();
-		usernameText.setText(user.getUserName());
+		usernameText.setText(CapitalizeUtil.captilize(user.getUserName()));
 		if (panel_type=="Course") {
 			AddCourse obj = new AddCourse(user);
 	        obj.setVisible(true);
