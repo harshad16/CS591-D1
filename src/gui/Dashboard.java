@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -178,32 +179,26 @@ public class Dashboard extends JFrame {
 		courseIdText.setBounds(322, 52, 251, 26);
 		contentPane.add(courseIdText);
 
-		
-<<<<<<< HEAD
-		/*courseYearText = new JLabel();
-		courseYearText.setText(course.getYear());
-=======
 		courseYearText = new JLabel();
 		courseYearText.setText(CapitalizeUtil.captilize(course.getDays()));
->>>>>>> added export csv, capitalizeUtil
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(322, 80, 251, 26);
-		contentPane.add(courseYearText);*/
+		contentPane.add(courseYearText);
 		
 		JLabel collegeText = new JLabel();
-		collegeText.setText(course.getCollege());
+		collegeText.setText(CapitalizeUtil.captilize(course.getCollege()));
 		collegeText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		collegeText.setBounds(570, 20, 251, 26);
 		contentPane.add(collegeText);
 		
 		JLabel TypeText = new JLabel();
-		TypeText.setText(course.getType());
+		TypeText.setText(CapitalizeUtil.captilize(course.getType()));
 		TypeText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		TypeText.setBounds(570, 52, 251, 26);
 		contentPane.add(TypeText);
 		
 		JLabel daysText = new JLabel();
-		daysText.setText(course.getDays());
+		daysText.setText(CapitalizeUtil.captilize(course.getDays()));
 		daysText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		daysText.setBounds(570, 80, 251, 26);
 		contentPane.add( daysText);
@@ -504,24 +499,48 @@ public class Dashboard extends JFrame {
 //				DefaultTableModel model = (DefaultTableModel) table.getModel();
 //				model.setRowCount(0);
 				try {
-				  System.out.println("Working Directory = " +
-			              System.getProperty("user.dir"));
-				  String path =  System.getProperty("user.dir");
-				  File file = new File(path + "output.csv");
-				  FileWriter writer = new FileWriter(file);
-					CSVWriter csvWriter = new CSVWriter(writer); 
-					List<String[]> values= new ArrayList<>();
-					values.add(Arrays.copyOfRange(columnNames, 1, columnNames.length));
-					for (int row = 0; row < table.getRowCount(); row++){
-						String[] s = new String[table.getColumnCount()];
-						for (int col = 0; col < table.getColumnCount(); col++){
-							s[col] = table.getValueAt(row, col).toString();
+				String result = System.getProperty("user.dir");
+				boolean isApproved = true;
+				JFileChooser chooser = new JFileChooser(); 
+			    chooser.setCurrentDirectory(new java.io.File("."));
+			    chooser.setDialogTitle("Choose Directory");
+			    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			    //
+			    // disable the "All files" option.
+			    //
+			    chooser.setAcceptAllFileFilterUsed(false);
+			    //    
+			    if (chooser.showOpenDialog(Dashboard.this) == JFileChooser.APPROVE_OPTION) { 
+			      System.out.println("getCurrentDirectory(): " 
+			         +  chooser.getCurrentDirectory());
+			      System.out.println("getSelectedFile() : " 
+			         +  chooser.getSelectedFile());
+			      result = chooser.getSelectedFile().toString();
+			      }
+			    else {
+			      System.out.println("Canceled");
+			      isApproved = false;
+			      }
+			    if(isApproved) {
+			    	System.out.println("Working Directory = " +
+				              System.getProperty("user.dir"));
+					  //String path =  System.getProperty("user.dir");
+					  File file = new File(result + "/output.csv");
+					  FileWriter writer = new FileWriter(file);
+						CSVWriter csvWriter = new CSVWriter(writer); 
+						List<String[]> values= new ArrayList<>();
+						values.add(Arrays.copyOfRange(columnNames, 1, columnNames.length));
+						for (int row = 0; row < table.getRowCount(); row++){
+							String[] s = new String[table.getColumnCount()];
+							for (int col = 0; col < table.getColumnCount(); col++){
+								s[col] = table.getValueAt(row, col).toString();
+							}
+							values.add(s);
 						}
-						values.add(s);
-					}
-					csvWriter.writeAll(values);;
-			        csvWriter.close();
-			        JOptionPane.showMessageDialog(Dashboard.this, "Successfully exported file in" + System.getProperty("user.dir"));
+						csvWriter.writeAll(values);;
+				        csvWriter.close();
+				        JOptionPane.showMessageDialog(Dashboard.this, "Successfully exported file in" + result);
+			    		}  
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -593,20 +612,17 @@ public class Dashboard extends JFrame {
 	
 	private String calculateGrade(List<Grade> grade) {
 		double sum = 0;
-		int weight = 0;
 		if(!grade.isEmpty()) {
 			for(Grade grd : grade) {
 				System.out.println(grd.getAssignment().getWeight());
 				System.out.println(grd.getGrade());
-				sum += grd.getAssignment().getWeight() * grd.getGrade();
-				weight += grd.getAssignment().getWeight();
+				sum += grd.getGrade() / grd.getAssignment().getTotal() * grd.getAssignment().getWeight();
 			}
 			CalculateGrade finalGrade = new CalculateGrade();
 			// grade/total * weight
-			String fg = finalGrade.grade((int)sum / weight);
-			return null;
+			String fg = finalGrade.grade((int)sum);
+			return fg;
 		}
-		System.out.println("grade == null");
 		return null;
 	}
 
