@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,11 +23,8 @@ import src.entities.CapitalizeUtil;
 import src.entities.Course;
 import src.entities.User;
 import src.service.CourseService;
-import javax.swing.border.LineBorder;
-import javax.swing.BorderFactory;
 
 public class Home extends JFrame {
-
 	/**
 	 * TODO: Write the doc.
 	 */
@@ -36,24 +32,10 @@ public class Home extends JFrame {
 	private JPanel contentPane;
 	private User user;
 	private JLabel usernameText;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Home frame = new Home();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	CourseService courseService = new CourseService();
 	private List<Course> courseList;
-	
-	
+		
 	private  List<Course> readCourses() {
 		List<Course> courses = null;
 				
@@ -82,8 +64,7 @@ public class Home extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-		
-		
+
 		JLabel homeLabel = new JLabel();
 		homeLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/home.png")));
 		homeLabel.addMouseListener(new MouseListener () {
@@ -109,19 +90,19 @@ public class Home extends JFrame {
 		});
 		homeLabel.setBounds(90, 30, 50, 40);
 		contentPane.add(homeLabel);
-		
+
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameLabel.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/user_32x32.png")));
 		usernameLabel.setFont(new Font("Georgia", Font.BOLD, 14));
 		usernameLabel.setBounds(1025, 50, 125, 30);
 		contentPane.add(usernameLabel);
-		
+
 		usernameText = new JLabel();
 		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		usernameText.setBounds(1150, 50, 100, 30);
 		usernameText.setText(CapitalizeUtil.captilize(user.getUserName()));
 		contentPane.add(usernameText);
-		
+
 		JLabel returnLabel = new JLabel();
 		returnLabel.setIcon(new ImageIcon(Home.class.getResource("/src/misc/back.png")));
 		returnLabel.setBounds(30, 30, 50, 40);
@@ -162,20 +143,20 @@ public class Home extends JFrame {
 		});
 		addStudentButton.setBounds(1027, 146, 163, 105);
 		contentPane.add(addStudentButton);
-		
+
 		JLabel addCourseLabel = new JLabel("Add Course:");
 		addCourseLabel.setBounds(12, 98, 121, 43);
 		contentPane.add(addCourseLabel);
 		addCourseLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
-		
+
 		JPanel buttonPanel = new JPanel();
 	    buttonPanel.setLayout(new GridLayout(0,4,30,30));
 	    buttonPanel.setSize(new Dimension(400, 300)); 
-	    
+
 	    JScrollPane pane = new JScrollPane();
 	    pane.setLocation(12,146);
 	    pane.setSize(new Dimension(900, 514));
-	    
+
 	    JButton newCourseButton = new JButton();
 		newCourseButton.setIcon(new ImageIcon(Home.class.getResource("/src/misc/add_course_.png")));
 		newCourseButton.addActionListener(new ActionListener() {
@@ -191,10 +172,9 @@ public class Home extends JFrame {
 	    for (Course course: courseList) {
 	    	if (course.getUserId() == user.getId()) {
 		    	JButton btnCs = new JButton("<html>"+course.getName()+"<br>"
-		    								+course.getCollege()+"<br>"
+		    								+course.getCollege()+" - "
 		    								+course.getCourseId()+"<br>"
-		    								+course.getDays()+"<br>"
-		    								+course.getStart_time()+"<br>"
+		    								+course.getYear()+"<br>"
 		    								+"</html>");
 				btnCs.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
@@ -203,19 +183,15 @@ public class Home extends JFrame {
 							_dashboard = new Dashboard(course,user);
 							_dashboard.setVisible(true);
 							setVisible(false);
-							
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
 					}
 				});
 				btnCs.setFont(new Font("Georgia", Font.PLAIN, 16));
 				buttonPanel.add(btnCs);
 	    	}
 	    }
-	    
 	    pane.setViewportView(buttonPanel);
 	    contentPane.add(pane);
 	}

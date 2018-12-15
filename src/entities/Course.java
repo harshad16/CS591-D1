@@ -12,13 +12,14 @@ public class Course {
     private String start_time;
     private String days;
     private String type;
+    private String year;
     private Integer userid;
 
     private List<Student> students;
     private List<Assignment> assignments;
 	
 
-    public Course(String name, String description, String start_time, String days, String courseid, String college, String type, Integer userid) {
+    public Course(String name, String description, String start_time, String days, String courseid, String college, String type, Integer userid, String year) {
         this.id = null;
         this.name = name;
         this.description =description;
@@ -28,6 +29,7 @@ public class Course {
         this.days = days;
         this.type = type;
         this.userid = userid;
+        this.year = year;
         this.students = null;
         this.assignments = null;
         
@@ -111,6 +113,14 @@ public class Course {
     
     public Integer getUserId() {
     	return this.userid;
+    }
+    
+    public String getYear() {
+    	return this.year;
+    }
+    
+    public void setYear(String year) {
+    	this.year = year;
     }
     
     public void setUserId(Integer userid) {

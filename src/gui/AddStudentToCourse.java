@@ -3,6 +3,7 @@ package src.gui;
 import src.entities.ClassEntity;
 import src.entities.Course;
 import src.entities.Student;
+import src.entities.User;
 import src.service.ClassService;
 import src.service.StudentService;
 import java.sql.SQLException;
@@ -23,13 +24,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class AddStudentToCourse extends JPanel {
 	/**
-	 * 
+	 * Class for adding students to course.
 	 */
+
 	private static final long serialVersionUID = 1L;
 	private Course course;
 	private JTextField searchText;
@@ -39,13 +42,15 @@ public class AddStudentToCourse extends JPanel {
 	private JScrollPane scrollPane;
 	private JTable resultTable;
 	private DefaultTableModel tableModel;
+	private User user;
 
 	public AddStudentToCourse() {
 		initialize();
 	}
 	
-	public AddStudentToCourse(Course c) {
+	public AddStudentToCourse(Course c, User u) {
 		this.course = c;
+		this.user = u;
 		initialize();
 	}
 	
@@ -55,7 +60,6 @@ public class AddStudentToCourse extends JPanel {
 		
 		JButton saveButton = new JButton("Save");
 		saveButton.setFont(new Font("Georgia", Font.PLAIN, 14));
-		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
 		saveButton.setBounds(755, 473, 113, 37);
 		add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
@@ -147,14 +151,14 @@ public class AddStudentToCourse extends JPanel {
 		add(searchText);
 		searchText.setColumns(10);
 		
-		JLabel searchLabel = new JLabel("Search :");
+		JLabel searchLabel = new JLabel("Search: ");
 		searchLabel.setIcon(new ImageIcon(AddStudentToCourse.class.getResource("/src/misc/search_32x32.png")));
 		searchLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
 		searchLabel.setBounds(93, 49, 109, 37);
 		add(searchLabel);
 		
 		String[] category = {"BUid", "First Name", "Last Name"};
-		JComboBox<String> comboBox = new JComboBox(category);
+		JComboBox<String> comboBox = new JComboBox<String>(category);
 		searchType = "BUid";
 		comboBox.addActionListener(new ActionListener() {
 			@Override
@@ -184,6 +188,23 @@ public class AddStudentToCourse extends JPanel {
 		scrollPane.setBounds(93, 145, 905, 297);
 		add(scrollPane);
 		
+		JLabel stdDBLabel = new JLabel("Add Students to DB:");
+		stdDBLabel.setIcon(new ImageIcon(AddStudentToCourse.class.getResource("/src/misc/student_24x24.png")));
+		stdDBLabel.setBounds(93, 460, 150, 25);
+		add(stdDBLabel);
+		
+		JButton stdDBButton = new JButton("Add students to DB");
+		stdDBButton.setSelectedIcon(null);
+		stdDBButton.setBounds(93, 489, 150, 25);
+		stdDBButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GeneralFrame _addstudent = new GeneralFrame("Student", user);
+				_addstudent.setVisible(true);
+				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(getParent());
+				topFrame.setVisible(false);
+			}
+		});
+		add(stdDBButton);
 	}
 	
 	private void searchStudent() {
@@ -199,7 +220,6 @@ public class AddStudentToCourse extends JPanel {
 		else {
 			StudentService sService = new StudentService();
 			try {
-				//TODO: after student has been added to the class, show "added" on another column. 
 				//Implement this by search id in class DB
 				switch(searchType) {
 				case "BUid":
@@ -239,23 +259,21 @@ public class AddStudentToCourse extends JPanel {
 						rst[count] = row;
 						count++;
 					}
-					
+
 					tableModel=new DefaultTableModel(rst, columnNames){
 						private static final long serialVersionUID = 1L;
-
 						// This Method is to make a column not be Editable on Table.
 					    @Override
 					    public boolean isCellEditable(int row, int column) {
 					        return column == rst[0].length-1 ? true: false; 
 					    }
-					    
+
 					    // This Method Renders Checkbox on Table.
 					    @Override
 					    public Class<?> getColumnClass(int columnIndex) {
 					        return getValueAt(0, columnIndex).getClass();
 					    }
 					};
-					
 
 					resultTable = new JTable(tableModel);
 					resultTable.setPreferredScrollableViewportSize(new Dimension(400, 400));
@@ -270,8 +288,6 @@ public class AddStudentToCourse extends JPanel {
 					resultTable.setFillsViewportHeight(true);
 					resultTable.setRowHeight(30);
 					resultTable.setFont(new Font("Georgia", Font.PLAIN, 16));
-					scrollPane.setViewportView(resultTable);
-					
 					scrollPane.setViewportView(resultTable);
 					}
 				}catch(SQLException e) {}

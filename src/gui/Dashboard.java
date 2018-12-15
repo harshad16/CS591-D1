@@ -172,7 +172,7 @@ public class Dashboard extends JFrame {
 		courseNameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseNameText.setBounds(322, 20, 263, 26);
 		contentPane.add(courseNameText);
-		
+
 		courseIdText = new JLabel();
 		courseIdText.setText(CapitalizeUtil.captilize(course.getCourseId()));
 		courseIdText.setFont(new Font("Georgia", Font.PLAIN, 14));
@@ -313,14 +313,14 @@ public class Dashboard extends JFrame {
 	        contentPane.repaint();
 		}
 		else if (panel_type.equals("Student")) {
-			AddStudentToCourse obj = new AddStudentToCourse(course);
+			AddStudentToCourse obj = new AddStudentToCourse(course,user);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();
 	        contentPane.repaint();
 		}
 		else if (panel_type.equals("Stats")) {
-			Statistics obj = new Statistics();
+			Statistics obj = new Statistics(course);
 	        obj.setVisible(true);
 	        contentPane.add(panel_type,obj);
 	        ((JPanel) contentPane).revalidate();
@@ -338,7 +338,7 @@ public class Dashboard extends JFrame {
 		contentPane.add(panel_type,panel);
 		((JPanel) contentPane).revalidate();
 		contentPane.repaint();
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 13, 949, 459);
 		scrollPane.setHorizontalScrollBarPolicy(
@@ -346,7 +346,6 @@ public class Dashboard extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(
 				   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panel.add(scrollPane);
-		
 		
 		// TODO get course id
 		ClassService  clsService = new ClassService();
@@ -384,7 +383,7 @@ public class Dashboard extends JFrame {
         	students = sService.findStudentById(clsE.getStudentId());
         	Object[] row = new Object[columnNames.length];
         	for(Student std : students) {
-        		System.out.println("Student:"+std);
+//        		System.out.println("Student:"+std);
         		row[0]=std.getId();
 				row[1]=std.getFirstName();
 				row[2]=std.getLastName();

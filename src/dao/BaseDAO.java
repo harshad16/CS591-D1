@@ -14,7 +14,7 @@ public abstract class BaseDAO<T> {
     public BaseDAO(Connection conn) {
         BaseDAO.conn = conn;
     }
-
+    
     public void save(String sql, Object[] vals) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         if (vals != null) {
@@ -26,7 +26,13 @@ public abstract class BaseDAO<T> {
         }
         pstmt.executeUpdate();
     }
+    
+    public void createDatabase(String sql) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.executeUpdate();
+    }
 
+    
     public Integer saveWithID(String sql, Object[] vals) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         if (vals != null) {

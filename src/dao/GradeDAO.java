@@ -55,7 +55,6 @@ public class GradeDAO extends BaseDAO<Grade>{
 
     public List<Grade> extractData(ResultSet rs) throws SQLException {
 
-        GradeDAO gdao = new GradeDAO(conn);
         AssignmentDAO adao = new AssignmentDAO(conn);
         StudentDAO sdao = new StudentDAO(conn);
         List<Grade> grades = new ArrayList<>();
@@ -78,9 +77,6 @@ public class GradeDAO extends BaseDAO<Grade>{
     }
 
     public List<Grade> extractDataFirstLevel(ResultSet rs) throws SQLException {
-        GradeDAO gdao = new GradeDAO(conn);
-        AssignmentDAO adao = new AssignmentDAO(conn);
-        StudentDAO sdao = new StudentDAO(conn);
         List<Grade> grades = new ArrayList<>();
         while (rs.next()) {
             Grade g = new Grade();

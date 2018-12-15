@@ -19,14 +19,12 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
         save("INSERT INTO assignment (courseid, name, weight, description, type, total, isOptional) VALUES (?,?,?,?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional()});
     }
 
-
-
     public Integer saveAssignmentID(Assignment a) throws SQLException {
         return saveWithID("INSERT INTO assignment (courseid, name, weight, description, type, total, isOptional) VALUES (?,?,?,?,?,?,?)", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional()});
     }
 
     public void updateAssignment(Assignment a) throws SQLException {
-        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ?, type = ?, total = ? isOptional = ?, WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional(), a.getAssignmentId() });
+        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ?, type = ?, total = ? isOptional = ? WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional(), a.getAssignmentId() });
     }
 
     public void updateAssignmentName(Assignment a) throws SQLException {
@@ -68,8 +66,6 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
     }
 
     public List<Assignment> extractData(ResultSet rs) throws SQLException {
-
-        StudentDAO sdao = new StudentDAO(conn);
         List<Assignment> assignments = new ArrayList<>();
         while (rs.next()) {
             Assignment a = new Assignment();
@@ -85,11 +81,9 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
             assignments.add(a);
         }
         return assignments;
-
     }
 
     public List<Assignment> extractDataFirstLevel(ResultSet rs) throws SQLException {
-        StudentDAO sdao = new StudentDAO(conn);
         List<Assignment> assignments = new ArrayList<>();
         while (rs.next()) {
             Assignment a = new Assignment();
