@@ -14,7 +14,7 @@ import src.service.Utilities;
 
 public class Test {
 
-	public void runTest() {
+	public void runTest() throws SQLException {
 		
 		System.out.println("Test Cases");
 		
@@ -39,11 +39,12 @@ public class Test {
 
         try {
         	List<Course> x = cService.readMostRecentCourse();
-            if (x.get(0).getId()==null) {
-	        	cService.saveCourse(c1);
-	            sService.saveStudent(s1);
-	            classService.saveClass(c1ass1);
-            }
+            x.get(0).getId(); 
         } catch (SQLException e) {;}
+         catch (IndexOutOfBoundsException e) {
+        	cService.saveCourse(c1);
+            sService.saveStudent(s1);
+            classService.saveClass(c1ass1);
+        }
 	}
 }

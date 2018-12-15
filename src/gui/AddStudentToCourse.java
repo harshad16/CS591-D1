@@ -78,6 +78,7 @@ public class AddStudentToCourse extends JPanel {
 				                	// System.out.println("ClassAttributes:"+clsE);
 				                	if(sid == clsE.getStudentId()) {
 				                		already = true;
+				                		break;
 				                    }
 				                }
 								if (!already) {
@@ -247,6 +248,7 @@ public class AddStudentToCourse extends JPanel {
 			                	if(s.getId() == clsE.getStudentId()) {
 			                		// validation if student already exists in class
 			                    	already = true;
+			                    	break;
 			                    	// System.out.println(already+" "+clsE.getStudentId());
 			                    }
 			                }		

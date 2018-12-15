@@ -1,5 +1,7 @@
 package src;
 
+import java.sql.SQLException;
+
 import src.gui.Index;
 
 public class Main {
@@ -9,7 +11,11 @@ public class Main {
     	
     	// Test the Back end connections
     	Test backendTest = new Test();
-        backendTest.runTest();
+        try {
+			backendTest.runTest();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         
     	// Start the GUI
         Index gui= new Index();

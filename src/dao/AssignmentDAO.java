@@ -24,7 +24,7 @@ public class AssignmentDAO extends BaseDAO<Assignment>{
     }
 
     public void updateAssignment(Assignment a) throws SQLException {
-        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ?, type = ?, total = ? isOptional = ? WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional(), a.getAssignmentId() });
+        save("UPDATE assignment SET courseid = ? ,name = ?, weight = ?, description = ?, type = ?, total = ?, isOptional = ? WHERE id = ?", new Object[] { a.getCourseId(), a.getName(), a.getWeight(), a.getDescription(), a.getType(), a.getTotal(), a.getIsOptional(), a.getAssignmentId() });
     }
 
     public void updateAssignmentName(Assignment a) throws SQLException {

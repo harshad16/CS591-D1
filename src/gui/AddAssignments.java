@@ -21,7 +21,6 @@ import src.service.AssignmentService;
 
 public class AddAssignments extends JPanel {
 
-	private List<Assignment> assignments;
 	/**
 	 * 
 	 */
@@ -29,12 +28,25 @@ public class AddAssignments extends JPanel {
 	private JTable table;
 	private JPanel contentPane;
 	private Course course;
-		
+	private List<Assignment> assignments;
+	
+	
 	public AddAssignments(Course c) {
 		
-		contentPane = new JPanel();
 		this.course = c;
-		assignments = course.getAssignments();
+		initialize();
+	}
+	
+	public void initialize() {
+		AssignmentService asgnService = new AssignmentService();
+		try {
+			assignments = asgnService.readAssignmentByCID(course.getId());
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			assignments = course.getAssignments();
+		}
+		contentPane = new JPanel();
 		setBounds(215, 146, 1021, 527);
 		setLayout(null);
 		
@@ -43,6 +55,7 @@ public class AddAssignments extends JPanel {
 		Object[][] data = new Object[assignments.size()+1][columnNames.length];
 		for (int i = 0; i < assignments.size(); ++i) {
 			Assignment a = assignments.get(i);
+			System.out.println("Assignment"+a);
 			String description = a.getDescription() != null ? a.getDescription() : "NO Description Avaible";
 			Boolean isOptional = a.getIsOptional();
 			Object[] row = {a.getName(), a.getWeight(), a.getType(), a.getTotal(), description, isOptional, a.getCreatedAt().toString()};
@@ -52,7 +65,12 @@ public class AddAssignments extends JPanel {
 		}
 		//Add extra row for creating a new assignment
 		for (int k = 0; k < columnNames.length; ++k) {
-				data[assignments.size()][k] = null;
+			if(k==columnNames.length-2) {
+				data[assignments.size()][k] = false;
+			}else {
+				data[assignments.size()][k] = new String("");
+			}
+				
 		}
 		
 		DefaultTableModel tableModel=new DefaultTableModel(data, columnNames){	
@@ -113,16 +131,18 @@ public class AddAssignments extends JPanel {
  				String type = table.getModel().getValueAt(row, 2).toString();
  				Integer total = Integer.parseInt(table.getModel().getValueAt(row, 3).toString());
  				String description = table.getModel().getValueAt(row, 4).toString();
- 				Boolean isOptional = (table.getModel().getValueAt(row, 5).equals(0)) ? false :true;
+ 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
  				
  				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
  				//if its not the last row , we need set the assignmentId so we know which one to update
  				if (row != assignments.size() && assignments.size() != 0 ) {
+ 				   System.out.println("Inside update: "+row);
  				   a.setAssignmentId(assignments.get(row).getAssignmentId());
  				}
  				boolean success = saveAssignment(a);
  				if(success) {
-				    JOptionPane.showMessageDialog(contentPane, "Success!");	
+				    JOptionPane.showMessageDialog(contentPane, "Success!");
+				    initialize();
 				}else {
 						JOptionPane.showMessageDialog(contentPane, "Error!");	
 				}
@@ -143,7 +163,7 @@ public class AddAssignments extends JPanel {
  				String type = table.getModel().getValueAt(row, 2).toString();
  				Integer total = (Integer) table.getModel().getValueAt(row, 3);
  				String description = table.getModel().getValueAt(row, 4).toString();
- 				Boolean isOptional = (table.getModel().getValueAt(row, 5).equals(new String("0"))) ? false :true;
+ 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
  				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
  				//if its not the last row , we need set the assignmentId so we know which one to update
  				a.setAssignmentId(assignments.get(row).getAssignmentId());
