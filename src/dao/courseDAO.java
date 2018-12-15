@@ -20,7 +20,7 @@ public class courseDAO extends BaseDAO<Course>{
     }
 
     public Integer saveCourseID(Course c) throws SQLException {
-        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid) VALUES (?,?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId(), c.getYear()});
+        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid, year) VALUES (?,?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId(), c.getYear()});
     }
 
     public void updateCourse(Course c) throws SQLException {

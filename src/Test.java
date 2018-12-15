@@ -27,24 +27,5 @@ public class Test {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		
-		// For Testing Purpose only
-		CourseService cService = new CourseService();
-        StudentService sService = new StudentService();
-        ClassService classService = new ClassService();
-
-        Course c1 = new Course("Object oriented Design Using Java", "First Course", "9:00-11:45:", "Mon,Tues,Thrus", "CS591-D1", "CAS", "", 1, "Fall-2018");
-        Student s1 = new Student("U12345678", "Foo", "Bar","fall-2018", "graduate");
-        ClassEntity c1ass1 = new ClassEntity(1, 1);
-
-        try {
-        	List<Course> x = cService.readMostRecentCourse();
-            x.get(0).getId(); 
-        } catch (SQLException e) {;}
-         catch (IndexOutOfBoundsException e) {
-        	cService.saveCourse(c1);
-            sService.saveStudent(s1);
-            classService.saveClass(c1ass1);
-        }
 	}
 }

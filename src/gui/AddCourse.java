@@ -169,23 +169,28 @@ public class AddCourse extends JPanel {
 					}
 					
 					Course c = new Course(name, description, startTime, days, courseId, college, type, userid, yearId);
-					c.setAssignments(getMostRecentCourse().getAssignments());
-					Integer rst = saveCourse(c);
-					Boolean assignmentSaved = true;
-					if(rst != -1) {
-						if (importAssignmentrdBtn.isSelected()) {
-						    for (Assignment a: c.getAssignments()) {
-							    a.setCourseId(rst);
-							    a.setAssignmentId(null);
-							    assignmentSaved = saveAssignment(a);
-							    if (!assignmentSaved ) break;
-						    }
-						}    
-						if (assignmentSaved)
-					        JOptionPane.showMessageDialog(panel, "Success!");	
-					}else if (rst == -1){
-							JOptionPane.showMessageDialog(panel, "Error!");	
-					}		
+					Course mrCourse = getMostRecentCourse();
+					if(mrCourse!=null) {
+						c.setAssignments(mrCourse.getAssignments());
+						Integer rst = saveCourse(c);
+						Boolean assignmentSaved = true;
+						if(rst != -1) {
+							if (importAssignmentrdBtn.isSelected()) {
+							    for (Assignment a: c.getAssignments()) {
+								    a.setCourseId(rst);
+								    a.setAssignmentId(null);
+								    assignmentSaved = saveAssignment(a);
+								    if (!assignmentSaved ) break;
+							    }
+							}    
+							if (assignmentSaved)
+						        JOptionPane.showMessageDialog(panel, "Success!");	
+						}else if (rst == -1){
+								JOptionPane.showMessageDialog(panel, "Error!");	
+						}
+					} else {
+						saveCourse(c);
+					}
  			 }
 		});
 	}
@@ -207,7 +212,9 @@ public class AddCourse extends JPanel {
     	try {
 		    CourseService courseService = new CourseService();
 		    courseList = courseService.readMostRecentCourse();
-		    mostRecentCourse = courseList.get(0);
+		    if(!courseList.isEmpty()) {
+		    	mostRecentCourse = courseList.get(0);
+		    }
 	    } catch (SQLException e) {
 		    return null;
 	    }
