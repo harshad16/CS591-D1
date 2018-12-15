@@ -9,8 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -23,8 +27,11 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.opencsv.CSVWriter;
+
 import src.entities.Assignment;
 import src.entities.CalculateGrade;
+import src.entities.CapitalizeUtil;
 import src.entities.ClassEntity;
 import src.entities.Grade;
 import src.entities.Student;
@@ -53,6 +60,7 @@ public class Dashboard extends JFrame {
 	private JLabel courseIdText;
 	private JLabel courseYearText;
 	private User user;
+	private String[] columnNames;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -94,7 +102,7 @@ public class Dashboard extends JFrame {
 		contentPane.add(usernameLabel);
 		
 		usernameText = new JLabel();
-		usernameText.setText(user.getUserName());
+		usernameText.setText(CapitalizeUtil.captilize(user.getUserName()));
 		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		usernameText.setBounds(1150, 50, 100, 30);
 		contentPane.add(usernameText);
@@ -159,20 +167,25 @@ public class Dashboard extends JFrame {
 		
 		
 		courseNameText = new JLabel();
-		courseNameText.setText(course.getName());;
+		courseNameText.setText(CapitalizeUtil.captilize(course.getName()));;
 		courseNameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseNameText.setBounds(322, 20, 263, 26);
 		contentPane.add(courseNameText);
 		
 		courseIdText = new JLabel();
-		courseIdText.setText(course.getCourseId());
+		courseIdText.setText(CapitalizeUtil.captilize(course.getCourseId()));
 		courseIdText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseIdText.setBounds(322, 52, 251, 26);
 		contentPane.add(courseIdText);
 
 		
+<<<<<<< HEAD
 		/*courseYearText = new JLabel();
 		courseYearText.setText(course.getYear());
+=======
+		courseYearText = new JLabel();
+		courseYearText.setText(CapitalizeUtil.captilize(course.getDays()));
+>>>>>>> added export csv, capitalizeUtil
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(322, 80, 251, 26);
 		contentPane.add(courseYearText);*/
@@ -365,7 +378,7 @@ public class Dashboard extends JFrame {
 			colNameList.add(asgnE.getName());
 		}
 		colNameList.add("Grade");
-		String[] columnNames = new String[colNameList.size()];
+		columnNames = new String[colNameList.size()];
 		columnNames = colNameList.toArray(columnNames);
 		
 		
@@ -483,13 +496,38 @@ public class Dashboard extends JFrame {
 		panel.add(saveButton);
 		
 		
-		JButton clearButton = new JButton("Clear");
+		JButton clearButton = new JButton("Export CVS");
 		// TODO: Need to Come up with better logic
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				model.setRowCount(0);
+//				DefaultTableModel model = (DefaultTableModel) table.getModel();
+//				model.setRowCount(0);
+				try {
+				  System.out.println("Working Directory = " +
+			              System.getProperty("user.dir"));
+				  String path =  System.getProperty("user.dir");
+				  File file = new File(path + "output.csv");
+				  FileWriter writer = new FileWriter(file);
+					CSVWriter csvWriter = new CSVWriter(writer); 
+					List<String[]> values= new ArrayList<>();
+					values.add(Arrays.copyOfRange(columnNames, 1, columnNames.length));
+					for (int row = 0; row < table.getRowCount(); row++){
+						String[] s = new String[table.getColumnCount()];
+						for (int col = 0; col < table.getColumnCount(); col++){
+							s[col] = table.getValueAt(row, col).toString();
+						}
+						values.add(s);
+					}
+					csvWriter.writeAll(values);;
+			        csvWriter.close();
+			        JOptionPane.showMessageDialog(Dashboard.this, "Successfully exported file in" + System.getProperty("user.dir"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
 			}
 		});
 		clearButton.setBounds(864, 485, 97, 25);
@@ -564,7 +602,7 @@ public class Dashboard extends JFrame {
 				weight += grd.getAssignment().getWeight();
 			}
 			CalculateGrade finalGrade = new CalculateGrade();
-			// 60/100 * weight
+			// grade/total * weight
 			String fg = finalGrade.grade((int)sum / weight);
 			return null;
 		}

@@ -19,6 +19,8 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
+
+import src.entities.CapitalizeUtil;
 import src.entities.Course;
 import src.entities.User;
 import src.service.CourseService;
@@ -117,7 +119,7 @@ public class Home extends JFrame {
 		usernameText = new JLabel();
 		usernameText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		usernameText.setBounds(1150, 50, 100, 30);
-		usernameText.setText(user.getUserName());
+		usernameText.setText(CapitalizeUtil.captilize(user.getUserName()));
 		contentPane.add(usernameText);
 		
 		JLabel returnLabel = new JLabel();
