@@ -1,11 +1,9 @@
 package src.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,19 +22,6 @@ public class GeneralFrame extends JFrame {
 	private JPanel contentPane;
 	private JLabel usernameText;
 	private User user;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GeneralFrame frame = new GeneralFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public GeneralFrame() {
 		intialCommonComponent();

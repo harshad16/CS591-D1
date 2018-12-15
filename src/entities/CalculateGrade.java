@@ -16,8 +16,7 @@ public class CalculateGrade {
 			{"F",new Integer(0),new Integer(35)},
 	};
 
-	public String grade(int grd) {
-		// TODO Auto-generated method stub
+	public String grade(double grd) {
 		for (int i=0; i< grade.length; i++) {
 			if(grd > (Integer)grade[i][1] && grd <= (Integer)grade[i][2]) {
 				return (String)grade[i][0];

@@ -1,8 +1,8 @@
 package src.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
-
+import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,12 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import src.entities.SecurityQuestions;
 import src.entities.User;
 import src.service.UserService;
-import javax.swing.JComboBox;
-import java.awt.Color;
+
 
 public class Signup extends JFrame {
 
@@ -39,19 +37,6 @@ public class Signup extends JFrame {
 	private JPasswordField passwordTextField;
 	private JTextField securityAnswerTextField;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Signup frame = new Signup();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	public Signup() {
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,7 +44,6 @@ public class Signup extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-
 		
 		JLabel logoLabel = new JLabel();
 		logoLabel.setIcon(new ImageIcon(Signup.class.getResource("/src/misc/logo.png")));
@@ -102,7 +86,7 @@ public class Signup extends JFrame {
 		passwordTextField.setBounds(610, 317, 345, 35);
 		contentPane.add(passwordTextField);
 		
-		JComboBox<String> securityQuestionText = new JComboBox();
+		JComboBox<String> securityQuestionText = new JComboBox<String>();
 		securityQuestionText.setEditable(true);
 		securityQuestionText.setFont(new Font("Georgia", Font.PLAIN, 16));
 		securityQuestionText.setBounds(610, 382, 345, 35);
@@ -121,7 +105,6 @@ public class Signup extends JFrame {
 		
 		JButton registerButton = new JButton("Register");
 		registerButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String userName = usernameTextField.getText();
@@ -138,8 +121,8 @@ public class Signup extends JFrame {
 				}
 			}
 		});
+		
 		registerButton.addKeyListener(new KeyListener() {
-
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode()==KeyEvent.VK_ENTER){

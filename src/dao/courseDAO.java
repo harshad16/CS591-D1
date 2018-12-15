@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.entities.Course;
-import src.service.StudentService;
 
 
 public class courseDAO extends BaseDAO<Course>{
@@ -17,15 +16,15 @@ public class courseDAO extends BaseDAO<Course>{
     }
 
     public void saveCourse(Course c) throws SQLException {
-        save("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid) VALUES (?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId()});
+        save("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid, year) VALUES (?,?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId(), c.getYear()});
     }
 
     public Integer saveCourseID(Course c) throws SQLException {
-        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid) VALUES (?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId()});
+        return saveWithID("INSERT INTO course (name, description, start_time, days, college, courseid, type, userid, year) VALUES (?,?,?,?,?,?,?,?,?)", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getType(), c.getUserId(), c.getYear()});
     }
 
     public void updateCourse(Course c) throws SQLException {
-        save("UPDATE course SET name = ? ,description = ?, start_time = ?, days = ?, college = ?, courseid = ? WHERE id = ?", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getId() });
+        save("UPDATE course SET name = ? ,description = ?, start_time = ?, days = ?, college = ?, courseid = ?, year=? WHERE id = ?", new Object[] { c.getName(), c.getDescription(), c.getStart_time(), c.getDays(), c.getCollege(), c.getCourseId(), c.getId(), c.getYear() });
     }
 
     public void updateCourseName(Course c) throws SQLException {
@@ -78,6 +77,7 @@ public class courseDAO extends BaseDAO<Course>{
             c.setStart_time(rs.getString("days"));
             c.setType(rs.getString("type"));
             c.setUserId(rs.getInt("userid"));
+            c.setYear(rs.getString("year"));
             c.setCollege(rs.getString("college"));
             c.setStudents(sdao.readAllFirstLevel("SELECT * FROM student WHERE id IN (SELECT studentid FROM class WHERE courseid = ?)",
                     new Object[] { c.getId() }));
@@ -102,6 +102,7 @@ public class courseDAO extends BaseDAO<Course>{
             c.setDays(rs.getString("days"));
             c.setType(rs.getString("type"));
             c.setUserId(rs.getInt("userid"));
+            c.setYear(rs.getString("year"));
             courses.add(c);
         }
         return courses;

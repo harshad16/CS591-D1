@@ -1,8 +1,8 @@
 package src.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,11 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import src.entities.SecurityQuestions;
 import src.entities.User;
 import src.service.UserService;
-import java.awt.Color;
 
 public class ForgotPassword extends JFrame {
 
@@ -38,19 +35,6 @@ public class ForgotPassword extends JFrame {
 	private JTextField usernameTextField;
 	private JPasswordField passwordTextField;
 	private JTextField securityAnswerText;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ForgotPassword frame = new ForgotPassword();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public ForgotPassword() {
 		setBounds(100, 100, 1280, 720);
@@ -101,7 +85,7 @@ public class ForgotPassword extends JFrame {
 		passwordTextField.setBounds(610, 438, 345, 35);
 		contentPane.add(passwordTextField);
 		
-		JComboBox<String> securityQuestionText = new JComboBox();
+		JComboBox<String> securityQuestionText = new JComboBox<String>();
 		securityQuestionText.setEditable(true);
 		securityQuestionText.setFont(new Font("Georgia", Font.PLAIN, 16));
 		securityQuestionText.setBounds(610, 322, 345, 35);
@@ -120,7 +104,6 @@ public class ForgotPassword extends JFrame {
 
 		JButton updateButton = new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -139,8 +122,8 @@ public class ForgotPassword extends JFrame {
 				}
 			}	
 		});
+		
 		updateButton.addKeyListener(new KeyListener() {
-
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode()==KeyEvent.VK_ENTER){
@@ -178,7 +161,6 @@ public class ForgotPassword extends JFrame {
 		returnLabel.setBounds(30, 30, 50, 40);
 		contentPane.add(returnLabel, BorderLayout.WEST);
 		returnLabel.addMouseListener(new MouseListener () {
-
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				Index _index = new Index();
@@ -231,10 +213,8 @@ public class ForgotPassword extends JFrame {
 	public User checkUserAndSecurityQuestion(String userName, String password, String securityQuestion,String securityQuestionAnswer ) throws SQLException{
 		UserService uService = new UserService();
 		List<User> users = uService.findUserByUserName(userName);
-		// System.out.println(users.size());
 		if(users.size() > 0) {
 			User foundUser = users.get(0);
-			// System.out.println(foundUser);
 			if(foundUser.getSecurityQuestion().equals(securityQuestion)) {
 				if(foundUser.getSecurityQuestionAnswer().equals(securityQuestionAnswer)) {
 					User u =  new User(userName, password, securityQuestion , securityQuestionAnswer);
