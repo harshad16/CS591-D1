@@ -545,6 +545,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
+		exportButton.setBounds(645, 485, 100, 25);
 		panel.add(exportButton);
 
 		JButton clearButton = new JButton("Clear");
