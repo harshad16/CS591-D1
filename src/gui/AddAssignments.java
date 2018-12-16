@@ -29,10 +29,11 @@ public class AddAssignments extends JPanel {
 	private JPanel contentPane;
 	private Course course;
 	private List<Assignment> assignments;
+	private JScrollPane scrollPane;
+	private DefaultTableModel tableModel;
 	
 	
 	public AddAssignments(Course c) {
-		
 		this.course = c;
 		initialize();
 	}
@@ -42,8 +43,6 @@ public class AddAssignments extends JPanel {
 		try {
 			assignments = asgnService.readAssignmentByCID(course.getId());
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 			assignments = course.getAssignments();
 		}
 		contentPane = new JPanel();
@@ -51,14 +50,13 @@ public class AddAssignments extends JPanel {
 		setLayout(null);
 		
 		// Populate Assignments
-		String[] columnNames = {"Name","Weight","Type","Total","Description","isOptional","Created At"};
+		String[] columnNames = {"Name","Weight","Total","Type","Description","isOptional","Created At"};
 		Object[][] data = new Object[assignments.size()+1][columnNames.length];
 		for (int i = 0; i < assignments.size(); ++i) {
 			Assignment a = assignments.get(i);
-			System.out.println("Assignment"+a);
 			String description = a.getDescription() != null ? a.getDescription() : "NO Description Avaible";
 			Boolean isOptional = a.getIsOptional();
-			Object[] row = {a.getName(), a.getWeight(), a.getType(), a.getTotal(), description, isOptional, a.getCreatedAt().toString()};
+			Object[] row = {a.getName(), a.getWeight(), a.getTotal(), a.getType(), description, isOptional, a.getCreatedAt().toString()};
 			for (int j = 0; j < row.length; ++j) {
 			    data[i][j] = row[j];
 			}
@@ -73,7 +71,7 @@ public class AddAssignments extends JPanel {
 				
 		}
 		
-		DefaultTableModel tableModel=new DefaultTableModel(data, columnNames){	
+		tableModel=new DefaultTableModel(data, columnNames){	
 			private static final long serialVersionUID = 1L;
 			// This Method is to make a column not be Editable on Table.
 		    @Override
@@ -88,7 +86,7 @@ public class AddAssignments extends JPanel {
 		    }
 		}; 
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBounds(28, 32, 960, 422);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -125,28 +123,49 @@ public class AddAssignments extends JPanel {
 			public void actionPerformed(ActionEvent e) {
  				//Assignment a = new Assignment();
  				int row = table.getSelectedRow();
- 				Integer courseId = course.getId();
- 				String name = table.getModel().getValueAt(row, 0).toString();
- 				Integer weight =  Integer.parseInt(table.getModel().getValueAt(row, 1).toString());
- 				String type = table.getModel().getValueAt(row, 2).toString();
- 				Integer total = Integer.parseInt(table.getModel().getValueAt(row, 3).toString());
- 				String description = table.getModel().getValueAt(row, 4).toString();
- 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
- 				
- 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
- 				//if its not the last row , we need set the assignmentId so we know which one to update
- 				if (row != assignments.size() && assignments.size() != 0 ) {
- 				   System.out.println("Inside update: "+row);
- 				   a.setAssignmentId(assignments.get(row).getAssignmentId());
- 				}
- 				boolean success = saveAssignment(a);
- 				if(success) {
-				    JOptionPane.showMessageDialog(contentPane, "Success!");
-				    initialize();
+ 				if(row == -1) {
+					JOptionPane.showMessageDialog(AddAssignments.this, "Please Select a Row to Save!");
 				}else {
-						JOptionPane.showMessageDialog(contentPane, "Error!");	
+	 				Integer courseId = course.getId();
+	 				String name = table.getModel().getValueAt(row, 0).toString();
+	 				Integer weight =  Integer.parseInt(table.getModel().getValueAt(row, 1).toString());
+	 				String type = table.getModel().getValueAt(row, 3).toString();
+	 				Integer total = Integer.parseInt(table.getModel().getValueAt(row, 2).toString());
+	 				String description = table.getModel().getValueAt(row, 4).toString();
+	 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
+	 				
+	 				if(weightcheck(weight)) {
+		 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
+		 				//if its not the last row , we need set the assignmentId so we know which one to update
+		 				if (row != assignments.size() && assignments.size() != 0 ) {
+		 				   a.setAssignmentId(assignments.get(row).getAssignmentId());
+		 				}
+		 				boolean success = saveAssignment(a);
+		 				if(success) {
+						    JOptionPane.showMessageDialog(AddAssignments.this, "Success!");
+						}else {
+							JOptionPane.showMessageDialog(AddAssignments.this, "Error!");	
+						}
+		 				// Refresh the Add Assignment
+		 				// initialize();
+	 				}else {
+	 					JOptionPane.showMessageDialog(AddAssignments.this, "Total Weight for course is more then 100%!");
+	 				}
 				}
- 			 }
+	 		}
+
+			private boolean weightcheck(Integer weight) {
+				// TODO Auto-generated method stub
+				Integer total_wgt = 0;
+				for(Assignment a: assignments) {
+					total_wgt+= a.getWeight();
+				}
+				if (total_wgt+weight<=100) {
+					return true;
+				}else {
+					return false;
+				}
+			}
 		});
 			
 		JButton deleteBtn = new JButton("delete");
@@ -157,24 +176,30 @@ public class AddAssignments extends JPanel {
 			public void actionPerformed(ActionEvent e) {
  				//Assignment a = new Assignment();
  				int row = table.getSelectedRow();
- 				Integer courseId = course.getId();
- 				String name = table.getModel().getValueAt(row, 0).toString();
- 				Integer weight =  (Integer) (table.getModel().getValueAt(row, 1));
- 				String type = table.getModel().getValueAt(row, 2).toString();
- 				Integer total = (Integer) table.getModel().getValueAt(row, 3);
- 				String description = table.getModel().getValueAt(row, 4).toString();
- 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
- 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
- 				//if its not the last row , we need set the assignmentId so we know which one to update
- 				a.setAssignmentId(assignments.get(row).getAssignmentId());
- 				
- 				boolean success = deleteAssignment(a);
- 				if(success) {
-				    JOptionPane.showMessageDialog(contentPane, "Deleted successfully!");
-				}else {
-						JOptionPane.showMessageDialog(contentPane, "Error!");	
-				}
- 			 }
+ 				if(row == -1) {
+					JOptionPane.showMessageDialog(AddAssignments.this, "Please Select a Row to Save!");
+				}else {	
+	 				Integer courseId = course.getId();
+	 				String name = table.getModel().getValueAt(row, 0).toString();
+	 				Integer weight =  (Integer) (table.getModel().getValueAt(row, 1));
+	 				String type = table.getModel().getValueAt(row, 3).toString();
+	 				Integer total = (Integer) table.getModel().getValueAt(row, 2);
+	 				String description = table.getModel().getValueAt(row, 4).toString();
+	 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
+	 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
+	 				//if its not the last row , we need set the assignmentId so we know which one to update
+	 				boolean success=false;
+	 				if(assignments.size()<row) {
+	 					a.setAssignmentId(assignments.get(row).getAssignmentId());
+	 					success = deleteAssignment(a);
+	 				}
+					if(success) {
+					    JOptionPane.showMessageDialog(contentPane, "Deleted successfully!");
+					}else {
+							JOptionPane.showMessageDialog(contentPane, "Error!");	
+					}
+	 			 }
+ 			}
 		});
 	}
 	

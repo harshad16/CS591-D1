@@ -90,7 +90,6 @@ public class AddStudentDB extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if(lastNameTF.getText() == null || lastNameTF.getText().equals("")) {
-					System.out.println("text is null" );
 					lastNameLabel.setText("*Last Name:(Cannot be null)");
 					lastNameLabel.setForeground(Color.RED);
 				}
@@ -99,7 +98,6 @@ public class AddStudentDB extends JPanel {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(lastNameTF.getText() == null || lastNameTF.getText().equals("")) {
-					System.out.println("text is null" );
 					lastNameLabel.setText("*Last Name:(Cannot be null)");
 					lastNameLabel.setForeground(Color.RED);
 				}
