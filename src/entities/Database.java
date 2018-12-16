@@ -56,7 +56,7 @@ public class Database {
 		 		+ "INDEX `userid_idx` (`userid` ASC),"
 		 		+ "CONSTRAINT `user-id`"
 		 		+ "FOREIGN KEY (`userid`)"
-		 		+ "REFERENCES `grading_system`.`user` (`id`)"
+		 		+ "REFERENCES `"+db_name+"`.`user` (`id`)"
 		 		+ "ON DELETE NO ACTION "
 		 		+ "ON UPDATE NO ACTION);");
 		}
@@ -77,7 +77,7 @@ public class Database {
 				+ "INDEX `courseid_idx` (`courseid` ASC),"
 				+ "CONSTRAINT `course-id`"
 				+ "FOREIGN KEY (`courseid`)"
-				+ "REFERENCES `grading_system`.`course` (`id`)"
+				+ "REFERENCES `"+db_name+"`.`course` (`id`)"
 				+ "ON DELETE NO ACTION "
 				+ "ON UPDATE NO ACTION);");
 	}
@@ -106,7 +106,7 @@ public class Database {
 				+ "INDEX `studentid_idx` (`studentid` ASC),"
 				+ "CONSTRAINT `studentid`"
 				+ "FOREIGN KEY (`studentid`)"
-				+ "REFERENCES `grading_system`.`student` (`id`)"
+				+ "REFERENCES `"+db_name+"`.`student` (`id`)"
 				+ "ON DELETE NO ACTION "
 				+ "ON UPDATE NO ACTION);");
 	}
@@ -126,12 +126,12 @@ public class Database {
 				+ "INDEX `student-id_idx` (`studentid` ASC),"
 				+ "CONSTRAINT `assignmentid`"
 				+ "FOREIGN KEY (`assignmentid`)"
-				+ "REFERENCES `grading_system`.`assignment` (`id`)"
+				+ "REFERENCES `"+db_name+"`.`assignment` (`id`)"
 				+ "ON DELETE NO ACTION "
 				+ "ON UPDATE NO ACTION,"
 				+ "CONSTRAINT `student-id`"
 				+ "FOREIGN KEY (`studentid`)"
-				+ "REFERENCES `grading_system`.`student` (`id`)"
+				+ "REFERENCES `"+db_name+"`.`student` (`id`)"
 				+ "ON DELETE NO ACTION "
 				+ "ON UPDATE NO ACTION);");
 	}
