@@ -33,9 +33,11 @@ import org.jfree.data.xy.XYDataset;
 
 import src.entities.Assignment;
 import src.entities.Calculations;
+import src.entities.ClassEntity;
 import src.entities.Course;
 import src.entities.Grade;
 import src.service.AssignmentService;
+import src.service.ClassService;
 import src.service.GradeService;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -295,29 +297,79 @@ public class Statistics extends JPanel {
 		return agnDict;
 	}
 	
+	@SuppressWarnings("null")
 	public void setStats(String plotType, Integer AssignmentId) throws SQLException {
-		GradeService gService = new GradeService();
-		List<Grade> grade = gService.readGrades();
-		
 		List<Double> score= new ArrayList<Double>();
-		for(Grade grd:grade) {
-			if(AssignmentId==grd.getAssignmentId()) {				
-				if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
-					score.add(grd.getGrade());
-				}
-				else if (plotType!=null && plotType.equals("both")) {
-					score.add(grd.getGrade());
-				}
+		if(AssignmentId ==-1) {
+			AssignmentService aService = new AssignmentService();
+			List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
+			GradeService gService1 = new GradeService();
+			List<Grade> grade1 = gService1.readGrades();
+			ClassService cService = new ClassService();
+			List<ClassEntity> cls = cService.readClasses(course.getId());
+			List<Integer> students = new ArrayList<Integer>();
+			
+			for(ClassEntity c:cls) {
+				students.add(c.getStudentId());
 			}
-			else if(AssignmentId ==-1) {
-				if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
-					score.add(grd.getGrade());
+			
+			for(Integer stdid: students) {
+				double sum = 0;
+				int total_weight = 0;
+				for(Grade r:grade1) {
+					for(Assignment a: assignment) {
+						if(a.getAssignmentId() == r.getAssignmentId() && r.getStudentId()==stdid) {
+							if(plotType!=null && r.getStudent().getType().toLowerCase().equals(plotType)) {	
+								if(!r.getAssignment().getIsOptional()) {
+									total_weight+=r.getAssignment().getWeight();
+								}			
+							}
+							else if (plotType!=null && plotType.equals("both")) {
+								if(!r.getAssignment().getIsOptional()) {
+									total_weight+=r.getAssignment().getWeight();
+								}
+							}
+						}
+					}
 				}
-				else if (plotType!=null && plotType.equals("both")) {
-					score.add(grd.getGrade());
+				for(Grade grd : grade1) {
+					for(Assignment ad: assignment) {
+						if(ad.getAssignmentId() == grd.getAssignmentId() && grd.getStudentId()==stdid) {	
+							if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {	
+								sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+								if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+									sum = total_weight;
+								}
+							}
+							else if (plotType!=null && plotType.equals("both")) {	
+								sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+								if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+									sum = total_weight;
+								}
+							}
+						}
+					}
+				}
+				if(sum!=0.0) {
+					score.add(sum);
+				}
+			}	
+		}
+		else {
+			GradeService gService = new GradeService();
+			List<Grade> grade = gService.readGrades();
+			for(Grade grd:grade) {
+				if(AssignmentId==grd.getAssignmentId()) {				
+					if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
+						score.add(grd.getGrade());
+					}
+					else if (plotType!=null && plotType.equals("both")) {
+						score.add(grd.getGrade());
+					}
 				}
 			}
 		}
+			
 		Double[] assign_wise = score.toArray(new Double[score.size()]);
 		if(score.size()>0) {
 			Calculations cal = new Calculations(assign_wise);
@@ -367,30 +419,63 @@ public class Statistics extends JPanel {
 	
 	public Calculations getCurveData(String plotType) throws SQLException {
 		AssignmentService aService = new AssignmentService();
-		GradeService gService = new GradeService();
 		List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
-		List<Grade> grade = gService.readGrades();
-		
-		// Assignment wise Grades:
 		List<Double> totalscore = new ArrayList<Double>();
-		for (Assignment asgnE: assignment) {
-			for(Grade grd:grade) {
-				if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
-					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
-						totalscore.add(grd.getGrade());
-					}
-				}
-				else if (plotType!=null && plotType.equals("both")) {
-					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
-						totalscore.add(grd.getGrade());
+		GradeService gService1 = new GradeService();
+		List<Grade> grade1 = gService1.readGrades();
+		ClassService cService = new ClassService();
+		List<ClassEntity> cls = cService.readClasses(course.getId());
+		List<Integer> students = new ArrayList<Integer>();
+		
+		for(ClassEntity c:cls) {
+			students.add(c.getStudentId());
+		}
+		
+		for(Integer stdid: students) {
+			double sum = 0;
+			int total_weight = 0;
+			for(Grade r:grade1) {
+				for(Assignment a: assignment) {
+					if(a.getAssignmentId() == r.getAssignmentId() && r.getStudentId()==stdid) {
+						if(plotType!=null && r.getStudent().getType().toLowerCase().equals(plotType)) {	
+							if(!r.getAssignment().getIsOptional()) {
+								total_weight+=r.getAssignment().getWeight();
+							}			
+						}
+						else if (plotType!=null && plotType.equals("both")) {
+							if(!r.getAssignment().getIsOptional()) {
+								total_weight+=r.getAssignment().getWeight();
+							}
+						}
 					}
 				}
 			}
-			if (totalscore.size()>0) {
-				Double[] course_wise = totalscore.toArray(new Double[totalscore.size()]);
-				Calculations cal = new Calculations(course_wise);
-				return cal;
+			for(Grade grd : grade1) {
+				for(Assignment ad: assignment) {
+					if(ad.getAssignmentId() == grd.getAssignmentId() && grd.getStudentId()==stdid) {	
+						if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {	
+							sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+							if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+								sum = total_weight;
+							}
+						}
+						else if (plotType!=null && plotType.equals("both")) {	
+							sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+							if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+								sum = total_weight;
+							}
+						}
+					}
+				}
 			}
+			if(sum!=0.0) {
+				totalscore.add(sum);
+			}
+		}
+		if (totalscore.size()>0) {
+			Double[] course_wise = totalscore.toArray(new Double[totalscore.size()]);
+			Calculations cal = new Calculations(course_wise);
+			return cal;
 		}
 		return null ;
 	}

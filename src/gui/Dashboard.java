@@ -71,7 +71,6 @@ public class Dashboard extends JFrame {
 	}
 	
 	public void initializeDashboard(boolean def) throws SQLException {
-
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -178,10 +177,9 @@ public class Dashboard extends JFrame {
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(570, 50, 165, 25);
 		contentPane.add(courseYearText);
-
 		
 		JLabel daysText = new JLabel();
-		daysText.setText(CapitalizeUtil.captilize(course.getDays()));
+		daysText.setText(course.getDays());
 		daysText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		daysText.setBounds(570, 80, 165, 25);
 		contentPane.add( daysText);
@@ -346,14 +344,14 @@ public class Dashboard extends JFrame {
 
 	public void setDashboard(String panel_type) throws SQLException {
 		JPanel panel = new JPanel();
-		panel.setBounds(215, 200, 1021, 475);
+		panel.setBounds(215, 170, 1021, 500);
 		panel.setLayout(null);
 		contentPane.add(panel_type,panel);
 		((JPanel) contentPane).revalidate();
 		contentPane.repaint();
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 70, 950, 400);
+		scrollPane.setBounds(12, 70, 950, 350);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -471,13 +469,11 @@ public class Dashboard extends JFrame {
 				Double grade = 0.0;
 				GradeService gService = new GradeService();
 				Grade stdGrade;
-				System.out.println("Selected Muliple Rows: "+table.getSelectedRow());
 				
 				int rowIndex = table.getSelectedRow();
 				if(rowIndex == -1) {
 					JOptionPane.showMessageDialog(Dashboard.this, "Please Select a Row to Save!");
 				}else {
-					System.out.println(tableModel.getValueAt(rowIndex, 0));
 					sid = (Integer) tableModel.getValueAt(rowIndex, 0);
 					boolean sucess = false;
 					for (int col = 4; col < table.getColumnCount()-2; col++){
@@ -490,7 +486,6 @@ public class Dashboard extends JFrame {
 									assignmentId = null;
 									bug=asgnE.getName();
 								}
-								System.out.println("Grade:"+grade+" Val :"+table.getValueAt(rowIndex, col));
 								break;
 							}
 						}
@@ -533,7 +528,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		saveButton.setBounds(755, 485, 100, 25);
+		saveButton.setBounds(755, 425, 100, 25);
 		panel.add(saveButton);
 		
 		JButton exportButton = new JButton("Export CVS");
@@ -544,7 +539,7 @@ public class Dashboard extends JFrame {
 //				DefaultTableModel model = (DefaultTableModel) table.getModel();
 //				model.setRowCount(0);
 				try {
-				String result = System.getProperty("user.dir");
+//				String result = System.getProperty("user.dir");
 				boolean isApproved = true;
 				JFileChooser chooser = new JFileChooser(); 
 			    chooser.setCurrentDirectory(new java.io.File("."));
@@ -554,12 +549,13 @@ public class Dashboard extends JFrame {
 			    // disable the "All files" option.
 			    //
 			    chooser.setAcceptAllFileFilterUsed(false);
-			    //    
+			    String result = null;
+				//    
 			    if (chooser.showOpenDialog(Dashboard.this) == JFileChooser.APPROVE_OPTION) { 
-			      System.out.println("getCurrentDirectory(): " 
-			         +  chooser.getCurrentDirectory());
-			      System.out.println("getSelectedFile() : " 
-			         +  chooser.getSelectedFile());
+			      //System.out.println("getCurrentDirectory(): " 
+			      //   +  chooser.getCurrentDirectory());
+			      //System.out.println("getSelectedFile() : " 
+			      //  +  chooser.getSelectedFile());
 			      result = chooser.getSelectedFile().toString();
 			      }
 			    else {
@@ -592,11 +588,11 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		exportButton.setBounds(645, 485, 100, 25);
+		exportButton.setBounds(645, 425, 100, 25);
 		panel.add(exportButton);
 
 		JButton clearButton = new JButton("Clear");
-		clearButton.setBounds(865, 485, 100, 25);
+		clearButton.setBounds(865, 425, 100, 25);
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -624,20 +620,40 @@ public class Dashboard extends JFrame {
 		String[] returnOutput = new String[3];
 		double sum = 0;
 		int weight = 0;
-		int total_weight = 0;	
+		int total_weight = 0;
+		AssignmentService aService = new AssignmentService();
+		List<Assignment> assignment = null;
+		try {
+			assignment = aService.readAssignmentByCID(course.getId());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		for(Grade r:grade) {
-			if(!r.getAssignment().getIsOptional()) {
-				total_weight+=r.getAssignment().getWeight();
+			for(Assignment a: assignment) {
+				if(a.getAssignmentId() == r.getAssignmentId()) {
+					if(!r.getAssignment().getIsOptional()) {
+						total_weight+=r.getAssignment().getWeight();
+					}
+				}
 			}
 		}
+		
+		
 		if(!grade.isEmpty()) {
 			for(Grade grd : grade) {
-				sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
-				if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
-					sum = total_weight;
-				}
-				if(!grd.getAssignment().getIsOptional()) {
-					weight += grd.getAssignment().getWeight();
+				for(Assignment ad: assignment) {
+					if(ad.getAssignmentId() == grd.getAssignmentId()) {	
+						sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+						if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+							sum = total_weight;
+						}
+						if(!grd.getAssignment().getIsOptional()) {
+							weight += grd.getAssignment().getWeight();
+						}
+					}
 				}
 			}
 			CalculateGrade finalGrade = new CalculateGrade();
