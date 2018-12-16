@@ -32,6 +32,7 @@ public class AddStudentDB extends JPanel {
 	private JTextField clgYearTF;
 	private JRadioButton rdbtnGraduate;
 	private JRadioButton rdbtnUndergraduate;
+	private JLabel lblDegree;
 
 	public AddStudentDB() {
 		panel = new JPanel();
@@ -40,24 +41,29 @@ public class AddStudentDB extends JPanel {
 
 		JLabel firstNameLabel = new JLabel("*First Name:");
 		firstNameLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
-		firstNameLabel.setBounds(309, 173, 500, 31);
+		firstNameLabel.setBounds(115, 170, 201, 30);
 		add(firstNameLabel);
 
 		JLabel lastNameLabel = new JLabel("*Last Name:");
 		lastNameLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
-		lastNameLabel.setBounds(309, 202, 500, 31);
+		lastNameLabel.setBounds(115, 205, 201, 30);
 		add(lastNameLabel);
 
 		JLabel buIdLabel = new JLabel("*BU ID:");
 		buIdLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
-		buIdLabel.setBounds(309, 231, 500, 22);
+		buIdLabel.setBounds(115, 240, 201, 30);
 		add(buIdLabel);
 
 		JLabel clgYearLabel = new JLabel("*Year:");
 		clgYearLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
-		clgYearLabel.setBounds(309, 260, 500, 22);
+		clgYearLabel.setBounds(115, 275, 201, 30);
 		add(clgYearLabel);
 
+		lblDegree = new JLabel("Degree");
+		lblDegree.setFont(new Font("Georgia", Font.PLAIN, 16));
+		lblDegree.setBounds(115, 311, 115, 30);
+		add(lblDegree);
+		
 		firstNameTF = new JTextField();
 		firstNameTF.addFocusListener(new FocusListener() {
 			@Override
@@ -81,7 +87,7 @@ public class AddStudentDB extends JPanel {
 				}
 			}
 		});
-		firstNameTF.setBounds(810, 177, 116, 22);
+		firstNameTF.setBounds(340, 171, 115, 30);
 		add(firstNameTF);
 		firstNameTF.setColumns(10);
 
@@ -90,7 +96,6 @@ public class AddStudentDB extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if(lastNameTF.getText() == null || lastNameTF.getText().equals("")) {
-					System.out.println("text is null" );
 					lastNameLabel.setText("*Last Name:(Cannot be null)");
 					lastNameLabel.setForeground(Color.RED);
 				}
@@ -99,7 +104,6 @@ public class AddStudentDB extends JPanel {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(lastNameTF.getText() == null || lastNameTF.getText().equals("")) {
-					System.out.println("text is null" );
 					lastNameLabel.setText("*Last Name:(Cannot be null)");
 					lastNameLabel.setForeground(Color.RED);
 				}
@@ -109,7 +113,7 @@ public class AddStudentDB extends JPanel {
 				}
 			}
 		});
-		lastNameTF.setBounds(810, 206, 116, 22);
+		lastNameTF.setBounds(340, 206, 115, 30);
 		add(lastNameTF);
 		lastNameTF.setColumns(10);
 		
@@ -135,7 +139,7 @@ public class AddStudentDB extends JPanel {
 				}
 			}
 		});
-		buIDTF.setBounds(810, 235, 116, 22);
+		buIDTF.setBounds(340, 241, 115, 30);
 		add(buIDTF);
 		buIDTF.setColumns(10);
 
@@ -162,7 +166,7 @@ public class AddStudentDB extends JPanel {
 			}
 			
 		});;
-		clgYearTF.setBounds(810, 264, 116, 22);
+		clgYearTF.setBounds(340, 276, 115, 30);
 		add(clgYearTF);
 		clgYearTF.setColumns(10);
 
@@ -174,7 +178,7 @@ public class AddStudentDB extends JPanel {
 			}
 		});
 		rdbtnGraduate.setFont(new Font("Georgia", Font.PLAIN, 16));
-		rdbtnGraduate.setBounds(309, 293, 127, 25);
+		rdbtnGraduate.setBounds(115, 340, 125, 30);
 		add(rdbtnGraduate);
 
 		rdbtnUndergraduate = new JRadioButton("UnderGraduate");
@@ -185,7 +189,7 @@ public class AddStudentDB extends JPanel {
 			}
 		});
 		rdbtnUndergraduate.setFont(new Font("Georgia", Font.PLAIN, 16));
-		rdbtnUndergraduate.setBounds(445, 293, 146, 37);
+		rdbtnUndergraduate.setBounds(244, 340, 150, 30);
 		add(rdbtnUndergraduate);
 
 		JButton btnNewButton = new JButton("Save");
@@ -214,7 +218,7 @@ public class AddStudentDB extends JPanel {
 					}
 		});
 		btnNewButton.setFont(new Font("Georgia", Font.PLAIN, 16));
-		btnNewButton.setBounds(373, 357, 88, 37);
+		btnNewButton.setBounds(300, 403, 88, 37);
 		add(btnNewButton);
 	}
 

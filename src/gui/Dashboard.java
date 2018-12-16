@@ -57,7 +57,8 @@ public class Dashboard extends JFrame {
 	private JLabel courseYearText;
 	private User user;
 	private String[] columnNames;
-
+	private String presentPanel="Dashboard";
+	
 	public Dashboard() throws SQLException {
 		initializeDashboard(true);			
 	}
@@ -70,7 +71,6 @@ public class Dashboard extends JFrame {
 	}
 	
 	public void initializeDashboard(boolean def) throws SQLException {
-
 		setBounds(100, 100, 1280, 720);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -177,10 +177,9 @@ public class Dashboard extends JFrame {
 		courseYearText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		courseYearText.setBounds(570, 50, 165, 25);
 		contentPane.add(courseYearText);
-
 		
 		JLabel daysText = new JLabel();
-		daysText.setText(CapitalizeUtil.captilize(course.getDays()));
+		daysText.setText(course.getDays());
 		daysText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		daysText.setBounds(570, 80, 165, 25);
 		contentPane.add( daysText);
@@ -221,6 +220,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					displayPanel("Assignment");
+					presentPanel = "Assignment";
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -237,6 +237,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					displayPanel("Student");
+					presentPanel = "Student";
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -253,6 +254,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					displayPanel("Stats");
+					presentPanel="Stats";
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -269,6 +271,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					displayPanel("Dashboard");
+					presentPanel="Dashboard";
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -279,6 +282,34 @@ public class Dashboard extends JFrame {
 		dashboardButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		dashboardButton.setBounds(30, 200, 133, 96);
 		contentPane.add(dashboardButton);
+		
+		JLabel refresh = new JLabel();
+		refresh.setIcon(new ImageIcon(Dashboard.class.getResource("/src/misc/re_32x32.png")));
+		refresh.setBounds(1211, 124, 39, 47);
+		refresh.addMouseListener(new MouseListener () {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// Goto Home Page
+				try {
+					displayPanel(presentPanel);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+		});
+		contentPane.add(refresh);
 	}
 
 
@@ -313,14 +344,14 @@ public class Dashboard extends JFrame {
 
 	public void setDashboard(String panel_type) throws SQLException {
 		JPanel panel = new JPanel();
-		panel.setBounds(215, 146, 1021, 527);
+		panel.setBounds(215, 170, 1021, 500);
 		panel.setLayout(null);
 		contentPane.add(panel_type,panel);
 		((JPanel) contentPane).revalidate();
 		contentPane.repaint();
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 70, 950, 400);
+		scrollPane.setBounds(12, 70, 950, 350);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -378,7 +409,9 @@ public class Dashboard extends JFrame {
 							}
 							if(calculateGrade(grade)!=null) {
 								row[columnNames.length-2] = calculateGrade(grade)[1];
-								row[columnNames.length-1] = calculateGrade(grade)[2];
+								if (calculateGrade(grade)[0].equals("100")) {
+									row[columnNames.length-1] = calculateGrade(grade)[2];
+								}
 							}
 						}
 		    			// Create a check method to see if student is already added to class
@@ -408,7 +441,7 @@ public class Dashboard extends JFrame {
 		};
 
 		table = new JTable(tableModel);
-		table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+		table.setPreferredScrollableViewportSize(new Dimension(450, 450));
 		table.getTableHeader().setForeground(SystemColor.textHighlight);
 		table.getTableHeader().setFont(new Font("Georgia", Font.BOLD, 16));
 		table.getTableHeader().setReorderingAllowed(false);
@@ -427,6 +460,8 @@ public class Dashboard extends JFrame {
 	// Save button
 		JButton saveButton = new JButton("Save");
 		saveButton.addActionListener(new ActionListener() {
+			private String bug;
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Integer assignmentId = null;
@@ -434,13 +469,11 @@ public class Dashboard extends JFrame {
 				Double grade = 0.0;
 				GradeService gService = new GradeService();
 				Grade stdGrade;
-				System.out.println("Selected Muliple Rows: "+table.getSelectedRow());
 				
 				int rowIndex = table.getSelectedRow();
 				if(rowIndex == -1) {
 					JOptionPane.showMessageDialog(Dashboard.this, "Please Select a Row to Save!");
 				}else {
-					System.out.println(tableModel.getValueAt(rowIndex, 0));
 					sid = (Integer) tableModel.getValueAt(rowIndex, 0);
 					boolean sucess = false;
 					for (int col = 4; col < table.getColumnCount()-2; col++){
@@ -449,7 +482,10 @@ public class Dashboard extends JFrame {
 							if (asgnE.getName().equals(table.getColumnName(col).split("\\(")[0].toString())) {
 								assignmentId = asgnE.getAssignmentId();
 								grade = ((Number) table.getValueAt(rowIndex, col)).doubleValue();
-								System.out.println("Grade:"+grade+" Val :"+table.getValueAt(rowIndex, col));
+								if(grade>asgnE.getTotal()) {
+									assignmentId = null;
+									bug=asgnE.getName();
+								}
 								break;
 							}
 						}
@@ -478,15 +514,21 @@ public class Dashboard extends JFrame {
 							}
 						}
 					}
-					if(sucess){
-						JOptionPane.showMessageDialog(Dashboard.this, "Successfully Saved the Selected a Row!");
-					} else {
-						JOptionPane.showMessageDialog(Dashboard.this, "Unable to Save the Selected a Row!");
+					if(bug!=null) {
+						JOptionPane.showMessageDialog(Dashboard.this, "Score in "+bug+" is more than Total of "+bug+" !");
+						bug = null;
+					}
+					else {
+						if(sucess){
+							JOptionPane.showMessageDialog(Dashboard.this, "Successfully Saved the Selected a Row!");
+						} else {
+							JOptionPane.showMessageDialog(Dashboard.this, "Unable to Save the Selected a Row!");
+						}
 					}
 				}
 			}
 		});
-		saveButton.setBounds(755, 485, 100, 25);
+		saveButton.setBounds(755, 425, 100, 25);
 		panel.add(saveButton);
 		
 		JButton exportButton = new JButton("Export CVS");
@@ -497,7 +539,7 @@ public class Dashboard extends JFrame {
 //				DefaultTableModel model = (DefaultTableModel) table.getModel();
 //				model.setRowCount(0);
 				try {
-				String result = System.getProperty("user.dir");
+//				String result = System.getProperty("user.dir");
 				boolean isApproved = true;
 				JFileChooser chooser = new JFileChooser(); 
 			    chooser.setCurrentDirectory(new java.io.File("."));
@@ -507,12 +549,13 @@ public class Dashboard extends JFrame {
 			    // disable the "All files" option.
 			    //
 			    chooser.setAcceptAllFileFilterUsed(false);
-			    //    
+			    String result = null;
+				//    
 			    if (chooser.showOpenDialog(Dashboard.this) == JFileChooser.APPROVE_OPTION) { 
-			      System.out.println("getCurrentDirectory(): " 
-			         +  chooser.getCurrentDirectory());
-			      System.out.println("getSelectedFile() : " 
-			         +  chooser.getSelectedFile());
+			      //System.out.println("getCurrentDirectory(): " 
+			      //   +  chooser.getCurrentDirectory());
+			      //System.out.println("getSelectedFile() : " 
+			      //  +  chooser.getSelectedFile());
 			      result = chooser.getSelectedFile().toString();
 			      }
 			    else {
@@ -545,11 +588,11 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		exportButton.setBounds(645, 485, 100, 25);
+		exportButton.setBounds(645, 425, 100, 25);
 		panel.add(exportButton);
 
 		JButton clearButton = new JButton("Clear");
-		clearButton.setBounds(865, 485, 100, 25);
+		clearButton.setBounds(865, 425, 100, 25);
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -577,24 +620,40 @@ public class Dashboard extends JFrame {
 		String[] returnOutput = new String[3];
 		double sum = 0;
 		int weight = 0;
-		int total_weight = 0;	
-		for(Grade r:grade) {
-			if(!r.getAssignment().getIsOptional()) {
-				total_weight+=r.getAssignment().getWeight();
-			}
+		int total_weight = 0;
+		AssignmentService aService = new AssignmentService();
+		List<Assignment> assignment = null;
+		try {
+			assignment = aService.readAssignmentByCID(course.getId());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(!grade.isEmpty()) {
-			for(Grade grd : grade) {
-				if (grd.getGrade()==0.0 && grd.getAssignment().getIsOptional()!=true) {
-					sum += grd.getAssignment().getWeight();
-				}else {
-					sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
-					if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
-						sum = total_weight;
+		
+		
+		for(Grade r:grade) {
+			for(Assignment a: assignment) {
+				if(a.getAssignmentId() == r.getAssignmentId()) {
+					if(!r.getAssignment().getIsOptional()) {
+						total_weight+=r.getAssignment().getWeight();
 					}
 				}
-				if(!grd.getAssignment().getIsOptional()) {
-					weight += grd.getAssignment().getWeight();
+			}
+		}
+		
+		
+		if(!grade.isEmpty()) {
+			for(Grade grd : grade) {
+				for(Assignment ad: assignment) {
+					if(ad.getAssignmentId() == grd.getAssignmentId()) {	
+						sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+						if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+							sum = total_weight;
+						}
+						if(!grd.getAssignment().getIsOptional()) {
+							weight += grd.getAssignment().getWeight();
+						}
+					}
 				}
 			}
 			CalculateGrade finalGrade = new CalculateGrade();

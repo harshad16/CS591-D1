@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -30,9 +33,11 @@ import org.jfree.data.xy.XYDataset;
 
 import src.entities.Assignment;
 import src.entities.Calculations;
+import src.entities.ClassEntity;
 import src.entities.Course;
 import src.entities.Grade;
 import src.service.AssignmentService;
+import src.service.ClassService;
 import src.service.GradeService;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -56,7 +61,9 @@ public class Statistics extends JPanel {
 	private JLabel minScoreText;
 	private JComboBox<String> comboBox;
 	private JLabel selectAssignmentOption;
-	
+	private Map<String, Integer> assgn;
+	private String plotType;
+
 	
 	public Statistics(Course c) {
 		this.course = c;
@@ -81,13 +88,10 @@ public class Statistics extends JPanel {
 	    		generalButton.setFont(new Font("Georgia", Font.BOLD, 14));
 	    		curveButton.setForeground(Color.BLACK);
 	    		curveButton.setFont(new Font("Georgia", Font.PLAIN, 14));
-	    
-	    		comboBox.setVisible(true);
-	    		selectAssignmentOption.setVisible(true);
 	    	}
 	    });
 	    buttonGroup.add(generalButton);
-	    
+
 	    curveButton.setBounds(288, 52, 206, 25);
 	    add(curveButton);
 	    curveButton.addActionListener(new ActionListener() {
@@ -133,16 +137,17 @@ public class Statistics extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				// Get Data of the graduate students
 				if (curve == true && general == false) {
-					System.out.println("Graduate Has been Selected for Curve");
 					ChartPanel cp = plotGraph("graduate");
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
 				}
 				else {
-					System.out.println("Graduate Has been Selected for Bar");
 					ChartPanel cp = plotBarGraph("graduate");
+					plotType = "graduate";
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
+					comboBox.setVisible(true);
+		    		selectAssignmentOption.setVisible(true);
 				}	
 			}
 		});
@@ -156,16 +161,17 @@ public class Statistics extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				// Get Data of the undergraduate students
 				if (curve == true && general == false) {
-					System.out.println("Undergraduate Has been Selected for Curve");
 					ChartPanel cp = plotGraph("undergraduate");
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
 				}
 				else {
-					System.out.println("Undergraduate Has been Selected for Bar");
 					ChartPanel cp = plotBarGraph("undergraduate");
+					plotType = "undergraduate";
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
+					comboBox.setVisible(true);
+		    		selectAssignmentOption.setVisible(true);
 				}
 			}
 		});
@@ -175,19 +181,21 @@ public class Statistics extends JPanel {
 		allRadioButton.setBounds(12, 94, 120, 25);
 		panel.add(allRadioButton);
 		allRadioButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent arg0) {
 				// Get Data of the all students
 				if (curve == true && general == false) {
-					System.out.println("All Has been Selected for Curve");
 					ChartPanel cp = plotGraph("both");
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
 				}
 				else {
-					System.out.println("All Has been Selected for Bar");
 					ChartPanel cp = plotBarGraph("both");
+					plotType = "both";
 					cp.setVisible(true);
 					scrollPane.setViewportView(cp);
+					comboBox.setVisible(true);
+		    		selectAssignmentOption.setVisible(true);
 				}
 			}
 		});
@@ -197,13 +205,33 @@ public class Statistics extends JPanel {
 			
 		selectAssignmentOption = new JLabel("Select the Assignment:");
 		selectAssignmentOption.setBounds(12, 143, 183, 24);
+		selectAssignmentOption.setVisible(false);
 		panel.add(selectAssignmentOption);
 		
 		comboBox = new JComboBox<String>();
 		comboBox.setBounds(12, 174, 183, 22);
+		comboBox.setVisible(false);
+		try {
+			assgn = populateAssignment();
+			for(String val:assgn.keySet()){
+				comboBox.addItem(val);;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		comboBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					setStats(plotType,assgn.get(comboBox.getSelectedItem()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}	
+		});
 		panel.add(comboBox);
-				
-		
 		
 		JLabel statsLabel = new JLabel("Stats:");
 		statsLabel.setFont(new Font("Georgia", Font.BOLD, 14));
@@ -258,7 +286,102 @@ public class Statistics extends JPanel {
 		
 	}
 	
-	public DefaultCategoryDataset getData(String type) throws SQLException {
+	public Map<String, Integer> populateAssignment() throws SQLException {
+		AssignmentService aService = new AssignmentService();
+		List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
+		Map<String, Integer> agnDict = new HashMap<String,Integer>();
+		for (Assignment asgnE: assignment) {
+			agnDict.put(asgnE.getName(),asgnE.getAssignmentId());
+		}
+		agnDict.put("OverAll",-1);
+		return agnDict;
+	}
+	
+	@SuppressWarnings("null")
+	public void setStats(String plotType, Integer AssignmentId) throws SQLException {
+		List<Double> score= new ArrayList<Double>();
+		if(AssignmentId ==-1) {
+			AssignmentService aService = new AssignmentService();
+			List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
+			GradeService gService1 = new GradeService();
+			List<Grade> grade1 = gService1.readGrades();
+			ClassService cService = new ClassService();
+			List<ClassEntity> cls = cService.readClasses(course.getId());
+			List<Integer> students = new ArrayList<Integer>();
+			
+			for(ClassEntity c:cls) {
+				students.add(c.getStudentId());
+			}
+			
+			for(Integer stdid: students) {
+				double sum = 0;
+				int total_weight = 0;
+				for(Grade r:grade1) {
+					for(Assignment a: assignment) {
+						if(a.getAssignmentId() == r.getAssignmentId() && r.getStudentId()==stdid) {
+							if(plotType!=null && r.getStudent().getType().toLowerCase().equals(plotType)) {	
+								if(!r.getAssignment().getIsOptional()) {
+									total_weight+=r.getAssignment().getWeight();
+								}			
+							}
+							else if (plotType!=null && plotType.equals("both")) {
+								if(!r.getAssignment().getIsOptional()) {
+									total_weight+=r.getAssignment().getWeight();
+								}
+							}
+						}
+					}
+				}
+				for(Grade grd : grade1) {
+					for(Assignment ad: assignment) {
+						if(ad.getAssignmentId() == grd.getAssignmentId() && grd.getStudentId()==stdid) {	
+							if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {	
+								sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+								if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+									sum = total_weight;
+								}
+							}
+							else if (plotType!=null && plotType.equals("both")) {	
+								sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+								if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+									sum = total_weight;
+								}
+							}
+						}
+					}
+				}
+				if(sum!=0.0) {
+					score.add(sum);
+				}
+			}	
+		}
+		else {
+			GradeService gService = new GradeService();
+			List<Grade> grade = gService.readGrades();
+			for(Grade grd:grade) {
+				if(AssignmentId==grd.getAssignmentId()) {				
+					if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
+						score.add(grd.getGrade());
+					}
+					else if (plotType!=null && plotType.equals("both")) {
+						score.add(grd.getGrade());
+					}
+				}
+			}
+		}
+			
+		Double[] assign_wise = score.toArray(new Double[score.size()]);
+		if(score.size()>0) {
+			Calculations cal = new Calculations(assign_wise);
+			meanText.setText(((Number)cal.getMean()).toString());
+			stdDevText.setText(((Number)cal.getStdDev()).toString());
+			medianText.setText(((Number)cal.median()).toString());
+			maxScoreText.setText(((Number)cal.getMax()).toString());
+			minScoreText.setText(((Number)cal.getMin()).toString());
+		}
+	}
+	
+	public DefaultCategoryDataset getData(String plotType) throws SQLException {
 		AssignmentService aService = new AssignmentService();
 		GradeService gService = new GradeService();
 		List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
@@ -269,74 +392,100 @@ public class Statistics extends JPanel {
 		for (Assignment asgnE: assignment) {
 			List<Double> score= new ArrayList<Double>();
 			for(Grade grd:grade) {
-				System.out.println(grd.getStudent().getType());
-				if(type!=null && grd.getStudent().getType().equals(type)) {
+				if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {
 					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
 						score.add(grd.getGrade());
 					}
 				}
-				else if (type!=null && type.equals("both")) {
+				else if (plotType!=null && plotType.equals("both")) {
 					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
 						score.add(grd.getGrade());
 					}
 				}
 			}
 			Double[] assign_wise = score.toArray(new Double[score.size()]);
-			System.out.println(asgnE.getName());
 			if(score.size()>0) {
 				Calculations cal = new Calculations(assign_wise);
 				dataset.addValue(cal.getMean(), "Mean", asgnE.getName());
-				dataset.addValue(cal.getMax(), "Max Scored", asgnE.getName());
 				dataset.addValue(cal.getStdDev(), "StdDev", asgnE.getName());
 				dataset.addValue(cal.median(), "Median", asgnE.getName());
-				System.out.println("Mean: "+cal.getMean());
-				System.out.println("variance: "+cal.getVariance());
-				System.out.println("StdDev: "+cal.getStdDev());
-				System.out.println("Median: "+cal.median());
+				dataset.addValue(cal.getMax(), "Max Scored", asgnE.getName());
+				dataset.addValue(cal.getMin(), "Min Scored", asgnE.getName());
 			}
 		}
 		return dataset;
 	}
 	
 	
-	public Calculations getCurveData(String type) throws SQLException {
+	public Calculations getCurveData(String plotType) throws SQLException {
 		AssignmentService aService = new AssignmentService();
-		GradeService gService = new GradeService();
 		List<Assignment> assignment = aService.readAssignmentByCID(course.getId());
-		List<Grade> grade = gService.readGrades();
-		
-		// Assignment wise Grades:
 		List<Double> totalscore = new ArrayList<Double>();
-		for (Assignment asgnE: assignment) {
-			for(Grade grd:grade) {
-				System.out.println(grd.getStudent().getType());
-				if(type!=null && grd.getStudent().getType().equals(type)) {
-					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
-						totalscore.add(grd.getGrade());
-					}
-				}
-				else if (type!=null && type.equals("both")) {
-					if(asgnE.getAssignmentId()==grd.getAssignmentId()) {
-						totalscore.add(grd.getGrade());
-					}
-				}
-			}
-			if (totalscore.size()>0) {
-				Double[] course_wise = totalscore.toArray(new Double[totalscore.size()]);
-				Calculations cal = new Calculations(course_wise);
-				return cal;
-			}
+		GradeService gService1 = new GradeService();
+		List<Grade> grade1 = gService1.readGrades();
+		ClassService cService = new ClassService();
+		List<ClassEntity> cls = cService.readClasses(course.getId());
+		List<Integer> students = new ArrayList<Integer>();
+		
+		for(ClassEntity c:cls) {
+			students.add(c.getStudentId());
 		}
 		
+		for(Integer stdid: students) {
+			double sum = 0;
+			int total_weight = 0;
+			for(Grade r:grade1) {
+				for(Assignment a: assignment) {
+					if(a.getAssignmentId() == r.getAssignmentId() && r.getStudentId()==stdid) {
+						if(plotType!=null && r.getStudent().getType().toLowerCase().equals(plotType)) {	
+							if(!r.getAssignment().getIsOptional()) {
+								total_weight+=r.getAssignment().getWeight();
+							}			
+						}
+						else if (plotType!=null && plotType.equals("both")) {
+							if(!r.getAssignment().getIsOptional()) {
+								total_weight+=r.getAssignment().getWeight();
+							}
+						}
+					}
+				}
+			}
+			for(Grade grd : grade1) {
+				for(Assignment ad: assignment) {
+					if(ad.getAssignmentId() == grd.getAssignmentId() && grd.getStudentId()==stdid) {	
+						if(plotType!=null && grd.getStudent().getType().toLowerCase().equals(plotType)) {	
+							sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+							if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+								sum = total_weight;
+							}
+						}
+						else if (plotType!=null && plotType.equals("both")) {	
+							sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+							if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+								sum = total_weight;
+							}
+						}
+					}
+				}
+			}
+			if(sum!=0.0) {
+				totalscore.add(sum);
+			}
+		}
+		if (totalscore.size()>0) {
+			Double[] course_wise = totalscore.toArray(new Double[totalscore.size()]);
+			Calculations cal = new Calculations(course_wise);
+			return cal;
+		}
 		return null ;
 	}
 
-	public ChartPanel plotGraph(String type) {
+	public ChartPanel plotGraph(String plotType) {
 		
 		Calculations curveCal=null;
 		XYDataset dataset1=null;
 		try {
-			curveCal = getCurveData(type);
+			curveCal = getCurveData(plotType);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -364,19 +513,19 @@ public class Statistics extends JPanel {
 	    return cp;
 	}
 	
-	public ChartPanel plotBarGraph(String type) {
+	public ChartPanel plotBarGraph(String plotType) {
 		
 		DefaultCategoryDataset dataset = null;
 		try {
-			dataset = getData(type);
+			dataset = getData(plotType);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		JFreeChart chart = ChartFactory.createBarChart3D(
-	            "3D Bar Chart Demo",      // chart title
+	            "Statistics",      // chart title
 	            "Category",               // domain axis label
-	            "Value",                  // range axis label
+	            "Score",                  // range axis label
 	            dataset,                  // data
 	            PlotOrientation.VERTICAL, // orientation
 	            true,                     // include legend

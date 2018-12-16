@@ -235,31 +235,39 @@ public class AddStudentToCourse extends JPanel {
 				}
 				int count = 0;
 				if(!students.isEmpty()) {
-					rst = new Object[students.size()][columnNames.length];
+					int student_size=0;
 					for(Student s : students) {
-						// Create a check method to see if student is already added to class
-						ClassService  clsService = new ClassService();
-		        		List<ClassEntity> classes;		
-		        		boolean already=false;
-		        		try {
-							classes = clsService.readClasses(course.getId());
-							for (ClassEntity clsE: classes) {
-			                	// System.out.println("ClassAttributes:"+clsE);
-			                	if(s.getId() == clsE.getStudentId()) {
-			                		// validation if student already exists in class
-			                    	already = true;
-			                    	break;
-			                    	// System.out.println(already+" "+clsE.getStudentId());
-			                    }
-			                }		
-			        		
-		        		} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if(s.getType().toLowerCase().equals(course.getType().toLowerCase()) || course.getType().toLowerCase().equals("all")) {
+						student_size+=1;
 						}
-		        		Object[] row = {s.getId(),s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),already};
-						rst[count] = row;
-						count++;
+					}
+					rst = new Object[student_size][columnNames.length];
+					for(Student s : students) {
+						if(s.getType().toLowerCase().equals(course.getType().toLowerCase()) || course.getType().toLowerCase().equals("all")) {
+							// Create a check method to see if student is already added to class
+							ClassService  clsService = new ClassService();
+			        		List<ClassEntity> classes;		
+			        		boolean already=false;
+			        		try {
+								classes = clsService.readClasses(course.getId());
+								for (ClassEntity clsE: classes) {
+				                	// System.out.println("ClassAttributes:"+clsE);
+				                	if(s.getId() == clsE.getStudentId()) {
+				                		// validation if student already exists in class
+				                    	already = true;
+				                    	break;
+				                    	// System.out.println(already+" "+clsE.getStudentId());
+				                    }
+				                }		
+				        		
+			        		} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			        		Object[] row = {s.getId(),s.getFirstName(),s.getLastName(), s.getStudentId(), s.getYear(), s.getType(),already};
+							rst[count] = row;
+							count++;
+						}
 					}
 
 					tableModel=new DefaultTableModel(rst, columnNames){

@@ -153,12 +153,12 @@ public class AddCourse extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 					String name = nameTF.getText();
 					String description = descriptionTF.getText();
-					String startTime = startTimeTF.getText();
-					String days = daysTF.getText();
+					String startTime = startTimeTF.getText().toString();
+					String days = daysTF.getText().toString();
 					String college = collegeTF.getText();
 					String courseId = courseIdTF.getText();
 					String yearId = yearTF.getText();
-					String type = "";
+					String type = "all";
 					Integer userid = user.getId();
 					if(rdbtnGraduate.isSelected()) {
 						type = "graduate";
