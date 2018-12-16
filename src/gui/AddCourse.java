@@ -190,6 +190,7 @@ public class AddCourse extends JPanel {
 						}
 					} else {
 						saveCourse(c);
+				        JOptionPane.showMessageDialog(panel, "Success!");
 					}
  			 }
 		});
