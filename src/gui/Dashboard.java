@@ -179,7 +179,7 @@ public class Dashboard extends JFrame {
 		contentPane.add(courseYearText);
 		
 		JLabel daysText = new JLabel();
-		daysText.setText(course.getDays());
+		daysText.setText(course.getStart_time());
 		daysText.setFont(new Font("Georgia", Font.PLAIN, 14));
 		daysText.setBounds(570, 80, 165, 25);
 		contentPane.add( daysText);
@@ -351,7 +351,7 @@ public class Dashboard extends JFrame {
 		contentPane.repaint();
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 70, 950, 350);
+		scrollPane.setBounds(12, 0, 950, 420);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -528,7 +528,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		saveButton.setBounds(755, 425, 100, 25);
+		saveButton.setBounds(754, 444, 100, 25);
 		panel.add(saveButton);
 		
 		JButton exportButton = new JButton("Export CVS");
@@ -588,11 +588,11 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		exportButton.setBounds(645, 425, 100, 25);
+		exportButton.setBounds(644, 444, 100, 25);
 		panel.add(exportButton);
 
 		JButton clearButton = new JButton("Clear");
-		clearButton.setBounds(865, 425, 100, 25);
+		clearButton.setBounds(864, 444, 100, 25);
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -134,7 +134,7 @@ public class AddAssignments extends JPanel {
 	 				String description = table.getModel().getValueAt(row, 4).toString();
 	 				Boolean isOptional = (Boolean) table.getModel().getValueAt(row, 5);
 	 				
-	 				if(weightcheck(weight)) {
+	 				if(weightcheck(weight,row)) {
 		 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
 		 				//if its not the last row , we need set the assignmentId so we know which one to update
 		 				if (row != assignments.size() && assignments.size() != 0 ) {
@@ -154,11 +154,14 @@ public class AddAssignments extends JPanel {
 				}
 	 		}
 
-			private boolean weightcheck(Integer weight) {
+			private boolean weightcheck(Integer weight, int row) {
 				// TODO Auto-generated method stub
 				Integer total_wgt = 0;
 				for(Assignment a: assignments) {
 					total_wgt+= a.getWeight();
+				}
+				if(row!=assignments.size() && assignments.size()!=0) {
+					total_wgt = total_wgt-assignments.get(row).getWeight();
 				}
 				if (total_wgt+weight<=100) {
 					return true;
@@ -168,7 +171,7 @@ public class AddAssignments extends JPanel {
 			}
 		});
 			
-		JButton deleteBtn = new JButton("delete");
+		JButton deleteBtn = new JButton("Delete");
 		deleteBtn.setBounds(864, 485, 97, 25);
 		add(deleteBtn);
 		deleteBtn.addActionListener(new ActionListener() {					
@@ -176,8 +179,8 @@ public class AddAssignments extends JPanel {
 			public void actionPerformed(ActionEvent e) {
  				//Assignment a = new Assignment();
  				int row = table.getSelectedRow();
- 				if(row == -1) {
-					JOptionPane.showMessageDialog(AddAssignments.this, "Please Select a Row to Save!");
+ 				if(row == -1 || row == assignments.size()) {
+					JOptionPane.showMessageDialog(AddAssignments.this, "Please Select a Valid Row to Delete!");
 				}else {	
 	 				Integer courseId = course.getId();
 	 				String name = table.getModel().getValueAt(row, 0).toString();
