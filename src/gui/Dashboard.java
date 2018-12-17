@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import com.opencsv.CSVWriter;
 import src.entities.Assignment;
 import src.entities.CalculateGrade;
+import src.entities.Calculations;
 import src.entities.CapitalizeUtil;
 import src.entities.ClassEntity;
 import src.entities.Grade;
@@ -146,7 +147,6 @@ public class Dashboard extends JFrame {
 		daysLabel.setFont(new Font("Georgia", Font.PLAIN, 14));
 		daysLabel.setBounds(500, 80, 65, 25);
 		contentPane.add(daysLabel);
-		
 		
 		courseNameText = new JLabel();
 		courseNameText.setText(CapitalizeUtil.captilize(course.getName()));;
@@ -351,7 +351,7 @@ public class Dashboard extends JFrame {
 		contentPane.repaint();
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 0, 950, 420);
+		scrollPane.setBounds(12, 0, 950, 386);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -452,6 +452,7 @@ public class Dashboard extends JFrame {
 		table.setFillsViewportHeight(true);
 		table.setRowHeight(30);
 		table.setFont(new Font("Georgia", Font.PLAIN, 16));
+		table.setToolTipText("Estimated Grades only shows up when Weightage reaches 100 %");
 		// Hide the id column
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		scrollPane.setViewportView(table);
@@ -528,7 +529,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		saveButton.setBounds(754, 444, 100, 25);
+		saveButton.setBounds(748, 437, 100, 25);
 		panel.add(saveButton);
 		
 		JButton exportButton = new JButton("Export CVS");
@@ -588,11 +589,11 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		exportButton.setBounds(644, 444, 100, 25);
+		exportButton.setBounds(636, 437, 100, 25);
 		panel.add(exportButton);
 
 		JButton clearButton = new JButton("Clear");
-		clearButton.setBounds(864, 444, 100, 25);
+		clearButton.setBounds(860, 437, 100, 25);
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -601,6 +602,12 @@ public class Dashboard extends JFrame {
 		});
 		panel.add(clearButton);
 		
+		JLabel helpText = new JLabel("<html>"
+				+ "<ol><li>Select One Row to Save at a time.</li>"
+				+ "<li>Never Save a Row which is in edit mode, Please Double Click on the row then Save.</li>"
+				+ "<li>Estimated Grade will show up when weightage of assignments reaches 100</li></ol></html>");
+		helpText.setBounds(12, 399, 500, 88);
+		panel.add(helpText);
 	}
 
 	private void setDefaultValues(int rowCount, Object[][] data, String[] columnNames) {
@@ -616,6 +623,64 @@ public class Dashboard extends JFrame {
 		}
 	}
 	
+	private void calGradeByMean(List<Student> s) {
+		List<Double> totalscore = new ArrayList<Double>();
+		for(Student std: s) {
+			double sum = 0;
+			int total_weight = 0;
+			int weight = 0;
+			AssignmentService aService = new AssignmentService();
+			List<Assignment> assignment = null;
+			GradeService gService = new GradeService();
+			List<Grade> grade = null;
+			try {
+				grade = gService.readGradesByStudentId((Integer)std.getId());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				assignment = aService.readAssignmentByCID(course.getId());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			for(Grade r:grade) {
+				for(Assignment a: assignment) {
+					if(a.getAssignmentId() == r.getAssignmentId()) {
+						if(!r.getAssignment().getIsOptional()) {
+							total_weight+=r.getAssignment().getWeight();
+						}
+					}
+				}
+			}
+			
+			for(Grade grd : grade) {
+				for(Assignment ad: assignment) {
+					if(ad.getAssignmentId() == grd.getAssignmentId()) {	
+						sum += (grd.getGrade()/grd.getAssignment().getTotal())*grd.getAssignment().getWeight();
+						if(grd.getAssignment().getIsOptional() && sum > total_weight ) {
+							sum = total_weight;
+						}
+						if(!grd.getAssignment().getIsOptional()) {
+							weight += grd.getAssignment().getWeight();
+						}
+					}
+				}
+			}
+			if(sum!=0.0) {
+				totalscore.add(sum);
+			}
+		}
+		if (totalscore.size()>0) {
+			Double[] course_wise = totalscore.toArray(new Double[totalscore.size()]);
+			Calculations cal = new Calculations(course_wise);
+			System.out.println(cal.getMean());
+		}
+	}
+	
+		
 	private String[] calculateGrade(List<Grade> grade) {
 		String[] returnOutput = new String[3];
 		double sum = 0;
