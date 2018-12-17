@@ -55,7 +55,7 @@ There are four main packages:
 
 Using the above packages the application is built.  
 
-Starter MySQL Script: [Schema Scripts](Schema_scripts.sql)
+Starter MySQL Script: [Schema Scripts](Schema_scripts.sql)  
 Future Works: [ToDo](TODO.md)
 
 

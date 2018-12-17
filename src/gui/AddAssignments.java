@@ -207,10 +207,10 @@ public class AddAssignments extends JPanel {
 		
 		JLabel helpText = new JLabel("<html>"
 				+ "<ol><li>Select One Row to Save at a time.</li>"
-				+ "<li>Never Save a Row which is in edit mode, Please Double Click on the row then Save.</li>"
+				+ "<li>Never Save a Row which is in edit mode, Please Press Enter on the row then Save.</li>"
 				+ "<li>To Add More Assignments.Click on `+ Add Assignment` button or refresh the page</li>"
 				+ "</ol></html>");
-		helpText.setBounds(28, 446, 548, 68);
+		helpText.setBounds(28, 450, 631, 64);
 		add(helpText);
 	}
 	
