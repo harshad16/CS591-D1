@@ -57,8 +57,8 @@ public class Database {
 		 		+ "CONSTRAINT `user-id`"
 		 		+ "FOREIGN KEY (`userid`)"
 		 		+ "REFERENCES `"+db_name+"`.`user` (`id`)"
-		 		+ "ON DELETE CASCADE "
-		 		+ "ON UPDATE CASCADE);");
+		 		+ "ON DELETE NO ACTION "
+		 		+ "ON UPDATE NO ACTION);");
 		}
 
 	public String createAssignment() {
@@ -78,8 +78,8 @@ public class Database {
 				+ "CONSTRAINT `course-id`"
 				+ "FOREIGN KEY (`courseid`)"
 				+ "REFERENCES `"+db_name+"`.`course` (`id`)"
-				+ "ON DELETE CASCADE "
-				+ "ON UPDATE CASCADE);");
+				+ "ON DELETE NO ACTION "
+				+ "ON UPDATE NO ACTION);");
 	}
 	
 	public String createStudent() {
@@ -107,8 +107,8 @@ public class Database {
 				+ "CONSTRAINT `studentid`"
 				+ "FOREIGN KEY (`studentid`)"
 				+ "REFERENCES `"+db_name+"`.`student` (`id`)"
-				+ "ON DELETE CASCADE "
-				+ "ON UPDATE CASCADE);");
+				+ "ON DELETE NO ACTION "
+				+ "ON UPDATE NO ACTION);");
 	}
 	
 
@@ -127,13 +127,13 @@ public class Database {
 				+ "CONSTRAINT `assignmentid`"
 				+ "FOREIGN KEY (`assignmentid`)"
 				+ "REFERENCES `"+db_name+"`.`assignment` (`id`)"
-				+ "ON DELETE CASCADE "
-				+ "ON UPDATE CASCADE,"
+				+ "ON DELETE NO ACTION "
+				+ "ON UPDATE NO ACTION,"
 				+ "CONSTRAINT `student-id`"
 				+ "FOREIGN KEY (`studentid`)"
 				+ "REFERENCES `"+db_name+"`.`student` (`id`)"
-				+ "ON DELETE CASCADE "
-				+ "ON UPDATE CASCADE);");
+				+ "ON DELETE NO ACTION "
+				+ "ON UPDATE NO ACTION);");
 	}
 	
 	public String unableUniqueCheck() {
