@@ -192,7 +192,7 @@ public class AddAssignments extends JPanel {
 	 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
 	 				//if its not the last row , we need set the assignmentId so we know which one to update
 	 				boolean success=false;
-	 				if(assignments.size()<row) {
+	 				if(assignments.size() > row) {
 	 					a.setAssignmentId(assignments.get(row).getAssignmentId());
 	 					success = deleteAssignment(a);
 	 				}
@@ -221,6 +221,7 @@ public class AddAssignments extends JPanel {
 	    	AssignmentService assignmentService = new AssignmentService();
 	    	assignmentService.deleteAssignment(a);
 	    } catch (SQLException e) {
+	    		System.out.println(e);
 		    return false;
 	    }
 	    return true;
