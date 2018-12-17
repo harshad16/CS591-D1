@@ -1,15 +1,16 @@
-[![GradeIn Applciation](https://img.shields.io/badge/GradeIn-v1.0-green.svg)]()
-[![Java](https://img.shields.io/badge/Java-8-red.svg)]()
+[![GradeIn Applciation](https://img.shields.io/badge/GradeIn-v1.0-green.svg)](src/)
+[![Java](https://img.shields.io/badge/Java-8-red.svg)](https://www.oracle.com/technetwork/java/javase/documentation/index.html)
 
 # GradeIn    
 ![GradeIn](src/misc/logo.png)  
-Grading Application for helping the Professor in evaluation and keeping track of students grades.
+Grading Application for helping the Professor in evaluation and keeping track of students grades.  
+The Application was developed as a part of final project for the Course: CS591-D1 Object Oriented Design with Java,Fall 2018, Computer Science Department, Boston University 
 
 ## How to Run
 
 ### Requirement  
 * Java 8 should be installed.  
-* MySQL should be installed, with `root` user's password as `password`.  
+* MySQL should be installed, with `root` user's password set as `password`.  
     * For Custom `root` user, please change the required details in [src/service/Utilities.java](src/service/Utilities.java).  
 
 > *RUN* `GradeIn.jar` (Its Executable)
@@ -21,7 +22,7 @@ or Run [src/Main.Java](src/Main.Java) to execute the GradeIn Application.
 
 ### Prerequisites    
 * Install Java 8 JDK/JRE, if not already. [Java 8](https://www.java.com/en/download/)
-* Install MySQL Database with `root` user password as `password`, if not already. [MySQL](https://www.mysql.com/downloads/)
+* Install MySQL Database with `root` user password set as `password`, if not already. [MySQL](https://www.mysql.com/downloads/)
     * For Custom 'root' user, please change the required details in '[src/service/Utilities.java](src/service/Utilities.java)'.
 * Preferred: Install Eclipse, if not already. [Eclipse](https://www.eclipse.org/downloads/)
     * Install packages - Windows Builder and Java Swings in Eclipse using (Help -> Install New Software) Option.
@@ -45,6 +46,15 @@ or Run [src/Main.Java](src/Main.Java) to execute the GradeIn Application.
 
 ### Description  
 
+The Application is developed using Java 8 and MySQL. The architecture followed is the Data Access Object Model.  
+There are four main packages:
+	* DAO Package: Abstract Responsible for executing MySQL CRUD statements.
+	* Service Package: Responsible for establishing connection with JDBC and passing information along DAO package.
+	* Entity Package: Responsible for the Business Object entities.
+	* GUI Package: Responsible for all the UI's, developed using Java swings.  
+
+Using the above packages the application is built.  
+	
 
 ## Built With  
 * [Java 8](https://www.oracle.com/technetwork/java/javase/documentation/index.html) - Java
