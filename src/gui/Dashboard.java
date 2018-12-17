@@ -604,7 +604,7 @@ public class Dashboard extends JFrame {
 		
 		JLabel helpText = new JLabel("<html>"
 				+ "<ol><li>Select One Row to Save at a time.</li>"
-				+ "<li>Never Save a Row which is in edit mode, Please Double Click on the row then Save.</li>"
+				+ "<li>Never Save a Row which is in edit mode, Please Press Enter on the row then Save.</li>"
 				+ "<li>Estimated Grade will show up when weightage of assignments reaches 100</li></ol></html>");
 		helpText.setBounds(12, 399, 500, 88);
 		panel.add(helpText);
