@@ -47,14 +47,17 @@ or Run [src/Main.Java](src/Main.Java) to execute the GradeIn Application.
 ### Description  
 
 The Application is developed using Java 8 and MySQL. The architecture followed is the Data Access Object Model.  
-There are four main packages:
-	* DAO Package: Abstract Responsible for executing MySQL CRUD statements.
-	* Service Package: Responsible for establishing connection with JDBC and passing information along DAO package.
-	* Entity Package: Responsible for the Business Object entities.
-	* GUI Package: Responsible for all the UI's, developed using Java swings.  
+There are four main packages:  
+* DAO Package: Abstract Responsible for executing MySQL CRUD statements.
+* Service Package: Responsible for establishing connection with JDBC and passing information along DAO package.
+* Entity Package: Responsible for the Business Object entities.
+* GUI Package: Responsible for all the UI's, developed using Java swings.  
 
 Using the above packages the application is built.  
-	
+
+Starter MySQL Script: [Schema Scripts](Schema_scripts.sql)
+Future Works: [ToDo](TODO.md)
+
 
 ## Built With  
 * [Java 8](https://www.oracle.com/technetwork/java/javase/documentation/index.html) - Java
