@@ -297,7 +297,6 @@ public class Statistics extends JPanel {
 		return agnDict;
 	}
 	
-	@SuppressWarnings("null")
 	public void setStats(String plotType, Integer AssignmentId) throws SQLException {
 		List<Double> score= new ArrayList<Double>();
 		if(AssignmentId ==-1) {

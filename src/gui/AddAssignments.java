@@ -87,7 +87,7 @@ public class AddAssignments extends JPanel {
 		}; 
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(28, 32, 960, 422);
+		scrollPane.setBounds(28, 32, 960, 405);
 		scrollPane.setHorizontalScrollBarPolicy(
 				   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -107,7 +107,7 @@ public class AddAssignments extends JPanel {
 		Dimension d = table.getTableHeader().getPreferredSize();
 		d.height = 30;
 		table.getTableHeader().setSize(d);
-		
+		table.setToolTipText("To Add More Assignments.Click on `+ Add Assignment` button or refresh the page");
 		table.setFillsViewportHeight(true);
 		table.setRowHeight(30);
 		table.setFont(new Font("Georgia", Font.PLAIN, 16));
@@ -116,7 +116,7 @@ public class AddAssignments extends JPanel {
 
 			
 		JButton  saveBtn = new JButton("Save");
-		saveBtn.setBounds(755, 485, 97, 25);
+		saveBtn.setBounds(755, 470, 97, 25);
 		add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
  			@Override
@@ -172,7 +172,7 @@ public class AddAssignments extends JPanel {
 		});
 			
 		JButton deleteBtn = new JButton("Delete");
-		deleteBtn.setBounds(864, 485, 97, 25);
+		deleteBtn.setBounds(867, 470, 97, 25);
 		add(deleteBtn);
 		deleteBtn.addActionListener(new ActionListener() {					
  			@Override
@@ -192,7 +192,7 @@ public class AddAssignments extends JPanel {
 	 				Assignment a = new Assignment(courseId,name, weight, description, type, total, isOptional);
 	 				//if its not the last row , we need set the assignmentId so we know which one to update
 	 				boolean success=false;
-	 				if(assignments.size()<row) {
+	 				if(assignments.size()>row) {
 	 					a.setAssignmentId(assignments.get(row).getAssignmentId());
 	 					success = deleteAssignment(a);
 	 				}
@@ -204,6 +204,14 @@ public class AddAssignments extends JPanel {
 	 			 }
  			}
 		});
+		
+		JLabel helpText = new JLabel("<html>"
+				+ "<ol><li>Select One Row to Save at a time.</li>"
+				+ "<li>Never Save a Row which is in edit mode, Please Double Click on the row then Save.</li>"
+				+ "<li>To Add More Assignments.Click on `+ Add Assignment` button or refresh the page</li>"
+				+ "</ol></html>");
+		helpText.setBounds(28, 446, 548, 68);
+		add(helpText);
 	}
 	
 	private boolean saveAssignment(Assignment a) {
